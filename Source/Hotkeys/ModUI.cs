@@ -24,10 +24,22 @@ namespace Hotkeys
         }
 
         // The UI part
-        public override void DoSettingsWindowContents(Rect inRect)
+        public override void DoSettingsWindowContents(Rect canvas)
         {
-            settings.desCategories[0] = Widgets.TextField(inRect.TopHalf().TopHalf(), settings.desCategories[0]);
-            settings.designators[0] = Widgets.TextField(inRect.BottomHalf().BottomHalf(), settings.designators[0]);
+            var listing = new Listing_Standard();
+            listing.ColumnWidth = canvas.width;
+            listing.Begin(canvas);
+
+            listing.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
+            listing.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
+            listing.GapLine();
+
+            if (settings.useDirectHotkeys)
+            {
+                listing.ButtonText("Add", "Add additional direct hotkeys");
+            }
+
+            listing.End();
 
             settings.Write();
         }
@@ -35,12 +47,18 @@ namespace Hotkeys
 
     public class HotkeySettings : ModSettings
     {
+        public bool useArchitectHotkeys;
+        public bool useDirectHotkeys;
+
         public List<string> desCategories;
         public List<string> designators;
 
         public override void ExposeData()
         {
             base.ExposeData();
+            Scribe_Values.Look(ref useArchitectHotkeys, "Enable_Architect_Hotkeys");
+            Scribe_Values.Look(ref useDirectHotkeys, "Enable_Direct_Hotkeys");
+
             Scribe_Collections.Look(ref desCategories, "Designation_Categories");
             Scribe_Collections.Look(ref designators, "Designators");
 
