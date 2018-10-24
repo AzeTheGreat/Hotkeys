@@ -1,0 +1,5 @@
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Hotkeys\Assemblies\Hotkeys.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Hotkeys\Source\Hotkeys\obj\Debug\Hotkeys.csprojAssemblyReference.cache
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Hotkeys\Source\Hotkeys\obj\Debug\Hotkeys.csproj.CoreCompileInputs.cache
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Hotkeys\Source\Hotkeys\obj\Debug\Hotkeys.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Hotkeys\Source\Hotkeys\obj\Debug\Hotkeys.csproj.CopyComplete

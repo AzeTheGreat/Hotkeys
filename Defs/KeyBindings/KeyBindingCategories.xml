@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+	<KeyBindingCategoryDef>
+		<defName>ArchitectHotkeys</defName>
+		<label>Architect Hotkeys</label>
+		<description>Controls for the submenu of the Architect tab.</description>
+		<isGameUniversal>true</isGameUniversal>
+	</KeyBindingCategoryDef>
+</Defs>
