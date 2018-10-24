@@ -48,9 +48,9 @@ namespace Hotkeys
 
                         foreach (var desCat in DefDatabase<DesignationCategoryDef>.AllDefsListForReading)
                         {
-                            options.Add(new FloatMenuOption(desCat.label, delegate ()
+                            options.Add(new FloatMenuOption(desCat.LabelCap, delegate ()
                             {
-                                settings.desCategories[index] = desCat.label;
+                                settings.desCategories[index] = desCat.LabelCap;
                             }));
                         }
 
@@ -68,8 +68,8 @@ namespace Hotkeys
 
                 if (listing.ButtonText("Add", "Add additional direct hotkeys"))
                 {
-                    settings.desCategories.Add("New");
-                    settings.designators.Add("new");
+                    settings.desCategories.Add("None");
+                    settings.designators.Add("None");
                 }
             }
 

@@ -29,36 +29,43 @@ namespace Hotkeys
             var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<HotkeySettings>();
 
             // Sanitize settings - check for removed defs
-            var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Select(defCat => defCat.label);
+            var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Select(defCat => defCat.LabelCap);
+            var toRemove = new List<int>();
 
             foreach (var desCat in settings.desCategories)
             {
                 if (!allDesCatDefs.Contains(desCat))
                 {
                     int index = settings.desCategories.IndexOf(desCat);
-                    settings.desCategories.RemoveAt(index);
-                    settings.designators.RemoveAt(index);
-                    settings.Write();
-                    return;
+                    toRemove.Add(index);
                 }
 
-                var allDesDefs = DefDatabase<DesignationCategoryDef>.GetNamed(desCat).AllResolvedDesignators.Select(des => des.Label);
-
-                foreach (var des in allDesDefs)
+                if (allDesCatDefs.Contains(desCat))
                 {
-                    if (!allDesDefs.Contains(des))
+                    var allDesDefs = DefDatabase<DesignationCategoryDef>.GetNamed(desCat).AllResolvedDesignators.Select(des => des.Label);
+
+                    foreach (var des in allDesDefs)
                     {
-                        int index = settings.desCategories.IndexOf(desCat);
-                        settings.desCategories.RemoveAt(index);
-                        settings.designators.RemoveAt(index);
-                        settings.Write();
+                        if (!allDesDefs.Contains(des))
+                        {
+                            int index = settings.desCategories.IndexOf(desCat);
+                            toRemove.Add(index);  
+                        }
                     }
                 }
+            }
+
+            foreach (var i in toRemove)
+            {
+                settings.desCategories.RemoveAt(i);
+                settings.designators.RemoveAt(i);
+                settings.Write();
             }
 
             // Generate keybindings for all direct hotkeys
             foreach (var desCat in settings.desCategories)
             {
+                Log.Message("Constructing: " + desCat);
                 int index = settings.desCategories.IndexOf(desCat);
                 string designator = settings.designators[index];
                 var def = DefDatabase<DesignationCategoryDef>.GetNamed(desCat);
