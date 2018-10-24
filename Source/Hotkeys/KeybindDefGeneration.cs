@@ -1,5 +1,4 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using Harmony;
 
@@ -9,7 +8,6 @@ namespace Hotkeys
     [HarmonyPatch("GenerateImpliedDefs_PostResolve")]
     public class KeybindDefGenerationPatch
     {
-        [HarmonyPriority(Priority.First)]
         static void Postfix()
         {
             foreach (var def in DefDatabase<DesignationCategoryDef>.AllDefsListForReading)
