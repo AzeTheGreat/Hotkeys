@@ -31,12 +31,46 @@ namespace Hotkeys
             listing.Begin(canvas);
 
             listing.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
-            listing.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
+
             listing.GapLine();
+            listing.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
+            listing.Gap();
 
             if (settings.useDirectHotkeys)
             {
-                listing.ButtonText("Add", "Add additional direct hotkeys");
+                foreach (var cat in settings.desCategories)
+                {
+                    int index = settings.desCategories.IndexOf(cat);
+
+                    if (listing.ButtonText(cat))
+                    {
+                        List<FloatMenuOption> options = new List<FloatMenuOption>();
+
+                        foreach (var desCat in DefDatabase<DesignationCategoryDef>.AllDefsListForReading)
+                        {
+                            options.Add(new FloatMenuOption(desCat.label, delegate ()
+                            {
+                                settings.desCategories[index] = desCat.label;
+                            }));
+                        }
+
+                        options.Add(new FloatMenuOption("None", delegate ()
+                        {
+                            settings.desCategories[index] = "None";
+                        }));
+
+                        FloatMenu window = new FloatMenu(options, "Select Category", false);
+                        Find.WindowStack.Add(window);
+                    }
+                }
+
+                listing.Gap();
+
+                if (listing.ButtonText("Add", "Add additional direct hotkeys"))
+                {
+                    settings.desCategories.Add("New");
+                    settings.designators.Add("new");
+                }
             }
 
             listing.End();
@@ -68,6 +102,7 @@ namespace Hotkeys
         }
     }
 }
+
 
 
 
