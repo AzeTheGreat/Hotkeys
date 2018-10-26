@@ -13,6 +13,7 @@ namespace Hotkeys
     {
         public override string SettingsCategory() => "Hotkeys";
         private HotkeySettings settings;
+        private Vector2 scrollPosition;
 
         public Hotkeys(ModContentPack content) : base(content)
         {
@@ -21,63 +22,132 @@ namespace Hotkeys
             harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
 
             settings = GetSettings<HotkeySettings>();
+            scrollPosition = new Vector2(0f, 0f);
+
         }
 
         // The UI part
         public override void DoSettingsWindowContents(Rect canvas)
         {
-            var listing = new Listing_Standard();
-            listing.ColumnWidth = canvas.width;
-            listing.Begin(canvas);
+            float contentHeight = 30f * settings.desCategories.Count + 200f;
 
-            listing.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
+            Rect source = new Rect(0f, 0f, canvas.width - 24f, contentHeight);
+            Widgets.BeginScrollView(canvas, ref scrollPosition, source, true);
 
-            listing.GapLine();
-            listing.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
-            listing.Gap();
+            var lMain = new Listing_Standard();
+            lMain.ColumnWidth = source.width;
+            lMain.Begin(source);
+
+            lMain.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
+            lMain.GapLine();
+
+            lMain.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
+            lMain.GapLine();
+            lMain.End();
 
             if (settings.useDirectHotkeys)
             {
-                foreach (var cat in settings.desCategories)
-                {
-                    int index = settings.desCategories.IndexOf(cat);
+                var grid = new GridLayout(new Rect(source.xMin, source.yMin + lMain.CurHeight, source.width, source.height - lMain.CurHeight), 3, 1, 0, 0);
 
-                    if (listing.ButtonText(cat))
+                CategoryFloatMenus(grid);
+                DesignatorFloatMenus(grid);
+            }
+
+            Widgets.EndScrollView();
+            settings.Write();
+        }
+
+        private void DesignatorFloatMenus(GridLayout grid)
+        {
+            var rect = grid.GetCellRect(2, 0, 1);
+            var listing = new Listing_Standard();
+            listing.Begin(rect);
+
+            for (int index = 0; index < settings.designators.Count; index++)
+            {
+                    var des = settings.designators[index];
+
+                    if (listing.ButtonText(des))
                     {
+                        int buttonNum = index;
                         List<FloatMenuOption> options = new List<FloatMenuOption>();
 
-                        foreach (var desCat in DefDatabase<DesignationCategoryDef>.AllDefsListForReading)
+                        if (settings.desCategories[index] != "None")
                         {
-                            options.Add(new FloatMenuOption(desCat.LabelCap, delegate ()
+                            foreach (var designator in DefDatabase<DesignationCategoryDef>.GetNamed(settings.desCategories[index]).AllResolvedDesignators)
                             {
-                                settings.desCategories[index] = desCat.LabelCap;
-                            }));
+                                options.Add(new FloatMenuOption(designator.LabelCap, delegate ()
+                                {
+                                    settings.designators[buttonNum] = designator.LabelCap;
+                                }));
+                            }
                         }
 
                         options.Add(new FloatMenuOption("None", delegate ()
                         {
-                            settings.desCategories[index] = "None";
+                            settings.designators[buttonNum] = "None";
                         }));
 
                         FloatMenu window = new FloatMenu(options, "Select Category", false);
                         Find.WindowStack.Add(window);
                     }
-                }
+            }
 
-                listing.Gap();
+            listing.Gap();
 
-                if (listing.ButtonText("Add", "Add additional direct hotkeys"))
-                {
-                    settings.desCategories.Add("None");
-                    settings.designators.Add("None");
-                }
+            if (listing.ButtonText("Add Hotkey", "Add additional direct hotkeys"))
+            {
+                settings.desCategories.Add("None");
+                settings.designators.Add("None");
             }
 
             listing.End();
+        }
 
-            settings.Write();
+        private void CategoryFloatMenus(GridLayout grid)
+        {
+            var rect1 = grid.GetCellRect(0, 0, 2);
+            var listing1 = new Listing_Standard();
+            listing1.Begin(rect1);
+
+            for (int index = 0; index < settings.desCategories.Count; index++)
+            {
+                var cat = settings.desCategories[index];
+
+                if (listing1.ButtonTextLabeled("Direct Hotkey " + index.ToString(), cat))
+                {
+                    int buttonNum = index;
+                    List<FloatMenuOption> options = new List<FloatMenuOption>();
+
+                    foreach (var desCat in DefDatabase<DesignationCategoryDef>.AllDefsListForReading)
+                    {
+                        options.Add(new FloatMenuOption(desCat.LabelCap, delegate ()
+                        {
+                            settings.desCategories[buttonNum] = desCat.LabelCap;
+                        }));
+                    }
+
+                    options.Add(new FloatMenuOption("None", delegate ()
+                    {
+                        settings.desCategories[buttonNum] = "None";
+                    }));
+
+                    FloatMenu window = new FloatMenu(options, "Select Category", false);
+                    Find.WindowStack.Add(window);
+                }
+            }
+
+            listing1.Gap();
+
+            listing1.Label("Game must be restarted for keybindings to be available.");
+            listing1.Gap();
+            listing1.GapLine();
+
+            listing1.End();
         }
     }
+
+
 
     public class HotkeySettings : ModSettings
     {

@@ -7,4 +7,11 @@
 		<description>Controls for the submenu of the Architect tab.</description>
 		<isGameUniversal>true</isGameUniversal>
 	</KeyBindingCategoryDef>
+	
+	<KeyBindingCategoryDef>
+		<defName>DirectHotkeys</defName>
+		<label>Direct Hotkeys</label>
+		<description>Controls for direct designations. Configurable in Hotkeys mod menu.</description>
+		<isGameUniversal>true</isGameUniversal>
+	</KeyBindingCategoryDef>
 </Defs>

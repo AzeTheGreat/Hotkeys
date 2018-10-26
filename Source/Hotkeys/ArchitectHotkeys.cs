@@ -14,22 +14,29 @@ namespace Hotkeys
 
         static void Prefix(ref ArchitectCategoryTab ___selectedDesPanel, ref List<ArchitectCategoryTab> ___desPanelsCached)
         {
-            
+            var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<HotkeySettings>();
             keyWasDown = false;
 
             // If no key pressed just end
             if (Event.current.type != EventType.KeyDown) { return; }
+            if (!settings.useArchitectHotkeys) { return; }
 
             List<KeyBindingDef> categories = DefDatabase<KeyBindingDef>.AllDefsListForReading.FindAll(x => x.category == DefDatabase<KeyBindingCategoryDef>.GetNamed("ArchitectHotkeys"));
             
             foreach (var category in categories)
             {
-                string tab = category.defName.Remove(0,17);
+                string tab = category.defName.Remove(0,23);
 
                 if (category.JustPressed)
                 {
-                    keyWasDown = true;
-                    ___selectedDesPanel = ___desPanelsCached.Find(x => x.def.defName.Contains(tab));
+                    var panel = ___desPanelsCached.Find(x => x.def.defName.Contains(tab));
+
+                    if (panel != ___selectedDesPanel)
+                    {
+                        keyWasDown = true;
+                        ___selectedDesPanel = panel;
+                    }
+                    
                 }
             }
         }    

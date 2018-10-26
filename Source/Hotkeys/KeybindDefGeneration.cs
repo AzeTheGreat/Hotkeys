@@ -12,72 +12,103 @@ namespace Hotkeys
     {
         static void Postfix()
         {
-            // Generate keybindings for all architect subtabs.
-            foreach (var def in DefDatabase<DesignationCategoryDef>.AllDefsListForReading)
-            {
-                var keyDef = new KeyBindingDef();
-                keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("ArchitectHotkeys");
-                keyDef.defName = "ArchitectHotkeys_" + def.defName;
-                keyDef.label = def.label + " tab";
-                keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
-                keyDef.modContentPack = def.modContentPack;
-                DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
-
-                //var test = DefDatabase<DesignationCategoryDef>.GetNamed("balh").AllResolvedDesignators.Find(x => x.Label.Contains("blah"));
-            }
-
             var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<HotkeySettings>();
 
+            if (settings.useArchitectHotkeys)
+            {
+                // Generate keybindings for all architect subtabs.
+                foreach (var def in DefDatabase<DesignationCategoryDef>.AllDefsListForReading)
+                {
+                    var keyDef = new KeyBindingDef();
+                    keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("ArchitectHotkeys");
+                    keyDef.defName = "Hotkeys_ArchitectHotkey" + def.defName;
+                    keyDef.label = def.label + " tab";
+                    keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
+                    keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("ArchitectHotkeys").modContentPack;
+                    DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
+                }
+            }
+
+            if (settings.useDirectHotkeys)
+            {
+                // Generate keybindings for all direct hotkeys
+                for (int i = 0; i < settings.desCategories.Count; i++)
+                {
+                    var keyDef = new KeyBindingDef();
+                    keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
+                    keyDef.defName = "Hotkeys_DirectHotkey_" + i.ToString();
+                    keyDef.label = "Direct Hotkey " + i.ToString();
+                    keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
+                    keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys").modContentPack;
+                    DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
+                }
+            }
+
+            
+
             // Sanitize settings - check for removed defs
-            var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Select(defCat => defCat.LabelCap);
-            var toRemove = new List<int>();
+            //var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Select(x => x.LabelCap);
 
-            foreach (var desCat in settings.desCategories)
-            {
-                if (!allDesCatDefs.Contains(desCat))
-                {
-                    int index = settings.desCategories.IndexOf(desCat);
-                    toRemove.Add(index);
-                }
+            //int index = 0;
+            //while (index < settings.desCategories.Count)
+            //{
+            //    var desCat = settings.desCategories[index];
 
-                if (allDesCatDefs.Contains(desCat))
-                {
-                    var allDesDefs = DefDatabase<DesignationCategoryDef>.GetNamed(desCat).AllResolvedDesignators.Select(des => des.Label);
+            //    if (!allDesCatDefs.Contains(desCat))
+            //    {
+            //        settings.desCategories.RemoveAt(index);
+            //        settings.designators.RemoveAt(index);
+            //    }
+            //    else
+            //    {
+            //        index++;
+            //    }
+            //}
 
-                    foreach (var des in allDesDefs)
-                    {
-                        if (!allDesDefs.Contains(des))
-                        {
-                            int index = settings.desCategories.IndexOf(desCat);
-                            toRemove.Add(index);  
-                        }
-                    }
-                }
-            }
+            //index = 0;
+            //while (index < settings.designators.Count)
+            //{
+            //    var desCat = settings.desCategories[index];
+            //    var des = settings.designators[index];
+            //    var allDesDefs = DefDatabase<DesignationCategoryDef>.GetNamed(desCat).AllResolvedDesignators.Select(x => x.LabelCap);
+            //    //var allDesDefs = DefDatabase<DesignationDef>.AllDefsListForReading.Select(x => x.LabelCap);
 
-            foreach (var i in toRemove)
-            {
-                settings.desCategories.RemoveAt(i);
-                settings.designators.RemoveAt(i);
-                settings.Write();
-            }
+            //    Log.Message("Category: " + desCat);
+            //    foreach (var name in allDesDefs)
+            //    {
+            //        Log.Message("Exists: " + name);
+            //    }
 
-            // Generate keybindings for all direct hotkeys
-            foreach (var desCat in settings.desCategories)
-            {
-                Log.Message("Constructing: " + desCat);
-                int index = settings.desCategories.IndexOf(desCat);
-                string designator = settings.designators[index];
-                var def = DefDatabase<DesignationCategoryDef>.GetNamed(desCat);
 
-                var keyDef = new KeyBindingDef();
-                keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("ArchitectHotkeys");
-                keyDef.defName = "ArchitectHotkeys_" + desCat + "_" + designator;
-                keyDef.label = desCat + ": " + designator;
-                keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
-                keyDef.modContentPack = def.modContentPack;
-                DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
-            }
+            //    if (!allDesDefs.Contains(des))
+            //    {
+            //        Log.Message("Remove: " + des);
+            //        settings.desCategories.RemoveAt(index);
+            //        settings.designators.RemoveAt(index);
+            //    }
+            //    else
+            //    {
+            //        index++;
+            //    }
+            //}
+
+            
+
+            //foreach (var desCat in settings.desCategories)
+            //{
+            //    Log.Message("Constructing: " + desCat);
+            //    int i = settings.desCategories.IndexOf(desCat);
+            //    string designator = settings.designators[i];
+            //    var def = DefDatabase<DesignationCategoryDef>.GetNamed(desCat);
+
+            //    var keyDef = new KeyBindingDef();
+            //    keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("ArchitectHotkeys");
+            //    keyDef.defName = "ArchitectHotkeys_" + desCat + "_" + designator;
+            //    keyDef.label = desCat + ": " + designator;
+            //    keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
+            //    keyDef.modContentPack = def.modContentPack;
+            //    DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
+            //}
         }
     }
 }
