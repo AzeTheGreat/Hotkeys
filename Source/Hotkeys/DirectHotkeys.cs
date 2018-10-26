@@ -4,6 +4,7 @@ using RimWorld;
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 
 namespace Hotkeys
@@ -19,18 +20,17 @@ namespace Hotkeys
             if (Event.current.type != EventType.KeyDown) { return; }
             if (!settings.useDirectHotkeys) { return; }
 
-            List<KeyBindingDef> designators = DefDatabase<KeyBindingDef>.AllDefsListForReading.FindAll(x => x.category == DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys"));
+            List<KeyBindingDef> designatorKeys = DefDatabase<KeyBindingDef>.AllDefsListForReading.FindAll(x => x.category == DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys"));
 
-            foreach (var des in designators)
+            for (int i = 0; i < designatorKeys.Count; i++)
             {
-                int desIndex = Int32.Parse(des.defName.Remove(0, 21));
-
-                if (des.JustPressed)
+                if (designatorKeys[i].JustPressed)
                 {
-                    var desCatName = settings.desCategories[desIndex];
-                    var designatorName = settings.designators[desIndex];
-                    var designator = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Find(x => x.defName.Contains(desCatName)).AllResolvedDesignators.Find(x => x.LabelCap.Contains(designatorName));
-                    Find.DesignatorManager.Select(designator);
+                    var designator = settings.GetDesignator(i);
+                    if (designator != null)
+                    {
+                        Find.DesignatorManager.Select(designator);
+                    }
                 }
             }
         }

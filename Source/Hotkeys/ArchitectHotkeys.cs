@@ -17,7 +17,6 @@ namespace Hotkeys
             var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<HotkeySettings>();
             keyWasDown = false;
 
-            // If no key pressed just end
             if (Event.current.type != EventType.KeyDown) { return; }
             if (!settings.useArchitectHotkeys) { return; }
 
