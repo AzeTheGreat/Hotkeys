@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchitectHotkeys.cs" />
+    <Compile Include="MultiKeyPatch.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="DirectHotkeys.cs" />
     <Compile Include="ModUI.cs" />

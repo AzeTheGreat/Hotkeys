@@ -27,7 +27,7 @@ namespace Hotkeys
 
         public override void DoSettingsWindowContents(Rect canvas)
         {
-            float contentHeight = 30f * settings.desCategoryLabelCaps.Count + 200f;
+            float contentHeight = 30f * settings.desCategoryLabelCaps.Count + 1000f;
 
             Rect source = new Rect(0f, 0f, canvas.width - 24f, contentHeight);
             Widgets.BeginScrollView(canvas, ref scrollPosition, source, true);
@@ -39,26 +39,57 @@ namespace Hotkeys
             lMain.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
             lMain.GapLine();
 
+            if (settings.useArchitectHotkeys)
+            {
+                lMain.CheckboxLabeled("Use alternate keybinding as modifier", ref settings.useArchitectModifier);
+                lMain.GapLine();
+            }
+
+            lMain.Gap();
+            lMain.Gap();
+            lMain.Gap();
             lMain.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
             lMain.GapLine();
-            lMain.End();
 
             if (settings.useDirectHotkeys)
             {
-                var grid = new GridLayout(new Rect(source.xMin, source.yMin + lMain.CurHeight, source.width, source.height - lMain.CurHeight), 4, 1, 0, 0);
+                lMain.CheckboxLabeled("Use alternate keybinding as modifier", ref settings.useDirectModifier);
+                lMain.Gap();
+                lMain.End();
+
+                var grid = new GridLayout(new Rect(source.xMin, source.yMin + lMain.CurHeight, source.width, source.height - lMain.CurHeight), 5, 1, 0, 0);
 
                 CategoryFloatMenus(grid);
                 DesignatorFloatMenus(grid);
+                ShiftModifiers(grid);
                 RemoveButtons(grid);
+            }
+            else
+            {
+                lMain.End();
             }
 
             Widgets.EndScrollView();
             settings.Write();
         }
 
-        private void RemoveButtons(GridLayout grid)
+        private void ShiftModifiers(GridLayout grid)
         {
             var rect = grid.GetCellRect(3, 0, 1);
+            var listing = new Listing_Standard();
+            listing.Begin(rect);
+
+            for (int i = 0; i < settings.requireShiftModifier.Count; i++)
+            {
+                //listing.CheckboxLabeled("Require Shift", ref settings.requireShiftModifier[i]);
+            }
+
+            listing.End();
+        }
+
+        private void RemoveButtons(GridLayout grid)
+        {
+            var rect = grid.GetCellRect(4, 0, 1);
             var listing = new Listing_Standard();
             var rect2 = new Rect(rect.xMax - 30f, rect.yMin, 30f, rect.height);
             listing.Begin(rect2);

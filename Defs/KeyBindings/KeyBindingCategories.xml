@@ -5,13 +5,13 @@
 		<defName>ArchitectHotkeys</defName>
 		<label>Architect Hotkeys</label>
 		<description>Controls for the submenu of the Architect tab.</description>
-		<isGameUniversal>true</isGameUniversal>
+		<isGameUniversal>false</isGameUniversal>
 	</KeyBindingCategoryDef>
 	
 	<KeyBindingCategoryDef>
 		<defName>DirectHotkeys</defName>
 		<label>Direct Hotkeys</label>
 		<description>Controls for direct designations. Configurable in Hotkeys mod menu.</description>
-		<isGameUniversal>true</isGameUniversal>
+		<isGameUniversal>false</isGameUniversal>
 	</KeyBindingCategoryDef>
 </Defs>

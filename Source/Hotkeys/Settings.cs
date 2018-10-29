@@ -14,23 +14,33 @@ namespace Hotkeys
     {
         public bool useArchitectHotkeys;
         public bool useDirectHotkeys;
+        public bool useArchitectModifier;
+        public bool useDirectModifier;
 
         public List<string> desCategoryLabelCaps;
         public List<string> desLabelCaps;
+        public List<bool> requireShiftModifier;
 
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look(ref useArchitectHotkeys, "Enable_Architect_Hotkeys");
             Scribe_Values.Look(ref useDirectHotkeys, "Enable_Direct_Hotkeys");
+            Scribe_Values.Look(ref useArchitectModifier, "Use_Achitect_Modifier");
+            Scribe_Values.Look(ref useDirectHotkeys, "Use_Direct_Modifier");
+
 
             Scribe_Collections.Look(ref desCategoryLabelCaps, "Designation_Categories");
             Scribe_Collections.Look(ref desLabelCaps, "Designators");
+            Scribe_Collections.Look(ref requireShiftModifier, "Is_Shift_Required");
 
             // If lists don't exist create them
             if (desCategoryLabelCaps == null) { desCategoryLabelCaps = new List<string>(); }
             if (desLabelCaps == null) { desLabelCaps = new List<string>(); }
+            if (requireShiftModifier == null) { requireShiftModifier = new List<bool>(); }
         }
+
+
 
         public DesignationCategoryDef GetDesCategory(int index)
         {
