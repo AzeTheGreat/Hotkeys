@@ -34,12 +34,16 @@ namespace Hotkeys
         }
     }
 
+
+
     [HarmonyPatch(typeof(Dialog_DefineBinding))]
     [HarmonyPatch("DoWindowContents")]
     public class KeyBindingWindowPatch
     {
         static bool Prefix(Rect inRect, ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance)
         {
+            if (HotkeysGlobal.keysPressed == null) { HotkeysGlobal.keysPressed = new ExposableList<KeyCode>(); }
+
             Text.Anchor = TextAnchor.MiddleCenter;
             Widgets.Label(inRect, "PressAnyKeyOrEsc".Translate());
             Text.Anchor = TextAnchor.UpperLeft;
@@ -49,17 +53,27 @@ namespace Hotkeys
                 if (Event.current.type == EventType.KeyUp)
                 {
                     ___keyPrefsData.SetBinding(___keyDef, ___slot, Event.current.keyCode);
+
+                    var settings = LoadedModManager.GetMod<HotkeysLate>().GetSettings<HotkeySettingsLate>();
+                    settings.ExposeData();
+
+                    settings.keyBindMods[___keyDef] = HotkeysGlobal.keysPressed;
+
+                    settings.Write();
+
+                    HotkeysGlobal.keysPressed.Clear();
                     __instance.Close(true);
                     Event.current.Use();
                 }
 
                 if (Event.current.type == EventType.KeyDown)
                 {
-                    //List<KeyCode> pressedKeys = pressedKeys.Add();
+                    HotkeysGlobal.keysPressed.Add(Event.current.keyCode);
                 }
                 
                 if( Event.current.keyCode == KeyCode.Escape)
                 {
+                    HotkeysGlobal.keysPressed.Clear();
                     __instance.Close(true);
                     Event.current.Use();
                 }
@@ -67,6 +81,8 @@ namespace Hotkeys
 
             return false;
         }
+
+
     }
 }
 
