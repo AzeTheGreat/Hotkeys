@@ -54,11 +54,10 @@ namespace Hotkeys
                 {
                     ___keyPrefsData.SetBinding(___keyDef, ___slot, Event.current.keyCode);
 
-                    var settings = LoadedModManager.GetMod<HotkeysLate>().GetSettings<HotkeySettingsLate>();
-                    settings.ExposeData();
+                    HotkeysGlobal.keysPressed.Remove(Event.current.keyCode);
 
+                    var settings = HotkeysLate.settings;
                     settings.keyBindMods[___keyDef] = HotkeysGlobal.keysPressed;
-
                     settings.Write();
 
                     HotkeysGlobal.keysPressed.Clear();

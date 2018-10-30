@@ -33,12 +33,9 @@ namespace Hotkeys
             Scribe_Collections.Look(ref desLabelCaps, "Designators");
             Scribe_Collections.Look(ref requireShiftModifier, "Is_Shift_Required");
 
-
-            // If lists don't exist create them
             if (desCategoryLabelCaps == null) { desCategoryLabelCaps = new List<string>(); }
             if (desLabelCaps == null) { desLabelCaps = new List<string>(); }
             if (requireShiftModifier == null) { requireShiftModifier = new List<bool>(); }
-
         }
 
 
@@ -92,14 +89,14 @@ namespace Hotkeys
     }
 
     // Needed for second settings
+    [StaticConstructorOnStartup]
     public class HotkeysLate : Mod
     {
-        private HotkeySettingsLate settings;
+        public static HotkeySettingsLate settings;
 
-        public HotkeysLate(ModContentPack content) : base(content)
-        {
-            settings = GetSettings<HotkeySettingsLate>();
-        }
+        public HotkeysLate(ModContentPack content) : base(content) { }
+        
+        static HotkeysLate() { LongEventHandler.QueueLongEvent(() => settings = LoadedModManager.GetMod<HotkeysLate>().GetSettings<HotkeySettingsLate>(), null, true, null); }
     }
 
     // Needed to avoid trying to call defs before generation
@@ -109,7 +106,6 @@ namespace Hotkeys
 
         public override void ExposeData()
         {
-            base.ExposeData();
             Scribe_Collections.Look(ref keyBindMods, "List_of_Keybind_Modifiers");
 
             if (keyBindMods == null) { keyBindMods = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>();}
