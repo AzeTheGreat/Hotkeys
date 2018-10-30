@@ -94,9 +94,7 @@ namespace Hotkeys
     {
         public static HotkeySettingsLate settings;
 
-        public HotkeysLate(ModContentPack content) : base(content) { }
-        
-        static HotkeysLate() { LongEventHandler.QueueLongEvent(() => settings = LoadedModManager.GetMod<HotkeysLate>().GetSettings<HotkeySettingsLate>(), null, true, null); }
+        public HotkeysLate(ModContentPack content) : base(content) { LongEventHandler.QueueLongEvent(() => settings = GetSettings<HotkeySettingsLate>(), null, true, null); }
     }
 
     // Needed to avoid trying to call defs before generation
@@ -108,7 +106,7 @@ namespace Hotkeys
         {
             Scribe_Collections.Look(ref keyBindMods, "List_of_Keybind_Modifiers");
 
-            if (keyBindMods == null) { keyBindMods = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>();}
+            if (keyBindMods == null) { keyBindMods = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>(); }
         }
     }
 }
