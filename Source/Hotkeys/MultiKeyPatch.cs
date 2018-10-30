@@ -16,8 +16,10 @@ namespace Hotkeys
         static bool Postfix(bool __result, KeyBindingDef __instance)
         {
             KeyBindingData keyBindingData;
-            __result = KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData) && (Input.GetKeyDown(keyBindingData.keyBindingA) && Input.GetKeyDown(keyBindingData.keyBindingB));
-            return __result;
+            __result = KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData) && (Input.GetKeyDown(keyBindingData.keyBindingA) || Input.GetKeyDown(keyBindingData.keyBindingB));
+
+            bool flag = HotkeysGlobal.AllModifierKeysDown(__instance);
+            return __result && flag;
         }
     }
 
@@ -29,8 +31,10 @@ namespace Hotkeys
         static bool Postfix(bool __result, KeyBindingDef __instance)
         {
             KeyBindingData keyBindingData;
-            __result = KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData) && (Input.GetKey(keyBindingData.keyBindingA) && Input.GetKey(keyBindingData.keyBindingB));
-            return __result;
+            __result = KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData) && (Input.GetKey(keyBindingData.keyBindingA) || Input.GetKey(keyBindingData.keyBindingB));
+
+            bool flag = HotkeysGlobal.AllModifierKeysDown(__instance);
+            return (__result && flag);
         }
     }
 
@@ -154,9 +158,10 @@ namespace Hotkeys
             {
                 foreach (var keyCode in modifierKeyCodes)
                 {
-                    mainKey = mainKey + " + " + keyCode.ToStringReadable();
+                    mainKey = keyCode.ToStringReadable() + " + " + mainKey;
                 }
             }
+
             return mainKey;
         }
     }
