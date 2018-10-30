@@ -135,10 +135,12 @@ namespace Hotkeys
                 {
                     KeyCode keyCode = (slot != KeyPrefs.BindingSlot.A) ? keyDef.defaultKeyCodeB : keyDef.defaultKeyCodeA;
                     keyPrefsData.SetBinding(keyDef, slot, keyCode);
+                    HotkeysLate.settings.keyBindMods[keyDef] = new ExposableList<KeyCode>();
                 }, MenuOptionPriority.Default, null, null, 0f, null, null));
                 list.Add(new FloatMenuOption("ClearBinding".Translate(), delegate ()
                 {
                     keyPrefsData.SetBinding(keyDef, slot, KeyCode.None);
+                    HotkeysLate.settings.keyBindMods[keyDef] = new ExposableList<KeyCode>();
                 }, MenuOptionPriority.Default, null, null, 0f, null, null));
                 Find.WindowStack.Add(new FloatMenu(list));
             }
