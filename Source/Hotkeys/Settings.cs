@@ -14,6 +14,7 @@ namespace Hotkeys
     {
         public bool useArchitectHotkeys;
         public bool useDirectHotkeys;
+        public bool useMultiKeys;
 
         public List<string> desCategoryLabelCaps;
         public List<string> desLabelCaps;
@@ -22,6 +23,7 @@ namespace Hotkeys
         {
             useArchitectHotkeys = false;
             useDirectHotkeys = false;
+            useMultiKeys = false;
 
             desCategoryLabelCaps = new List<string>();
             desLabelCaps = new List<string>();
@@ -32,6 +34,7 @@ namespace Hotkeys
             base.ExposeData();
             Scribe_Values.Look(ref useArchitectHotkeys, "Enable_Architect_Hotkeys");
             Scribe_Values.Look(ref useDirectHotkeys, "Enable_Direct_Hotkeys");
+            Scribe_Values.Look(ref useMultiKeys, "Enable_Multi_Keybindings");
 
             Scribe_Collections.Look(ref desCategoryLabelCaps, "Designation_Categories");
             Scribe_Collections.Look(ref desLabelCaps, "Designators");

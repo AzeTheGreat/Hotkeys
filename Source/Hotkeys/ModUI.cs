@@ -36,15 +36,13 @@ namespace Hotkeys
             lMain.ColumnWidth = source.width;
             lMain.Begin(source);
 
+            lMain.GapLine();
+            lMain.CheckboxLabeled("Multi Keybindings", ref settings.useMultiKeys, "Check to enable binding multiple keystrokes to each keybinding");
             lMain.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
             lMain.GapLine();
+            lMain.Label("The game MUST be restarted to add or remove keybinding options.  Set keybinds in the standard menu.");
 
-            if (settings.useArchitectHotkeys)
-            {
-                lMain.GapLine();
-            }
 
-            lMain.Gap();
             lMain.Gap();
             lMain.Gap();
             lMain.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
@@ -134,12 +132,6 @@ namespace Hotkeys
                     Find.WindowStack.Add(window);
                 }
             }
-
-            listing.Gap();
-
-            listing.Label("Game must be restarted for new keybindings to be available.");
-            listing.Gap();
-            listing.GapLine();
 
             listing.End();
         }
