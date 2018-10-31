@@ -106,13 +106,13 @@ namespace Hotkeys
     // Needed to avoid trying to call defs before generation
     public class HotkeySettingsLate : ModSettings
     {
-        public Dictionary<KeyBindingDef, ExposableList<KeyCode>> keyBindModsA;
-        public Dictionary<KeyBindingDef, ExposableList<KeyCode>> keyBindModsB;
+        public Dictionary<string, ExposableList<KeyCode>> keyBindModsA;
+        public Dictionary<string, ExposableList<KeyCode>> keyBindModsB;
 
         public HotkeySettingsLate()
         {
-            keyBindModsA = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>();
-            keyBindModsB = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>();
+            keyBindModsA = new Dictionary<string, ExposableList<KeyCode>>();
+            keyBindModsB = new Dictionary<string, ExposableList<KeyCode>>();
         }
 
         public override void ExposeData()

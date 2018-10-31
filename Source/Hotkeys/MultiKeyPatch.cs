@@ -71,8 +71,8 @@ namespace Hotkeys
                     keysPressed.Remove(Event.current.keyCode);
 
                     var settings = HotkeysLate.settings;
-                    if (___slot == KeyPrefs.BindingSlot.A) { settings.keyBindModsA[___keyDef] = new ExposableList<KeyCode>(keysPressed); }
-                    if (___slot == KeyPrefs.BindingSlot.B) { settings.keyBindModsB[___keyDef] = new ExposableList<KeyCode>(keysPressed); }
+                    if (___slot == KeyPrefs.BindingSlot.A) { settings.keyBindModsA[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
+                    if (___slot == KeyPrefs.BindingSlot.B) { settings.keyBindModsB[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
                     settings.Write();
 
                     ___keyPrefsData.EraseConflictingBindingsForKeyCode(___keyDef, Event.current.keyCode, delegate (KeyBindingDef oldDef)
@@ -133,8 +133,8 @@ namespace Hotkeys
 
             if (prefData.keyBindingA == assignedCode)
             {
-                if (settings.keyBindModsA.TryGetValue(assignedKeyDef, out ExposableList<KeyCode> assignedCodes) &&
-                    settings.keyBindModsA.TryGetValue(existingKeyDef, out ExposableList<KeyCode> existingCodes))   
+                if (settings.keyBindModsA.TryGetValue(assignedKeyDef.defName, out ExposableList<KeyCode> assignedCodes) &&
+                    settings.keyBindModsA.TryGetValue(existingKeyDef.defName, out ExposableList<KeyCode> existingCodes))   
                 {
                     return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
                 }
@@ -142,8 +142,8 @@ namespace Hotkeys
             }
             if (prefData.keyBindingB == assignedCode)
             {
-                if (settings.keyBindModsB.TryGetValue(assignedKeyDef, out ExposableList<KeyCode> assignedCodes) &&
-                    settings.keyBindModsB.TryGetValue(existingKeyDef, out ExposableList<KeyCode> existingCodes))
+                if (settings.keyBindModsB.TryGetValue(assignedKeyDef.defName, out ExposableList<KeyCode> assignedCodes) &&
+                    settings.keyBindModsB.TryGetValue(existingKeyDef.defName, out ExposableList<KeyCode> existingCodes))
                 {
                     return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
                 }
@@ -232,12 +232,12 @@ namespace Hotkeys
             var settings = HotkeysLate.settings;
             if (slot == KeyPrefs.BindingSlot.A)
             {
-                settings.keyBindModsA[keyDef] = new ExposableList<KeyCode>();
+                settings.keyBindModsA[keyDef.defName] = new ExposableList<KeyCode>();
                 settings.Write();
             }
             if (slot == KeyPrefs.BindingSlot.B)
             {
-                settings.keyBindModsB[keyDef] = new ExposableList<KeyCode>();
+                settings.keyBindModsB[keyDef.defName] = new ExposableList<KeyCode>();
                 settings.Write();
             }
         }
@@ -251,11 +251,11 @@ namespace Hotkeys
 
             if (slot == KeyPrefs.BindingSlot.A)
             {
-                keyPresent = settings.keyBindModsA.TryGetValue(keyDef, out modifierKeyCodes);
+                keyPresent = settings.keyBindModsA.TryGetValue(keyDef.defName, out modifierKeyCodes);
             }
             if (slot == KeyPrefs.BindingSlot.B)
             {
-                keyPresent = settings.keyBindModsB.TryGetValue(keyDef, out modifierKeyCodes);
+                keyPresent = settings.keyBindModsB.TryGetValue(keyDef.defName, out modifierKeyCodes);
             }
 
             if (keyPresent)

@@ -23,7 +23,7 @@ namespace Hotkeys
             bool allDownA = true;
             bool allDownB = true;
 
-            if (HotkeysLate.settings.keyBindModsA.TryGetValue(keyDef, out keyCodes))
+            if (HotkeysLate.settings.keyBindModsA.TryGetValue(keyDef.defName, out keyCodes))
             {
                 foreach (var keyCode in keyCodes)
                 {
@@ -34,7 +34,7 @@ namespace Hotkeys
                 }
             }
 
-            if (HotkeysLate.settings.keyBindModsB.TryGetValue(keyDef, out keyCodes))
+            if (HotkeysLate.settings.keyBindModsB.TryGetValue(keyDef.defName, out keyCodes))
             {
                 foreach (var keyCode in keyCodes)
                 {
