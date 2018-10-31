@@ -13,13 +13,18 @@ namespace Hotkeys
     [HarmonyPatch(MethodType.Getter)]
     public class MultiKeyPatchJustPressed
     {
-        static bool Postfix(bool __result, KeyBindingDef __instance)
+        // Kinda dirty maybe make separate harmony to patch later?
+        static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            KeyBindingData keyBindingData;
-            __result = KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData) && (Input.GetKeyDown(keyBindingData.keyBindingA) || Input.GetKeyDown(keyBindingData.keyBindingB));
+            if (!__result || !HotkeysLate.isInit) { return; }
 
-            bool flag = HotkeysGlobal.AllModifierKeysDown(__instance);
-            return __result && flag;
+            KeyBindingData keyBindingData;
+            if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
+            {
+                bool resultA = Input.GetKeyDown(keyBindingData.keyBindingA);
+                bool resultB = Input.GetKeyDown(keyBindingData.keyBindingB);
+                __result = HotkeysGlobal.AllModifierKeysDown(__instance, resultA, resultB);
+            }
         }
     }
 
@@ -28,13 +33,17 @@ namespace Hotkeys
     [HarmonyPatch(MethodType.Getter)]
     public class MultiKeyPatchIsDown
     {
-        static bool Postfix(bool __result, KeyBindingDef __instance)
+        static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            KeyBindingData keyBindingData;
-            __result = KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData) && (Input.GetKey(keyBindingData.keyBindingA) || Input.GetKey(keyBindingData.keyBindingB));
+            if (!__result || !HotkeysLate.isInit) { return; }
 
-            bool flag = HotkeysGlobal.AllModifierKeysDown(__instance);
-            return (__result && flag);
+            KeyBindingData keyBindingData;
+            if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
+            {
+                bool resultA = Input.GetKey(keyBindingData.keyBindingA);
+                bool resultB = Input.GetKey(keyBindingData.keyBindingB);
+                __result = HotkeysGlobal.AllModifierKeysDown(__instance, resultA, resultB);
+            }
         }
     }
 
@@ -115,18 +124,26 @@ namespace Hotkeys
 
         private static bool CheckAllKeys(KeyBindingDef assignedKeyDef, KeyBindingDef existingKeyDef, KeyBindingData prefData, KeyCode assignedCode)
         {
+            var settings = HotkeysLate.settings;
+            if (settings == null) { settings = LoadedModManager.GetMod<HotkeysLate>().GetSettings<HotkeySettingsLate>(); }
+
             if (prefData.keyBindingA == assignedCode)
             {
-                Log.Message("P1");
-                HotkeysLate.settings.keyBindModsA.TryGetValue(assignedKeyDef, out ExposableList<KeyCode> assignedCodes);
-                HotkeysLate.settings.keyBindModsA.TryGetValue(existingKeyDef, out ExposableList<KeyCode> existingCodes);
-                return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));  
+                if (settings.keyBindModsA.TryGetValue(assignedKeyDef, out ExposableList<KeyCode> assignedCodes) &&
+                    settings.keyBindModsA.TryGetValue(existingKeyDef, out ExposableList<KeyCode> existingCodes))   
+                {
+                    return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
+                }
+                return false;
             }
             if (prefData.keyBindingB == assignedCode)
             {
-                HotkeysLate.settings.keyBindModsB.TryGetValue(assignedKeyDef, out ExposableList<KeyCode> assignedCodes);
-                HotkeysLate.settings.keyBindModsB.TryGetValue(existingKeyDef, out ExposableList<KeyCode> existingCodes);
-                return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
+                if (settings.keyBindModsB.TryGetValue(assignedKeyDef, out ExposableList<KeyCode> assignedCodes) &&
+                    settings.keyBindModsB.TryGetValue(existingKeyDef, out ExposableList<KeyCode> existingCodes))
+                {
+                    return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
+                }
+                return false;
             }
             else
             {
@@ -206,13 +223,16 @@ namespace Hotkeys
 
         private static void ResetModifierList(KeyPrefs.BindingSlot slot, KeyBindingDef keyDef)
         {
+            var settings = HotkeysLate.settings;
             if (slot == KeyPrefs.BindingSlot.A)
             {
-                HotkeysLate.settings.keyBindModsA[keyDef] = new ExposableList<KeyCode>();
+                settings.keyBindModsA[keyDef] = new ExposableList<KeyCode>();
+                settings.Write();
             }
             if (slot == KeyPrefs.BindingSlot.B)
             {
-                HotkeysLate.settings.keyBindModsB[keyDef] = new ExposableList<KeyCode>();
+                settings.keyBindModsB[keyDef] = new ExposableList<KeyCode>();
+                settings.Write();
             }
         }
 
@@ -221,14 +241,15 @@ namespace Hotkeys
             string mainKey = keyPrefsData.GetBoundKeyCode(keyDef, slot).ToStringReadable();
             bool keyPresent = false;
             ExposableList<KeyCode> modifierKeyCodes = new ExposableList<KeyCode>();
+            var settings = HotkeysLate.settings;
 
             if (slot == KeyPrefs.BindingSlot.A)
             {
-                keyPresent = HotkeysLate.settings.keyBindModsA.TryGetValue(keyDef, out modifierKeyCodes);
+                keyPresent = settings.keyBindModsA.TryGetValue(keyDef, out modifierKeyCodes);
             }
             if (slot == KeyPrefs.BindingSlot.B)
             {
-                keyPresent = HotkeysLate.settings.keyBindModsB.TryGetValue(keyDef, out modifierKeyCodes);
+                keyPresent = settings.keyBindModsB.TryGetValue(keyDef, out modifierKeyCodes);
             }
 
             if (keyPresent)

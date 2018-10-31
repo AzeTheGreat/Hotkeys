@@ -14,8 +14,11 @@ namespace Hotkeys
     {
         public static ExposableList<KeyCode> keysPressed;
 
-        public static bool AllModifierKeysDown(KeyBindingDef keyDef)
+
+
+        public static bool AllModifierKeysDown(KeyBindingDef keyDef, bool resultA, bool resultB)
         {
+
             ExposableList<KeyCode> keyCodes = new ExposableList<KeyCode>();
             bool allDownA = true;
             bool allDownB = true;
@@ -42,7 +45,7 @@ namespace Hotkeys
                 }
             }
 
-            return allDownA || allDownB;
+            return (allDownA && resultA) || (allDownB && resultB);
         }
     } 
 }

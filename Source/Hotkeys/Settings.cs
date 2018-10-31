@@ -89,12 +89,17 @@ namespace Hotkeys
     }
 
     // Needed for second settings
-    [StaticConstructorOnStartup]
     public class HotkeysLate : Mod
     {
         public static HotkeySettingsLate settings;
+        public static bool isInit = false;
 
-        public HotkeysLate(ModContentPack content) : base(content) { LongEventHandler.QueueLongEvent(() => settings = GetSettings<HotkeySettingsLate>(), null, true, null); }
+        public HotkeysLate(ModContentPack content) : base(content)
+        {
+            Log.Message("HotkeysLate Constructor");
+            isInit = true;
+            LongEventHandler.QueueLongEvent(() => settings = GetSettings<HotkeySettingsLate>(), null, true, null);
+        }
     }
 
     // Needed to avoid trying to call defs before generation
@@ -103,13 +108,17 @@ namespace Hotkeys
         public Dictionary<KeyBindingDef, ExposableList<KeyCode>> keyBindModsA;
         public Dictionary<KeyBindingDef, ExposableList<KeyCode>> keyBindModsB;
 
+        public HotkeySettingsLate()
+        {
+            keyBindModsA = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>();
+            keyBindModsB = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>();
+        }
+
         public override void ExposeData()
         {
+            Log.Message("ExposeData");
             Scribe_Collections.Look(ref keyBindModsA, "List_of_Keybind_Modifiers_A");
             Scribe_Collections.Look(ref keyBindModsB, "List_of_Keybind_Modifiers_B");
-
-            if (keyBindModsA == null) { keyBindModsA = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>(); }
-            if (keyBindModsB == null) { keyBindModsB = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>(); }
         }
     }
 }
