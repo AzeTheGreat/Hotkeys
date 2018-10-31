@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>Hotkeys</name>
+	<name>HotkeysDev</name>
 	<author>Aze</author>
 	<targetVersion>1.0.1982</targetVersion>
-	<description>This mod adds keybindings to the Architect subtabs, and optional keybindings to directly access any designator.</description>
+	<description>This mod adds keybindings to the Architect subtabs, direct hotkeys to access any designator, and the ability to create multi-keybindings.</description>
 	<url></url>
 </ModMetaData>

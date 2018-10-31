@@ -41,7 +41,6 @@ namespace Hotkeys
 
             if (settings.useArchitectHotkeys)
             {
-                lMain.CheckboxLabeled("Use alternate keybinding as modifier", ref settings.useArchitectModifier);
                 lMain.GapLine();
             }
 
@@ -53,7 +52,6 @@ namespace Hotkeys
 
             if (settings.useDirectHotkeys)
             {
-                lMain.CheckboxLabeled("Use alternate keybinding as modifier", ref settings.useDirectModifier);
                 lMain.Gap();
                 lMain.End();
 
@@ -61,7 +59,6 @@ namespace Hotkeys
 
                 CategoryFloatMenus(grid);
                 DesignatorFloatMenus(grid);
-                ShiftModifiers(grid);
                 RemoveButtons(grid);
             }
             else
@@ -73,19 +70,6 @@ namespace Hotkeys
             settings.Write();
         }
 
-        private void ShiftModifiers(GridLayout grid)
-        {
-            var rect = grid.GetCellRect(3, 0, 1);
-            var listing = new Listing_Standard();
-            listing.Begin(rect);
-
-            for (int i = 0; i < settings.requireShiftModifier.Count; i++)
-            {
-                //listing.CheckboxLabeled("Require Shift", ref settings.requireShiftModifier[i]);
-            }
-
-            listing.End();
-        }
 
         private void RemoveButtons(GridLayout grid)
         {

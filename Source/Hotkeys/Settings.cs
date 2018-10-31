@@ -14,28 +14,27 @@ namespace Hotkeys
     {
         public bool useArchitectHotkeys;
         public bool useDirectHotkeys;
-        public bool useArchitectModifier;
-        public bool useDirectModifier;
 
         public List<string> desCategoryLabelCaps;
         public List<string> desLabelCaps;
-        public List<bool> requireShiftModifier;
+
+        public HotkeySettings()
+        {
+            useArchitectHotkeys = false;
+            useDirectHotkeys = false;
+
+            desCategoryLabelCaps = new List<string>();
+            desLabelCaps = new List<string>();
+        }
 
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look(ref useArchitectHotkeys, "Enable_Architect_Hotkeys");
             Scribe_Values.Look(ref useDirectHotkeys, "Enable_Direct_Hotkeys");
-            Scribe_Values.Look(ref useArchitectModifier, "Use_Achitect_Modifier");
-            Scribe_Values.Look(ref useDirectHotkeys, "Use_Direct_Modifier");
 
             Scribe_Collections.Look(ref desCategoryLabelCaps, "Designation_Categories");
             Scribe_Collections.Look(ref desLabelCaps, "Designators");
-            Scribe_Collections.Look(ref requireShiftModifier, "Is_Shift_Required");
-
-            if (desCategoryLabelCaps == null) { desCategoryLabelCaps = new List<string>(); }
-            if (desLabelCaps == null) { desLabelCaps = new List<string>(); }
-            if (requireShiftModifier == null) { requireShiftModifier = new List<bool>(); }
         }
 
 
@@ -96,7 +95,6 @@ namespace Hotkeys
 
         public HotkeysLate(ModContentPack content) : base(content)
         {
-            Log.Message("HotkeysLate Constructor");
             isInit = true;
             LongEventHandler.QueueLongEvent(() => settings = GetSettings<HotkeySettingsLate>(), null, true, null);
         }
@@ -116,7 +114,6 @@ namespace Hotkeys
 
         public override void ExposeData()
         {
-            Log.Message("ExposeData");
             Scribe_Collections.Look(ref keyBindModsA, "List_of_Keybind_Modifiers_A");
             Scribe_Collections.Look(ref keyBindModsB, "List_of_Keybind_Modifiers_B");
         }
