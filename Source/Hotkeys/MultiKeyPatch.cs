@@ -60,8 +60,14 @@ namespace Hotkeys
                     keysPressed.Remove(Event.current.keyCode);
 
                     var settings = HotkeysLate.settings;
-                    settings.keyBindMods[___keyDef] = new ExposableList<KeyCode>(keysPressed);
+                    if (___slot == KeyPrefs.BindingSlot.A) { settings.keyBindModsA[___keyDef] = new ExposableList<KeyCode>(keysPressed); }
+                    if (___slot == KeyPrefs.BindingSlot.B) { settings.keyBindModsB[___keyDef] = new ExposableList<KeyCode>(keysPressed); }
                     settings.Write();
+
+                    ___keyPrefsData.EraseConflictingBindingsForKeyCode(___keyDef, Event.current.keyCode, delegate (KeyBindingDef oldDef)
+                    {
+                        Messages.Message("KeyBindingOverwritten".Translate(oldDef.LabelCap), MessageTypeDefOf.TaskCompletion, false);
+                    });
 
                     __instance.Close(true);
                     Event.current.Use();
@@ -69,13 +75,10 @@ namespace Hotkeys
 
                 if (Event.current.type == EventType.KeyDown)
                 {
-                    if (!keysPressed.Contains(Event.current.keyCode))
-                    {
-                        keysPressed.Add(Event.current.keyCode);
-                    }
+                    if (!keysPressed.Contains(Event.current.keyCode)) { keysPressed.Add(Event.current.keyCode); }
                 }
-                
-                if( Event.current.keyCode == KeyCode.Escape)
+
+                if (Event.current.keyCode == KeyCode.Escape)
                 {
                     __instance.Close(true);
                     Event.current.Use();
@@ -84,6 +87,55 @@ namespace Hotkeys
             return false;
         }
     }
+
+    [HarmonyPatch(typeof(KeyPrefsData))]
+    [HarmonyPatch("ConflictingBindings")]
+    public class BindingConflictPatch
+    {
+        static bool Prefix(KeyBindingDef keyDef, KeyCode code, KeyPrefsData __instance, ref IEnumerable<KeyBindingDef> __result)
+        {
+            List<KeyBindingDef> allKeyDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading;
+            List<KeyBindingDef> conflictingDefs = new List<KeyBindingDef>();
+
+            foreach (var def in allKeyDefs)
+            {
+                KeyBindingData prefData;
+                if (def != keyDef
+                    && ((def.category == keyDef.category && def.category.selfConflicting) || keyDef.category.checkForConflicts.Contains(def.category)
+                    || (keyDef.extraConflictTags != null && def.extraConflictTags != null && keyDef.extraConflictTags.Any((string tag) => def.extraConflictTags.Contains(tag))))
+                    && __instance.keyPrefs.TryGetValue(def, out prefData) && (CheckAllKeys(keyDef, def, prefData, code)))
+                {
+                    conflictingDefs.Add(def);
+                }
+            }
+            __result = conflictingDefs;
+
+            return false;
+        }
+
+        private static bool CheckAllKeys(KeyBindingDef assignedKeyDef, KeyBindingDef existingKeyDef, KeyBindingData prefData, KeyCode assignedCode)
+        {
+            if (prefData.keyBindingA == assignedCode)
+            {
+                Log.Message("P1");
+                HotkeysLate.settings.keyBindModsA.TryGetValue(assignedKeyDef, out ExposableList<KeyCode> assignedCodes);
+                HotkeysLate.settings.keyBindModsA.TryGetValue(existingKeyDef, out ExposableList<KeyCode> existingCodes);
+                return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));  
+            }
+            if (prefData.keyBindingB == assignedCode)
+            {
+                HotkeysLate.settings.keyBindModsB.TryGetValue(assignedKeyDef, out ExposableList<KeyCode> assignedCodes);
+                HotkeysLate.settings.keyBindModsB.TryGetValue(existingKeyDef, out ExposableList<KeyCode> existingCodes);
+                return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+
 
     [HarmonyPatch(typeof(Dialog_KeyBindings))]
     [HarmonyPatch("DrawKeyEntry")]
@@ -103,7 +155,7 @@ namespace Hotkeys
                 Rect rect3 = new Rect(rect.x + rect.width - vector.x, rect.y, vector.x, vector.y);
                 TooltipHandler.TipRegion(rect2, new TipSignal("BindingButtonToolTip".Translate()));
                 TooltipHandler.TipRegion(rect3, new TipSignal("BindingButtonToolTip".Translate()));
-                
+
                 string label1 = GetLabelForKeyDef(___keyPrefsData, keyDef, KeyPrefs.BindingSlot.A);
                 string label2 = GetLabelForKeyDef(___keyPrefsData, keyDef, KeyPrefs.BindingSlot.B);
 
@@ -121,7 +173,7 @@ namespace Hotkeys
             return false;
         }
 
-        
+
 
         private static void SettingButtonClicked(KeyBindingDef keyDef, KeyPrefs.BindingSlot slot, KeyPrefsData keyPrefsData)
         {
@@ -139,22 +191,47 @@ namespace Hotkeys
                 {
                     KeyCode keyCode = (slot != KeyPrefs.BindingSlot.A) ? keyDef.defaultKeyCodeB : keyDef.defaultKeyCodeA;
                     keyPrefsData.SetBinding(keyDef, slot, keyCode);
-                    HotkeysLate.settings.keyBindMods[keyDef] = new ExposableList<KeyCode>();
+                    ResetModifierList(slot, keyDef);
+
                 }, MenuOptionPriority.Default, null, null, 0f, null, null));
                 list.Add(new FloatMenuOption("ClearBinding".Translate(), delegate ()
                 {
                     keyPrefsData.SetBinding(keyDef, slot, KeyCode.None);
-                    HotkeysLate.settings.keyBindMods[keyDef] = new ExposableList<KeyCode>();
+                    ResetModifierList(slot, keyDef);
+
                 }, MenuOptionPriority.Default, null, null, 0f, null, null));
                 Find.WindowStack.Add(new FloatMenu(list));
+            }
+        }
+
+        private static void ResetModifierList(KeyPrefs.BindingSlot slot, KeyBindingDef keyDef)
+        {
+            if (slot == KeyPrefs.BindingSlot.A)
+            {
+                HotkeysLate.settings.keyBindModsA[keyDef] = new ExposableList<KeyCode>();
+            }
+            if (slot == KeyPrefs.BindingSlot.B)
+            {
+                HotkeysLate.settings.keyBindModsB[keyDef] = new ExposableList<KeyCode>();
             }
         }
 
         private static string GetLabelForKeyDef(KeyPrefsData keyPrefsData, KeyBindingDef keyDef, KeyPrefs.BindingSlot slot)
         {
             string mainKey = keyPrefsData.GetBoundKeyCode(keyDef, slot).ToStringReadable();
+            bool keyPresent = false;
+            ExposableList<KeyCode> modifierKeyCodes = new ExposableList<KeyCode>();
 
-            if (HotkeysLate.settings.keyBindMods.TryGetValue(keyDef, out ExposableList<KeyCode> modifierKeyCodes))
+            if (slot == KeyPrefs.BindingSlot.A)
+            {
+                keyPresent = HotkeysLate.settings.keyBindModsA.TryGetValue(keyDef, out modifierKeyCodes);
+            }
+            if (slot == KeyPrefs.BindingSlot.B)
+            {
+                keyPresent = HotkeysLate.settings.keyBindModsB.TryGetValue(keyDef, out modifierKeyCodes);
+            }
+
+            if (keyPresent)
             {
                 foreach (var keyCode in modifierKeyCodes)
                 {

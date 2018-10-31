@@ -17,19 +17,32 @@ namespace Hotkeys
         public static bool AllModifierKeysDown(KeyBindingDef keyDef)
         {
             ExposableList<KeyCode> keyCodes = new ExposableList<KeyCode>();
-            bool allDown = true;
+            bool allDownA = true;
+            bool allDownB = true;
 
-            if (HotkeysLate.settings.keyBindMods.TryGetValue(keyDef, out keyCodes))
+            if (HotkeysLate.settings.keyBindModsA.TryGetValue(keyDef, out keyCodes))
             {
                 foreach (var keyCode in keyCodes)
                 {
                     if (!Input.GetKey(keyCode))
                     {
-                        allDown = false;
+                        allDownA = false;
                     }
                 }
             }
-            return allDown;
+
+            if (HotkeysLate.settings.keyBindModsB.TryGetValue(keyDef, out keyCodes))
+            {
+                foreach (var keyCode in keyCodes)
+                {
+                    if (!Input.GetKey(keyCode))
+                    {
+                        allDownB = false;
+                    }
+                }
+            }
+
+            return allDownA || allDownB;
         }
     } 
 }

@@ -100,13 +100,16 @@ namespace Hotkeys
     // Needed to avoid trying to call defs before generation
     public class HotkeySettingsLate : ModSettings
     {
-        public Dictionary<KeyBindingDef, ExposableList<KeyCode>> keyBindMods;
+        public Dictionary<KeyBindingDef, ExposableList<KeyCode>> keyBindModsA;
+        public Dictionary<KeyBindingDef, ExposableList<KeyCode>> keyBindModsB;
 
         public override void ExposeData()
         {
-            Scribe_Collections.Look(ref keyBindMods, "List_of_Keybind_Modifiers");
+            Scribe_Collections.Look(ref keyBindModsA, "List_of_Keybind_Modifiers_A");
+            Scribe_Collections.Look(ref keyBindModsB, "List_of_Keybind_Modifiers_B");
 
-            if (keyBindMods == null) { keyBindMods = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>(); }
+            if (keyBindModsA == null) { keyBindModsA = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>(); }
+            if (keyBindModsB == null) { keyBindModsB = new Dictionary<KeyBindingDef, ExposableList<KeyCode>>(); }
         }
     }
 }
