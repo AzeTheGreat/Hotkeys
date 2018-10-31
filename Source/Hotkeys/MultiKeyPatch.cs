@@ -16,7 +16,7 @@ namespace Hotkeys
         // Kinda dirty maybe make separate harmony to patch later?
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !HotkeysLate.isInit) { return; }
+            if (!__result || !HotkeysLate.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
@@ -35,7 +35,7 @@ namespace Hotkeys
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !HotkeysLate.isInit) { return; }
+            if (!__result || !HotkeysLate.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
@@ -55,6 +55,8 @@ namespace Hotkeys
     {
         static bool Prefix(Rect inRect, ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance)
         {
+            if (!Hotkeys.settings.useMultiKeys) { return true; }
+
             Text.Anchor = TextAnchor.MiddleCenter;
             Widgets.Label(inRect, "PressAnyKeyOrEsc".Translate());
             Text.Anchor = TextAnchor.UpperLeft;
@@ -103,6 +105,8 @@ namespace Hotkeys
     {
         static bool Prefix(KeyBindingDef keyDef, KeyCode code, KeyPrefsData __instance, ref IEnumerable<KeyBindingDef> __result)
         {
+            if (!Hotkeys.settings.useMultiKeys) { return true; }
+
             List<KeyBindingDef> allKeyDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading;
             List<KeyBindingDef> conflictingDefs = new List<KeyBindingDef>();
 
@@ -160,6 +164,8 @@ namespace Hotkeys
     {
         static bool Prefix(KeyBindingDef keyDef, Rect parentRect, ref float curY, bool skipDrawing, ref KeyPrefsData ___keyPrefsData)
         {
+            if (!Hotkeys.settings.useMultiKeys) { return true; }
+
             if (!skipDrawing)
             {
                 Rect rect = new Rect(parentRect.x, parentRect.y + curY, parentRect.width, 34f).ContractedBy(3f);

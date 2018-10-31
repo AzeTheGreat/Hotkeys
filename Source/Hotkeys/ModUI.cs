@@ -12,7 +12,7 @@ namespace Hotkeys
     public class Hotkeys : Mod
     {
         public override string SettingsCategory() => "Hotkeys";
-        private HotkeySettings settings;
+        public static HotkeySettings settings;
         private Vector2 scrollPosition;
 
         public Hotkeys(ModContentPack content) : base(content)
