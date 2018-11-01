@@ -53,6 +53,35 @@ namespace Hotkeys
     [HarmonyPatch("DoWindowContents")]
     public class KeyBindingWindowPatch
     {
+        private static bool AnyShiftPressed()
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift)) { return true; }
+            if (Input.GetKeyDown(KeyCode.RightShift)) { return true; }
+            if (Input.GetKeyUp(KeyCode.LeftShift)) { return true; }
+            if (Input.GetKeyUp(KeyCode.RightShift)) { return true; }
+
+            return false;
+        }
+
+        private static void BindOnKeyUp(KeyCode keyCode, ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance, ExposableList<KeyCode> keysPressed)
+        {
+            ___keyPrefsData.SetBinding(___keyDef, ___slot, keyCode);
+            keysPressed.Remove(keyCode);
+
+            var settings = HotkeysLate.settings;
+            if (___slot == KeyPrefs.BindingSlot.A) { settings.keyBindModsA[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
+            if (___slot == KeyPrefs.BindingSlot.B) { settings.keyBindModsB[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
+            settings.Write();
+
+            ___keyPrefsData.EraseConflictingBindingsForKeyCode(___keyDef, keyCode, delegate (KeyBindingDef oldDef)
+            {
+                Messages.Message("KeyBindingOverwritten".Translate(oldDef.LabelCap), MessageTypeDefOf.TaskCompletion, false);
+            });
+
+            __instance.Close(true);
+            //Event.current.Use();
+        }
+
         static bool Prefix(Rect inRect, ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance)
         {
             if (!Hotkeys.settings.useMultiKeys) { return true; }
@@ -61,32 +90,38 @@ namespace Hotkeys
             Widgets.Label(inRect, "PressAnyKeyOrEsc".Translate());
             Text.Anchor = TextAnchor.UpperLeft;
 
-            if (Event.current.isKey && Event.current.keyCode != KeyCode.None)
+            if ((Event.current.isKey && Event.current.keyCode != KeyCode.None) || (AnyShiftPressed()))
             {
-                var keysPressed = HotkeysGlobal.keysPressed;
+                ExposableList<KeyCode> keysPressed = HotkeysGlobal.keysPressed;
 
                 if (Event.current.type == EventType.KeyUp)
                 {
-                    ___keyPrefsData.SetBinding(___keyDef, ___slot, Event.current.keyCode);
-                    keysPressed.Remove(Event.current.keyCode);
-
-                    var settings = HotkeysLate.settings;
-                    if (___slot == KeyPrefs.BindingSlot.A) { settings.keyBindModsA[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
-                    if (___slot == KeyPrefs.BindingSlot.B) { settings.keyBindModsB[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
-                    settings.Write();
-
-                    ___keyPrefsData.EraseConflictingBindingsForKeyCode(___keyDef, Event.current.keyCode, delegate (KeyBindingDef oldDef)
-                    {
-                        Messages.Message("KeyBindingOverwritten".Translate(oldDef.LabelCap), MessageTypeDefOf.TaskCompletion, false);
-                    });
-
-                    __instance.Close(true);
-                    Event.current.Use();
+                    Log.Message("KeyUp---------");
+                    BindOnKeyUp(Event.current.keyCode, ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
+                }
+                if (Input.GetKeyUp(KeyCode.LeftShift))
+                {
+                    Log.Message("ShiftUp-----------");
+                    BindOnKeyUp(KeyCode.LeftShift, ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
+                }
+                if (Input.GetKeyUp(KeyCode.RightShift))
+                {
+                    BindOnKeyUp(KeyCode.RightShift, ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
 
                 if (Event.current.type == EventType.KeyDown)
                 {
+                    Log.Message("KeyDown");
                     if (!keysPressed.Contains(Event.current.keyCode)) { keysPressed.Add(Event.current.keyCode); }
+                }
+                if (Input.GetKeyDown(KeyCode.LeftShift))
+                {
+                    Log.Message("ShiftDown");
+                    if (!keysPressed.Contains(KeyCode.LeftShift)) { keysPressed.Add(KeyCode.LeftShift); }
+                }
+                if (Input.GetKeyDown(KeyCode.RightShift))
+                {
+                    if (!keysPressed.Contains(KeyCode.RightShift)) { keysPressed.Add(KeyCode.RightShift); }
                 }
 
                 if (Event.current.keyCode == KeyCode.Escape)
