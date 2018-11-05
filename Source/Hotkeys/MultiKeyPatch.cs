@@ -95,8 +95,6 @@ namespace Hotkeys
         {
             if (Input.GetKeyDown(KeyCode.LeftShift)) { return true; }
             if (Input.GetKeyDown(KeyCode.RightShift)) { return true; }
-            //if (Input.GetKey(KeyCode.LeftShift)) { return true; }
-            //if (Input.GetKey(KeyCode.RightShift)) { return true; }
             if (Input.GetKeyUp(KeyCode.LeftShift)) { return true; }
             if (Input.GetKeyUp(KeyCode.RightShift)) { return true; }
 
@@ -139,12 +137,12 @@ namespace Hotkeys
                 {
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
-                if (Input.GetKeyUp(KeyCode.LeftShift) && !HotkeysGlobal.lShiftWasUp)
+                if (Input.GetKeyUp(KeyCode.LeftShift) && !HotkeysGlobal.lShiftWasUp && keysPressed.Contains(KeyCode.LeftShift))
                 {
                     HotkeysGlobal.lShiftWasUp = true;
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
-                if (Input.GetKeyUp(KeyCode.RightShift) && !HotkeysGlobal.rShiftWasUp)
+                if (Input.GetKeyUp(KeyCode.RightShift) && !HotkeysGlobal.rShiftWasUp && keysPressed.Contains(KeyCode.RightShift))
                 {
                     HotkeysGlobal.rShiftWasUp = true;
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
