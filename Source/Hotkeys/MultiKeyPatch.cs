@@ -95,23 +95,26 @@ namespace Hotkeys
         {
             if (Input.GetKeyDown(KeyCode.LeftShift)) { return true; }
             if (Input.GetKeyDown(KeyCode.RightShift)) { return true; }
+            //if (Input.GetKey(KeyCode.LeftShift)) { return true; }
+            //if (Input.GetKey(KeyCode.RightShift)) { return true; }
             if (Input.GetKeyUp(KeyCode.LeftShift)) { return true; }
             if (Input.GetKeyUp(KeyCode.RightShift)) { return true; }
 
             return false;
         }
 
-        private static void BindOnKeyUp(KeyCode keyCode, ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance, ExposableList<KeyCode> keysPressed)
+        private static void BindOnKeyUp(ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance, ExposableList<KeyCode> keysPressed)
         {
-            ___keyPrefsData.SetBinding(___keyDef, ___slot, keysPressed.Last());
+            KeyCode lastPressed = keysPressed.Last();
             keysPressed.RemoveLast();
-
+            ___keyPrefsData.SetBinding(___keyDef, ___slot, lastPressed);
+            
             var settings = HotkeysLate.settings;
             if (___slot == KeyPrefs.BindingSlot.A) { settings.keyBindModsA[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
             if (___slot == KeyPrefs.BindingSlot.B) { settings.keyBindModsB[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
             settings.Write();
 
-            ___keyPrefsData.EraseConflictingBindingsForKeyCode(___keyDef, keyCode, delegate (KeyBindingDef oldDef)
+            ___keyPrefsData.EraseConflictingBindingsForKeyCode(___keyDef, lastPressed, delegate (KeyBindingDef oldDef)
             {
                 Messages.Message("KeyBindingOverwritten".Translate(oldDef.LabelCap), MessageTypeDefOf.TaskCompletion, false);
             });
@@ -134,15 +137,17 @@ namespace Hotkeys
 
                 if (Event.current.type == EventType.KeyUp)
                 {
-                    BindOnKeyUp(Event.current.keyCode, ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
+                    BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
-                if (Input.GetKeyUp(KeyCode.LeftShift))
+                if (Input.GetKeyUp(KeyCode.LeftShift) && !HotkeysGlobal.lShiftWasUp)
                 {
-                    BindOnKeyUp(KeyCode.LeftShift, ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
+                    HotkeysGlobal.lShiftWasUp = true;
+                    BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
-                if (Input.GetKeyUp(KeyCode.RightShift))
+                if (Input.GetKeyUp(KeyCode.RightShift) && !HotkeysGlobal.rShiftWasUp)
                 {
-                    BindOnKeyUp(KeyCode.RightShift, ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
+                    HotkeysGlobal.rShiftWasUp = true;
+                    BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
 
                 if (Event.current.type == EventType.KeyDown)
@@ -273,6 +278,8 @@ namespace Hotkeys
             {
                 if (HotkeysGlobal.keysPressed == null) { HotkeysGlobal.keysPressed = new ExposableList<KeyCode>(); }
                 HotkeysGlobal.keysPressed.Clear();
+                HotkeysGlobal.lShiftWasUp = false;
+                HotkeysGlobal.rShiftWasUp = false;
                 Find.WindowStack.Add(new Dialog_DefineBinding(keyPrefsData, keyDef, slot));
                 Event.current.Use();
             }

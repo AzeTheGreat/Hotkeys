@@ -13,6 +13,8 @@ namespace Hotkeys
     public static class HotkeysGlobal
     {
         public static ExposableList<KeyCode> keysPressed;
+        public static bool lShiftWasUp;
+        public static bool rShiftWasUp;
 
 
 
