@@ -90,7 +90,7 @@ namespace Hotkeys
         }
     }
 
-    // Needed for second settings
+    // Needed for second settings (Not actually needed anymore)
     public class HotkeysLate : Mod
     {
         public static HotkeySettingsLate settings;

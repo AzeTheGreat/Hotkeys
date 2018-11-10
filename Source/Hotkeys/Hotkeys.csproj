@@ -55,14 +55,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArchitectHotkeys.cs" />
-    <Compile Include="ErdelfExposableList.cs" />
-    <Compile Include="HotkeysGlobal.cs" />
-    <Compile Include="MultiKeyPatch.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="DirectHotkeys.cs" />
-    <Compile Include="ModUI.cs" />
-    <Compile Include="KeybindDefGeneration.cs" />
+    <Compile Include="Hotkeys\ArchitectHotkeys.cs" />
+    <Compile Include="UI\MultiDefineUI.cs" />
+    <Compile Include="UI\MultiKeyUI.cs" />
+    <Compile Include="Utilities\ErdelfExposableList.cs" />
+    <Compile Include="Utilities\HotkeysGlobal.cs" />
+    <Compile Include="Hotkeys\MultiKeyPatch.cs" />
+    <Compile Include="Utilities\Settings.cs" />
+    <Compile Include="Hotkeys\DirectHotkeys.cs" />
+    <Compile Include="UI\ModUI.cs" />
+    <Compile Include="Utilities\KeybindDefGeneration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
