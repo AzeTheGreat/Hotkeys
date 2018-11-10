@@ -103,6 +103,7 @@ namespace Hotkeys
 
         private static void BindOnKeyUp(ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance, ExposableList<KeyCode> keysPressed)
         {
+            keysPressed.Sort();
             KeyCode lastPressed = keysPressed.Last();
             keysPressed.RemoveLast();
             ___keyPrefsData.SetBinding(___keyDef, ___slot, lastPressed);
@@ -188,7 +189,7 @@ namespace Hotkeys
                 if (def != keyDef
                     && ((def.category == keyDef.category && def.category.selfConflicting) || keyDef.category.checkForConflicts.Contains(def.category)
                     || (keyDef.extraConflictTags != null && def.extraConflictTags != null && keyDef.extraConflictTags.Any((string tag) => def.extraConflictTags.Contains(tag))))
-                    && __instance.keyPrefs.TryGetValue(def, out prefData) && (CheckAllKeys(keyDef, def, prefData, code)))
+                    && __instance.keyPrefs.TryGetValue(def, out prefData) && (CheckAllKeys(keyDef, def, prefData, code, __instance)))
                 {
                     conflictingDefs.Add(def);
                 }
@@ -198,28 +199,47 @@ namespace Hotkeys
             return false;
         }
 
-        private static bool CheckAllKeys(KeyBindingDef assignedKeyDef, KeyBindingDef existingKeyDef, KeyBindingData prefData, KeyCode assignedCode)
+        private static bool CheckAllKeys(KeyBindingDef assignedKeyDef, KeyBindingDef existingKeyDef, KeyBindingData prefDataExisting, KeyCode assignedCode, KeyPrefsData __instance)
         {
             var settings = HotkeysLate.settings;
             if (settings == null) { settings = LoadedModManager.GetMod<HotkeysLate>().GetSettings<HotkeySettingsLate>(); }
 
-            if (prefData.keyBindingA == assignedCode)
+            __instance.keyPrefs.TryGetValue(assignedKeyDef, out KeyBindingData prefDataAssigned);
+
+            ExposableList<KeyCode> assignedCodes = new ExposableList<KeyCode>();
+            ExposableList<KeyCode> existingCodes = new ExposableList<KeyCode>();
+
+            if (assignedCode == prefDataAssigned.keyBindingA)
             {
-                if (settings.keyBindModsA.TryGetValue(assignedKeyDef.defName, out ExposableList<KeyCode> assignedCodes) &&
-                    settings.keyBindModsA.TryGetValue(existingKeyDef.defName, out ExposableList<KeyCode> existingCodes))   
+                if (settings.keyBindModsA.TryGetValue(assignedKeyDef.defName, out ExposableList<KeyCode> aCodes))
                 {
-                    return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
+                    assignedCodes.AddRange(aCodes);
                 }
-                return false;
             }
-            if (prefData.keyBindingB == assignedCode)
+            if (assignedCode == prefDataAssigned.keyBindingB)
             {
-                if (settings.keyBindModsB.TryGetValue(assignedKeyDef.defName, out ExposableList<KeyCode> assignedCodes) &&
-                    settings.keyBindModsB.TryGetValue(existingKeyDef.defName, out ExposableList<KeyCode> existingCodes))
+                if (settings.keyBindModsB.TryGetValue(assignedKeyDef.defName, out ExposableList<KeyCode> aCodes))
                 {
-                    return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
+                    assignedCodes.AddRange(aCodes);
                 }
-                return false;
+            }
+
+            if (prefDataExisting.keyBindingA == assignedCode)
+            {   
+                if (settings.keyBindModsA.TryGetValue(existingKeyDef.defName, out ExposableList<KeyCode> eCodes))
+                {
+                    existingCodes.AddRange(eCodes);
+                }
+                return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
+            }
+
+            if (prefDataExisting.keyBindingB == assignedCode)
+            {
+                if (settings.keyBindModsB.TryGetValue(existingKeyDef.defName, out ExposableList<KeyCode> eCodes))
+                {
+                    existingCodes.AddRange(eCodes);
+                }
+                return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
             }
             else
             {
