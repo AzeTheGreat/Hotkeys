@@ -24,7 +24,6 @@ namespace Hotkeys
 
         private static void BindOnKeyUp(ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance, ExposableList<KeyCode> keysPressed)
         {
-            keysPressed.Sort();
             KeyCode lastPressed = keysPressed.Last();
             keysPressed.RemoveLast();
             ___keyPrefsData.SetBinding(___keyDef, ___slot, lastPressed);
