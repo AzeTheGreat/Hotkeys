@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace Hotkeys
 {
+    // Detour the define binding window
     [HarmonyPatch(typeof(Dialog_DefineBinding))]
     [HarmonyPatch("DoWindowContents")]
     public class KeyBindingWindowPatch
@@ -42,6 +43,7 @@ namespace Hotkeys
             //Event.current.Use();  Dunno what the original purpose of this is for.
         }
 
+        
         static bool Prefix(Rect inRect, ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance)
         {
             if (!Hotkeys.settings.useMultiKeys) { return true; }
@@ -160,6 +162,7 @@ namespace Hotkeys
         }
     }
 
+    // Detour for something
     [HarmonyPatch(typeof(KeyPrefsData))]
     [HarmonyPatch("ErrorCheckOn")]
     public class Patch_ErrorCheckOn
@@ -204,6 +207,7 @@ namespace Hotkeys
         }
     }
 
+    // Detour to change how conflicting keybindings are handled.
     [HarmonyPatch(typeof(KeyPrefsData))]
     [HarmonyPatch("EraseConflictingBindingsForKeyCode")]
     public class Patch_EraseConflictingBindingsForKeyCode
@@ -219,12 +223,12 @@ namespace Hotkeys
                 {
                     Log.Message("Reset");
                     keyBindingData.keyBindingA = KeyCode.None;
-                    Patch_KeyBindDrawing.ResetModifierList(KeyPrefs.BindingSlot.A, keyBindingDef);
+                    HotkeysPatch_KeyBindDrawing.ResetModifierList(KeyPrefs.BindingSlot.A, keyBindingDef);
                 }
                 if (keyBindingData.keyBindingB == keyCode)
                 {
                     keyBindingData.keyBindingB = KeyCode.None;
-                    Patch_KeyBindDrawing.ResetModifierList(KeyPrefs.BindingSlot.B, keyBindingDef);
+                    HotkeysPatch_KeyBindDrawing.ResetModifierList(KeyPrefs.BindingSlot.B, keyBindingDef);
                 }
                 if (callBackOnErase != null)
                 {

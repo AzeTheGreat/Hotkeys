@@ -16,6 +16,9 @@ namespace Hotkeys
         public static bool lShiftWasUp;
         public static bool rShiftWasUp;
 
+        public static Dictionary<string, ExposableList<KeyCode>> oldKeyBindModsA;
+        public static Dictionary<string, ExposableList<KeyCode>> oldKeyBindModsB;
+
 
 
         public static bool AllModifierKeysDown(KeyBindingDef keyDef, bool resultA, bool resultB)

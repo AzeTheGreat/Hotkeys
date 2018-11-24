@@ -1,16 +1,20 @@
-﻿using Harmony;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Reflection;
+using System.Reflection.Emit;
 using Verse;
 using RimWorld;
+using RimWorld.Planet;
+using Harmony;
 using UnityEngine;
-using System.Collections.Generic;
-using System;
-using System.Linq;
 
 namespace Hotkeys
 {
     [HarmonyPatch(typeof(Dialog_KeyBindings))]
     [HarmonyPatch("DrawKeyEntry")]
-    public class Patch_KeyBindDrawing
+    public class HotkeysPatch_KeyBindDrawing
     {
         static bool Prefix(KeyBindingDef keyDef, Rect parentRect, ref float curY, bool skipDrawing, ref KeyPrefsData ___keyPrefsData)
         {
@@ -119,5 +123,108 @@ namespace Hotkeys
             return mainKey;
         }
     }
+
+    // Postfix to clear modifiers when resest button is pressed
+    [HarmonyPatch(typeof(KeyPrefsData), nameof(KeyPrefsData.ResetToDefaults))]
+    public class HotkeysPatch_ResetModifiers
+    {
+        static void Postfix()
+        {
+            HotkeysLate.settings.keyBindModsA.Clear();
+            HotkeysLate.settings.keyBindModsB.Clear();
+        }
+    }
+
+    // Transpiler to reset modifiers if closed
+    [HarmonyPatch(typeof(Dialog_KeyBindings), nameof(Dialog_KeyBindings.DoWindowContents))]
+    public class HotkeysPatch_KeybindingSettingsClosed
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            MethodInfo Close = AccessTools.Method(typeof(Window), nameof(Window.Close));
+            bool afterTarget = false;
+
+            foreach (CodeInstruction i in instructions)
+            {
+                if (i.opcode == OpCodes.Ldstr && (string)i.operand == "CancelButton")
+                {
+                    afterTarget = true;
+                }
+                if (i.opcode == OpCodes.Callvirt && i.operand == Close && afterTarget)
+                {
+                    i.operand = AccessTools.Method(typeof(HotkeysPatch_KeybindingSettingsClosed), nameof(HotkeysPatch_KeybindingSettingsClosed.Replacement));
+                    afterTarget = false;
+                }
+                yield return i;
+            }
+        }
+
+        private static void Replacement(Window that, bool toClose)
+        {
+            that.Close(toClose);
+            HotkeysLate.settings.keyBindModsA = new Dictionary<string, ExposableList<KeyCode>>(HotkeysGlobal.oldKeyBindModsA);
+            HotkeysLate.settings.keyBindModsB = new Dictionary<string, ExposableList<KeyCode>>(HotkeysGlobal.oldKeyBindModsB);
+            HotkeysLate.settings.Write();
+        }
+    }
+
+    //  Transpiler to clear old modifier lists when keybinding settings window is opened.
+    [HarmonyPatch(typeof(Dialog_Options), nameof(Dialog_Options.DoWindowContents))]
+    public class HotkeysPatch_KeybindingSettingsOpened
+    {
+         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            MethodInfo Add = AccessTools.Method(typeof(WindowStack), nameof(WindowStack.Add));
+            bool afterTarget = false;
+
+            foreach (CodeInstruction i in instructions)
+            {
+                if (i.opcode == OpCodes.Ldstr && (string)i.operand == "KeyboardConfig")
+                {
+                    afterTarget = true;
+                }
+                if (i.opcode == OpCodes.Callvirt && i.operand == Add && afterTarget)
+                {
+                    i.operand = AccessTools.Method(typeof(HotkeysPatch_KeybindingSettingsOpened), nameof(HotkeysPatch_KeybindingSettingsOpened.Replacement));
+                }
+                yield return i;
+            }
+        }
+
+        private static void Replacement(WindowStack windowStack, Window window)
+        {
+            windowStack.Add(window);
+            HotkeysGlobal.oldKeyBindModsA = new Dictionary<string, ExposableList<KeyCode>>(HotkeysLate.settings.keyBindModsA);
+            HotkeysGlobal.oldKeyBindModsB = new Dictionary<string, ExposableList<KeyCode>>(HotkeysLate.settings.keyBindModsB);
+        }
+    }
+
+
+
+    //[HarmonyPatch(typeof(Dialog_KeyBindings))]
+    //[HarmonyPatch(nameof(Dialog_KeyBindings.DoWindowContents))]
+    //public class HotkeysPatch_DoWindowContents
+    //{
+    //    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    //    {
+    //        MethodInfo ResetToDefaults = AccessTools.Method(typeof(KeyPrefsData), nameof(KeyPrefsData.ResetToDefaults));
+
+    //        foreach (CodeInstruction i in instructions)
+    //        {
+    //            if (i.opcode == OpCodes.Callvirt && i.operand == ResetToDefaults)
+    //            {
+    //                i.operand = AccessTools.Method(typeof(HotkeysPatch_DoWindowContents), nameof(HotkeysPatch_DoWindowContents.Testing));
+    //            }
+
+    //            yield return i;
+    //        }
+    //    }
+
+    //    public static void Testing(KeyPrefsData that)
+    //    {
+    //        that.ResetToDefaults();
+    //        Log.Message("Transpiled");
+    //    }
+    //}
 }
 

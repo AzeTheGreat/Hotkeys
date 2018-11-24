@@ -19,7 +19,9 @@ namespace Hotkeys
         {
             // Initialize Harmony
             var harmonyHotkeys = HarmonyInstance.Create("Hotkeys");
+            HarmonyInstance.DEBUG = false;
             harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
+
 
             settings = GetSettings<HotkeySettings>();
             scrollPosition = new Vector2(0f, 0f);
