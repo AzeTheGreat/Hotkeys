@@ -43,15 +43,12 @@ namespace Hotkeys
                 }
 
                 keyPrefData.keyPrefs.TryGetValue(keyDef, out KeyBindingData keyData);
-                if (overlappingKeyMods == null) { Log.Message("NULL"); }
-                if (overlappingKeyMods.TryGetValue(keyData.keyBindingA, out List<KeyCode> mods))
+                if (overlappingKeyMods != null && overlappingKeyMods.TryGetValue(keyData.keyBindingA, out List<KeyCode> mods))
                 {
                     foreach (KeyCode code in mods)
                     {
-                        Log.Message(code.ToString());
                         if (!keyCodes.Contains(code) && Input.GetKey(code))
                         {
-                            Log.Message("False Code: "+code.ToString());
                             allDownA = false;
                         }
                     }
@@ -91,8 +88,6 @@ namespace Hotkeys
             if (overlappingKeyMods == null) { overlappingKeyMods = new Dictionary<KeyCode, List<KeyCode>>(); }
             overlappingKeyMods.Clear();
 
-            Log.Message("Building Overlap List");
-
             List<KeyBindingDef> allKeyDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading;
             KeyPrefsData keyPrefData = KeyPrefs.KeyPrefsData.Clone();
 
@@ -105,11 +100,6 @@ namespace Hotkeys
 
             List<KeyCode> overlappingTriggerKeys = allTriggerKeys.GroupBy(x => x).SelectMany(x => x.Skip(1)).Distinct().ToList();
             overlappingTriggerKeys.Remove(KeyCode.None);
-
-            foreach (var code in overlappingTriggerKeys)
-            {
-                Log.Message("triggerKeys:" + code.ToString());
-            }
 
             foreach (KeyBindingDef keyDef in allKeyDefs)
             {
@@ -129,11 +119,6 @@ namespace Hotkeys
 
                     List<KeyCode> modifierKeyCodes = storedKeyCodes.Union(newKeyCodes).ToList();
                     if (modifierKeyCodes == null) { modifierKeyCodes = new List<KeyCode>(); }
-
-                    foreach (var code in modifierKeyCodes)
-                    {
-                        Log.Message(keyCodeA.ToString() + ": " + code.ToString());
-                    }
 
                     overlappingKeyMods[keyCodeA] = modifierKeyCodes;
                 }
