@@ -99,7 +99,7 @@ namespace Hotkeys
         public HotkeysLate(ModContentPack content) : base(content)
         {
             isInit = true;
-            LongEventHandler.QueueLongEvent(() => settings = GetSettings<HotkeySettingsLate>(), null, true, null);
+            settings = GetSettings<HotkeySettingsLate>();
         }
     }
 

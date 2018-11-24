@@ -22,9 +22,10 @@ namespace Hotkeys
             HarmonyInstance.DEBUG = false;
             harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
 
-
             settings = GetSettings<HotkeySettings>();
             scrollPosition = new Vector2(0f, 0f);
+
+            LongEventHandler.QueueLongEvent(() => HotkeysGlobal.overlappingKeyMods.Build(), null, false, null);
         }
 
         public override void DoSettingsWindowContents(Rect canvas)

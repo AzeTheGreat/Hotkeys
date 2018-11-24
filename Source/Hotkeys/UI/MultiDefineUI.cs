@@ -239,5 +239,4 @@ namespace Hotkeys
             return false;
         }
     }
-
 }

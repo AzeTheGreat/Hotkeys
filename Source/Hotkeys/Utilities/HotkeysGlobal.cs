@@ -19,6 +19,8 @@ namespace Hotkeys
         public static Dictionary<string, ExposableList<KeyCode>> oldKeyBindModsA;
         public static Dictionary<string, ExposableList<KeyCode>> oldKeyBindModsB;
 
+        public static Dictionary<KeyCode, ExposableList<KeyCode>> overlappingKeyMods;
+
 
 
         public static bool AllModifierKeysDown(KeyBindingDef keyDef, bool resultA, bool resultB)

@@ -152,23 +152,27 @@ namespace Hotkeys
                 }
                 if (i.opcode == OpCodes.Callvirt && i.operand == Close && afterTarget)
                 {
-                    i.operand = AccessTools.Method(typeof(HotkeysPatch_KeybindingSettingsClosed), nameof(HotkeysPatch_KeybindingSettingsClosed.Replacement));
+                    yield return i;
+                    yield return new CodeInstruction(OpCodes.Call,
+                        AccessTools.Method(typeof(HotkeysPatch_KeybindingSettingsClosed), nameof(HotkeysPatch_KeybindingSettingsClosed.RestoreKeyBindings)));
                     afterTarget = false;
+                    continue;
                 }
                 yield return i;
             }
         }
 
-        private static void Replacement(Window that, bool toClose)
+        private static void RestoreKeyBindings()
         {
-            that.Close(toClose);
+            if (!Hotkeys.settings.useMultiKeys) { return; }
+
             HotkeysLate.settings.keyBindModsA = new Dictionary<string, ExposableList<KeyCode>>(HotkeysGlobal.oldKeyBindModsA);
             HotkeysLate.settings.keyBindModsB = new Dictionary<string, ExposableList<KeyCode>>(HotkeysGlobal.oldKeyBindModsB);
             HotkeysLate.settings.Write();
         }
     }
 
-    //  Transpiler to clear old modifier lists when keybinding settings window is opened.
+    // Transpiler to clear old modifier lists when keybinding settings window is opened.
     [HarmonyPatch(typeof(Dialog_Options), nameof(Dialog_Options.DoWindowContents))]
     public class HotkeysPatch_KeybindingSettingsOpened
     {
@@ -185,46 +189,23 @@ namespace Hotkeys
                 }
                 if (i.opcode == OpCodes.Callvirt && i.operand == Add && afterTarget)
                 {
-                    i.operand = AccessTools.Method(typeof(HotkeysPatch_KeybindingSettingsOpened), nameof(HotkeysPatch_KeybindingSettingsOpened.Replacement));
+                    yield return i;
+                    yield return new CodeInstruction(OpCodes.Call,
+                        AccessTools.Method(typeof(HotkeysPatch_KeybindingSettingsOpened), nameof(HotkeysPatch_KeybindingSettingsOpened.BackupKeyBindings)));
+                    afterTarget = false;
+                    continue;
                 }
                 yield return i;
             }
         }
 
-        private static void Replacement(WindowStack windowStack, Window window)
+        private static void BackupKeyBindings()
         {
-            windowStack.Add(window);
+            if (!Hotkeys.settings.useMultiKeys) { return; }
+
             HotkeysGlobal.oldKeyBindModsA = new Dictionary<string, ExposableList<KeyCode>>(HotkeysLate.settings.keyBindModsA);
             HotkeysGlobal.oldKeyBindModsB = new Dictionary<string, ExposableList<KeyCode>>(HotkeysLate.settings.keyBindModsB);
         }
     }
-
-
-
-    //[HarmonyPatch(typeof(Dialog_KeyBindings))]
-    //[HarmonyPatch(nameof(Dialog_KeyBindings.DoWindowContents))]
-    //public class HotkeysPatch_DoWindowContents
-    //{
-    //    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-    //    {
-    //        MethodInfo ResetToDefaults = AccessTools.Method(typeof(KeyPrefsData), nameof(KeyPrefsData.ResetToDefaults));
-
-    //        foreach (CodeInstruction i in instructions)
-    //        {
-    //            if (i.opcode == OpCodes.Callvirt && i.operand == ResetToDefaults)
-    //            {
-    //                i.operand = AccessTools.Method(typeof(HotkeysPatch_DoWindowContents), nameof(HotkeysPatch_DoWindowContents.Testing));
-    //            }
-
-    //            yield return i;
-    //        }
-    //    }
-
-    //    public static void Testing(KeyPrefsData that)
-    //    {
-    //        that.ResetToDefaults();
-    //        Log.Message("Transpiled");
-    //    }
-    //}
 }
 

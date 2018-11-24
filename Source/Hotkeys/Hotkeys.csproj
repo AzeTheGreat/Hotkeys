@@ -58,6 +58,7 @@
     <Compile Include="Hotkeys\ArchitectHotkeys.cs" />
     <Compile Include="UI\MultiDefineUI.cs" />
     <Compile Include="UI\MultiKeyUI.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\ErdelfExposableList.cs" />
     <Compile Include="Utilities\HotkeysGlobal.cs" />
     <Compile Include="Hotkeys\MultiKeyPatch.cs" />
