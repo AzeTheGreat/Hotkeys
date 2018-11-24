@@ -25,7 +25,7 @@ namespace Hotkeys
             settings = GetSettings<HotkeySettings>();
             scrollPosition = new Vector2(0f, 0f);
 
-            LongEventHandler.QueueLongEvent(() => HotkeysGlobal.overlappingKeyMods.Build(), null, false, null);
+            LongEventHandler.QueueLongEvent(() => HotkeysGlobal.BuildOverlappingKeys(), null, false, null);
         }
 
         public override void DoSettingsWindowContents(Rect canvas)
