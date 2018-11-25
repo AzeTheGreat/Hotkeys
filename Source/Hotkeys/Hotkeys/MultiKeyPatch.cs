@@ -20,8 +20,8 @@ namespace Hotkeys
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
             {
-                bool resultA = Input.GetKeyDown(keyBindingData.keyBindingA);
-                bool resultB = Input.GetKeyDown(keyBindingData.keyBindingB);
+                bool resultA = Input.GetKeyDown(keyBindingData.keyBindingA) || Event.current.keyCode == keyBindingData.keyBindingA;
+                bool resultB = Input.GetKeyDown(keyBindingData.keyBindingB) || Event.current.keyCode == keyBindingData.keyBindingB;
                 __result = HotkeysGlobal.AllModifierKeysDown(__instance, resultA, resultB);
             }
         }
