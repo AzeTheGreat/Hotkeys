@@ -30,8 +30,6 @@ namespace Hotkeys
             bool allDownA = true;
             bool allDownB = true;
 
-
-
             if (HotkeysLate.settings.keyBindModsA.TryGetValue(keyDef.defName, out keyCodes))
             {
                 foreach (var keyCode in keyCodes)
@@ -121,6 +119,20 @@ namespace Hotkeys
                     if (modifierKeyCodes == null) { modifierKeyCodes = new List<KeyCode>(); }
 
                     overlappingKeyMods[keyCodeA] = modifierKeyCodes;
+                }
+
+                if (overlappingTriggerKeys.Contains(keyCodeB))
+                {
+                    HotkeysLate.settings.keyBindModsB.TryGetValue(keyDef.defName, out ExposableList<KeyCode> newCodes);
+                    newKeyCodes = newCodes;
+                    overlappingKeyMods.TryGetValue(keyCodeB, out storedKeyCodes);
+                    if (newKeyCodes == null) { newKeyCodes = new ExposableList<KeyCode>(); }
+                    if (storedKeyCodes == null) { storedKeyCodes = new List<KeyCode>(); }
+
+                    List<KeyCode> modifierKeyCodes = storedKeyCodes.Union(newKeyCodes).ToList();
+                    if (modifierKeyCodes == null) { modifierKeyCodes = new List<KeyCode>(); }
+
+                    overlappingKeyMods[keyCodeB] = modifierKeyCodes;
                 }
             }
         }
