@@ -1,5 +1,5 @@
-﻿using Verse;
-using Harmony;
+﻿using Harmony;
+using Verse;
 
 namespace Hotkeys
 {

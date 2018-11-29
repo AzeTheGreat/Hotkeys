@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Harmony;
+using RimWorld;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
-using RimWorld;
-using Harmony;
 
 namespace Hotkeys
 {

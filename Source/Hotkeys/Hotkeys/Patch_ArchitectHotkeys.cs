@@ -1,8 +1,8 @@
 ﻿using Harmony;
-using Verse;
 using RimWorld;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using Verse;
 
 namespace Hotkeys
 {

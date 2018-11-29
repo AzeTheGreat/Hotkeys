@@ -1,8 +1,6 @@
-﻿using RimWorld;
+﻿using Harmony;
+using RimWorld;
 using Verse;
-using Harmony;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Hotkeys
 {

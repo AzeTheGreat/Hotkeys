@@ -1,8 +1,4 @@
 ﻿using Verse;
-using RimWorld;
-using UnityEngine;
-using Verse.Sound;
-using RimWorld.Planet;
 
 namespace Hotkeys
 {

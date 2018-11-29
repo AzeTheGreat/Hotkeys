@@ -1,12 +1,7 @@
-﻿using Harmony;
-using Verse;
-using System.Reflection;
-using RimWorld;
-using UnityEngine;
-using System.Collections.Generic;
-using Verse.Sound;
-using RimWorld.Planet;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using Verse;
 
 namespace Hotkeys
 {
