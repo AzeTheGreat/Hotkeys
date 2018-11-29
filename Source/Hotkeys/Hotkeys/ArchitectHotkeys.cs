@@ -14,7 +14,7 @@ namespace Hotkeys
 
         static void Prefix(ref ArchitectCategoryTab ___selectedDesPanel, ref List<ArchitectCategoryTab> ___desPanelsCached)
         {
-            var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<HotkeySettings>();
+            var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<Hotkeys_Settings>();
             keyWasDown = false;
 
             if (Event.current.type != EventType.KeyDown) { return; }

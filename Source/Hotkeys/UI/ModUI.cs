@@ -12,25 +12,23 @@ namespace Hotkeys
     public class Hotkeys : Mod
     {
         public override string SettingsCategory() => "Hotkeys";
-        public static HotkeySettings settings;
+        public static Hotkeys_Settings settings;
+        private static Hotkeys_SettingsSave saved;
         private Vector2 scrollPosition;
 
         public Hotkeys(ModContentPack content) : base(content)
         {
-            // Initialize Harmony
-            var harmonyHotkeys = HarmonyInstance.Create("Hotkeys");
-            HarmonyInstance.DEBUG = false;
-            harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
+            // SETTINGS
+            settings = GetSettings<Hotkeys_Settings>();
+            saved = LoadedModManager.GetMod<Hotkeys_Save>().GetSettings<Hotkeys_SettingsSave>();
 
-            settings = GetSettings<HotkeySettings>();
+            // THIS
             scrollPosition = new Vector2(0f, 0f);
-
-            LongEventHandler.QueueLongEvent(() => HotkeysGlobal.BuildOverlappingKeys(), null, false, null);
         }
 
         public override void DoSettingsWindowContents(Rect canvas)
         {
-            float contentHeight = 30f * settings.desCategoryLabelCaps.Count + 1000f;
+            float contentHeight = 30f * saved.desCategoryLabelCaps.Count + 1000f;
 
             Rect source = new Rect(0f, 0f, canvas.width - 24f, contentHeight);
             Widgets.BeginScrollView(canvas, ref scrollPosition, source, true);
@@ -79,12 +77,12 @@ namespace Hotkeys
             var rect2 = new Rect(rect.xMax - 30f, rect.yMin, 30f, rect.height);
             listing.Begin(rect2);
 
-            for (int i = 0; i < settings.desLabelCaps.Count; i++)
+            for (int i = 0; i < saved.desLabelCaps.Count; i++)
             {
                 if (listing.ButtonText("-"))
                 {
-                    settings.desCategoryLabelCaps.RemoveAt(i);
-                    settings.desLabelCaps.RemoveAt(i);
+                    saved.desCategoryLabelCaps.RemoveAt(i);
+                    saved.desLabelCaps.RemoveAt(i);
                 }
             }
 
@@ -97,9 +95,9 @@ namespace Hotkeys
             var listing = new Listing_Standard();
             listing.Begin(rect);
 
-            for (int index = 0; index < settings.desLabelCaps.Count; index++)
+            for (int index = 0; index < saved.desLabelCaps.Count; index++)
             {
-                if (listing.ButtonText(settings.desLabelCaps[index]))
+                if (listing.ButtonText(saved.desLabelCaps[index]))
                 {
                     var options = GetDesFloatMenuOptions(index);
 
@@ -112,8 +110,8 @@ namespace Hotkeys
 
             if (listing.ButtonText("Add Hotkey", "Add additional direct hotkeys"))
             {
-                settings.desCategoryLabelCaps.Add("None");
-                settings.desLabelCaps.Add("None");
+                saved.desCategoryLabelCaps.Add("None");
+                saved.desLabelCaps.Add("None");
             }
 
             listing.End();
@@ -125,9 +123,9 @@ namespace Hotkeys
             var listing = new Listing_Standard();
             listing.Begin(rect);
 
-            for (int index = 0; index < settings.desCategoryLabelCaps.Count; index++)
+            for (int index = 0; index < saved.desCategoryLabelCaps.Count; index++)
             {
-                if (listing.ButtonTextLabeled("Direct Hotkey " + index.ToString(), settings.desCategoryLabelCaps[index]))
+                if (listing.ButtonTextLabeled("Direct Hotkey " + index.ToString(), saved.desCategoryLabelCaps[index]))
                 {
                     var options = GetCatFloatMenuOptions(index);
 
@@ -144,14 +142,14 @@ namespace Hotkeys
             int buttonNum = index;
             var options = new List<FloatMenuOption>();
 
-            if (settings.CheckDesCategory(index))
+            if (saved.CheckDesCategory(index))
             {
-                var designators = settings.GetDesCategory(index).AllResolvedDesignators;
+                var designators = saved.GetDesCategory(index).AllResolvedDesignators;
                 foreach (var designator in designators)
                 {
                     options.Add(new FloatMenuOption(designator.LabelCap, delegate ()
                     {
-                        settings.desLabelCaps[buttonNum] = designator.LabelCap;
+                        saved.desLabelCaps[buttonNum] = designator.LabelCap;
                     }));
                 }
             }
@@ -159,7 +157,7 @@ namespace Hotkeys
             {
                 options.Add(new FloatMenuOption("None", delegate ()
                 {
-                    settings.desLabelCaps[buttonNum] = "None";
+                    saved.desLabelCaps[buttonNum] = "None";
                 }));
             }
 
@@ -176,7 +174,7 @@ namespace Hotkeys
             {
                 options.Add(new FloatMenuOption(desCat.LabelCap, delegate ()
                 {
-                    settings.desCategoryLabelCaps[buttonNum] = desCat.LabelCap;
+                    saved.desCategoryLabelCaps[buttonNum] = desCat.LabelCap;
                 }));
             }
 

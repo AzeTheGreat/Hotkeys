@@ -15,14 +15,14 @@ namespace Hotkeys
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !HotkeysLate.isInit || !Hotkeys.settings.useMultiKeys) { return; }
+            if (!__result || !Hotkeys_Save.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
             {
                 bool resultA = Input.GetKeyDown(keyBindingData.keyBindingA) || Event.current.keyCode == keyBindingData.keyBindingA;
                 bool resultB = Input.GetKeyDown(keyBindingData.keyBindingB) || Event.current.keyCode == keyBindingData.keyBindingB;
-                __result = HotkeysGlobal.AllModifierKeysDown(__instance, resultA, resultB);
+                __result = __instance.ModifierData().AllModifierKeysDown(__instance, resultA, resultB);
             }
         }
     }
@@ -34,14 +34,14 @@ namespace Hotkeys
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !HotkeysLate.isInit || !Hotkeys.settings.useMultiKeys) { return; }
+            if (!__result || !Hotkeys_Save.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
             {
                 bool resultA = Input.GetKey(keyBindingData.keyBindingA);
                 bool resultB = Input.GetKey(keyBindingData.keyBindingB);
-                __result = HotkeysGlobal.AllModifierKeysDown(__instance, resultA, resultB);
+                __result = __instance.ModifierData().AllModifierKeysDown(__instance, resultA, resultB);
             }
         }
     }
@@ -54,14 +54,14 @@ namespace Hotkeys
         // Kinda dirty maybe make separate harmony to patch later?
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !HotkeysLate.isInit || !Hotkeys.settings.useMultiKeys) { return; }
+            if (!__result || !Hotkeys_Save.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
             {
                 bool resultA = Input.GetKeyDown(keyBindingData.keyBindingA);
                 bool resultB = Input.GetKeyDown(keyBindingData.keyBindingB);
-                __result = HotkeysGlobal.AllModifierKeysDown(__instance, resultA, resultB);
+                __result = __instance.ModifierData().AllModifierKeysDown(__instance, resultA, resultB);
             }
         }
     }
@@ -73,14 +73,14 @@ namespace Hotkeys
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !HotkeysLate.isInit || !Hotkeys.settings.useMultiKeys) { return; }
+            if (!__result || !Hotkeys_Save.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
             {
                 bool resultA = Input.GetKey(keyBindingData.keyBindingA);
                 bool resultB = Input.GetKey(keyBindingData.keyBindingB);
-                __result = HotkeysGlobal.AllModifierKeysDown(__instance, resultA, resultB);
+                __result = __instance.ModifierData().AllModifierKeysDown(__instance, resultA, resultB);
             }
         }
     }

@@ -29,9 +29,9 @@ namespace Hotkeys
             keysPressed.RemoveLast();
             ___keyPrefsData.SetBinding(___keyDef, ___slot, lastPressed);
 
-            var settings = HotkeysLate.settings;
-            if (___slot == KeyPrefs.BindingSlot.A) { settings.keyBindModsA[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
-            if (___slot == KeyPrefs.BindingSlot.B) { settings.keyBindModsB[___keyDef.defName] = new ExposableList<KeyCode>(keysPressed); }
+            var settings = Hotkeys_Save.saved;
+            if (___slot == KeyPrefs.BindingSlot.A) { ___keyDef.ModifierData().keyBindModsA = new ExposableList<KeyCode>(keysPressed); }
+            if (___slot == KeyPrefs.BindingSlot.B) { ___keyDef.ModifierData().keyBindModsB = new ExposableList<KeyCode>(keysPressed); }
             settings.Write();
 
             ___keyPrefsData.EraseConflictingBindingsForKeyCode(___keyDef, lastPressed, delegate (KeyBindingDef oldDef)
@@ -117,8 +117,8 @@ namespace Hotkeys
 
         private static bool CheckAllKeys(KeyBindingDef assignedKeyDef, KeyBindingDef existingKeyDef, KeyBindingData prefDataExisting, KeyCode assignedCode, KeyPrefsData __instance)
         {
-            var settings = HotkeysLate.settings;
-            if (settings == null) { settings = LoadedModManager.GetMod<HotkeysLate>().GetSettings<HotkeySettingsLate>(); }
+            var settings = Hotkeys_Save.saved;
+            if (settings == null) { settings = LoadedModManager.GetMod<Hotkeys_Save>().GetSettings<Hotkeys_SettingsSave>(); }
 
             __instance.keyPrefs.TryGetValue(assignedKeyDef, out KeyBindingData prefDataAssigned);
 
@@ -127,34 +127,28 @@ namespace Hotkeys
 
             if (assignedCode == prefDataAssigned.keyBindingA)
             {
-                if (settings.keyBindModsA.TryGetValue(assignedKeyDef.defName, out ExposableList<KeyCode> aCodes))
-                {
-                    assignedCodes.AddRange(aCodes);
-                }
+                List<KeyCode> aCodes = assignedKeyDef.ModifierData().keyBindModsA;
+                assignedCodes.AddRange(aCodes);
             }
             if (assignedCode == prefDataAssigned.keyBindingB)
             {
-                if (settings.keyBindModsB.TryGetValue(assignedKeyDef.defName, out ExposableList<KeyCode> aCodes))
-                {
-                    assignedCodes.AddRange(aCodes);
-                }
+                List<KeyCode> aCodes = assignedKeyDef.ModifierData().keyBindModsB;
+                assignedCodes.AddRange(aCodes);
             }
+
             if (prefDataExisting.keyBindingA == assignedCode)
             {
-                if (settings.keyBindModsA.TryGetValue(existingKeyDef.defName, out ExposableList<KeyCode> eCodes))
-                {
-                    existingCodes.AddRange(eCodes);
-                }
+                List<KeyCode> eCodes = existingKeyDef.ModifierData().keyBindModsA;
+                existingCodes.AddRange(eCodes);
                 return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
             }
             if (prefDataExisting.keyBindingB == assignedCode)
             {
-                if (settings.keyBindModsB.TryGetValue(existingKeyDef.defName, out ExposableList<KeyCode> eCodes))
-                {
-                    existingCodes.AddRange(eCodes);
-                }
+                List<KeyCode> eCodes = existingKeyDef.ModifierData().keyBindModsB;
+                existingCodes.AddRange(eCodes);
                 return assignedCodes.OrderBy(i => i).SequenceEqual(existingCodes.OrderBy(i => i));
             }
+
             else
             {
                 return false;
@@ -162,7 +156,7 @@ namespace Hotkeys
         }
     }
 
-    // Detour for something
+    // Detour to use my ConflictingBindingsMethod
     [HarmonyPatch(typeof(KeyPrefsData))]
     [HarmonyPatch("ErrorCheckOn")]
     public class Patch_ErrorCheckOn

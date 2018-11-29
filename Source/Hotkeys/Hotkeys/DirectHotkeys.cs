@@ -15,7 +15,8 @@ namespace Hotkeys
     {
         static void Postfix()
         {
-            var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<HotkeySettings>();
+            var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<Hotkeys_Settings>();
+            var saved = LoadedModManager.GetMod<Hotkeys_Save>().GetSettings<Hotkeys_SettingsSave>();
 
             if (Event.current.type != EventType.KeyDown) { return; }
             if (!settings.useDirectHotkeys) { return; }
@@ -26,7 +27,7 @@ namespace Hotkeys
             {
                 if (designatorKeys[i].JustPressed)
                 {
-                    var designator = settings.GetDesignator(i);
+                    var designator = saved.GetDesignator(i);
                     if (designator != null)
                     {
                         Find.DesignatorManager.Select(designator);

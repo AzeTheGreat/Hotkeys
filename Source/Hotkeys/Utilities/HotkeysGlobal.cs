@@ -10,81 +10,47 @@ using System.Linq;
 
 namespace Hotkeys
 {
+    [StaticConstructorOnStartup]
+    public class InitializeMod
+    {
+        static InitializeMod()
+        {
+            HotkeysGlobal.BuildOverlappingKeys();
+            Hotkeys_Save.isInit = true;
+        }
+    }
+
     public static class HotkeysGlobal
     {
+        
+        // Intermediate Fields
         public static ExposableList<KeyCode> keysPressed;
         public static bool lShiftWasUp;
         public static bool rShiftWasUp;
 
-        public static Dictionary<string, ExposableList<KeyCode>> oldKeyBindModsA;
-        public static Dictionary<string, ExposableList<KeyCode>> oldKeyBindModsB;
+        public static Dictionary<string, KeyModData> oldKeyModifiers;
 
-        public static Dictionary<KeyCode, List<KeyCode>> overlappingKeyMods;
-
-
-
-        public static bool AllModifierKeysDown(KeyBindingDef keyDef, bool resultA, bool resultB)
+        public static void BuildKeyModData()
         {
-            KeyPrefsData keyPrefData = KeyPrefs.KeyPrefsData.Clone();
-            ExposableList<KeyCode> keyCodes = new ExposableList<KeyCode>();
-            bool allDownA = true;
-            bool allDownB = true;
+            var allKeyModifiers = Hotkeys_Save.saved.allKeyModifiers;
 
-            if (HotkeysLate.settings.keyBindModsA.TryGetValue(keyDef.defName, out keyCodes))
+            if (allKeyModifiers == null)
             {
-                foreach (var keyCode in keyCodes)
-                {
-                    if (!Input.GetKey(keyCode))
-                    {
-                        allDownA = false;
-                    }
-                }
-
-                keyPrefData.keyPrefs.TryGetValue(keyDef, out KeyBindingData keyData);
-                if (overlappingKeyMods != null && overlappingKeyMods.TryGetValue(keyData.keyBindingA, out List<KeyCode> mods))
-                {
-                    foreach (KeyCode code in mods)
-                    {
-                        if (!keyCodes.Contains(code) && Input.GetKey(code))
-                        {
-                            allDownA = false;
-                        }
-                    }
-                }
+                allKeyModifiers = new Dictionary<string, KeyModData>();
             }
 
-            if (HotkeysLate.settings.keyBindModsB.TryGetValue(keyDef.defName, out keyCodes))
+            List<KeyBindingDef> allKeyDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading;
+            foreach (var keyDef in allKeyDefs)
             {
-                foreach (var keyCode in keyCodes)
-                {
-                    if (!Input.GetKey(keyCode))
-                    {
-                        allDownB = false;
-                    }
-                }
-
-                keyPrefData.keyPrefs.TryGetValue(keyDef, out KeyBindingData keyData);
-                if (overlappingKeyMods != null && overlappingKeyMods.TryGetValue(keyData.keyBindingB, out List<KeyCode> mods))
-                {
-                    foreach (KeyCode code in mods)
-                    {
-                        if (!keyCodes.Contains(code) && Input.GetKey(code))
-                        {
-                            allDownB = false;
-                        }
-                    }
-                }
+                var newModData = new KeyModData();
+                allKeyModifiers[keyDef.defName] = newModData;
             }
 
-            return (allDownA && resultA) || (allDownB && resultB);
         }
-
-
 
         public static void BuildOverlappingKeys()
         {
-            if (overlappingKeyMods == null) { overlappingKeyMods = new Dictionary<KeyCode, List<KeyCode>>(); }
-            overlappingKeyMods.Clear();
+            var overlappingKeyMods = new Dictionary<KeyCode, List<KeyCode>>();
 
             List<KeyBindingDef> allKeyDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading;
             KeyPrefsData keyPrefData = KeyPrefs.KeyPrefsData.Clone();
@@ -103,14 +69,13 @@ namespace Hotkeys
             {
                 KeyCode keyCodeA = keyPrefData.GetBoundKeyCode(keyDef, KeyPrefs.BindingSlot.A);
                 KeyCode keyCodeB = keyPrefData.GetBoundKeyCode(keyDef, KeyPrefs.BindingSlot.B);
-
+ 
                 List<KeyCode> newKeyCodes = new List<KeyCode>();
                 List<KeyCode> storedKeyCodes = new List<KeyCode>();
 
                 if (overlappingTriggerKeys.Contains(keyCodeA))
                 {
-                    HotkeysLate.settings.keyBindModsA.TryGetValue(keyDef.defName, out ExposableList<KeyCode> newCodes);
-                    newKeyCodes = newCodes;
+                    newKeyCodes = keyDef.ModifierData().keyBindModsA;
                     overlappingKeyMods.TryGetValue(keyCodeA, out storedKeyCodes);
                     if (newKeyCodes == null) { newKeyCodes = new ExposableList<KeyCode>(); }
                     if (storedKeyCodes == null) { storedKeyCodes = new List<KeyCode>(); }
@@ -123,8 +88,7 @@ namespace Hotkeys
 
                 if (overlappingTriggerKeys.Contains(keyCodeB))
                 {
-                    HotkeysLate.settings.keyBindModsB.TryGetValue(keyDef.defName, out ExposableList<KeyCode> newCodes);
-                    newKeyCodes = newCodes;
+                    newKeyCodes = keyDef.ModifierData().keyBindModsB;
                     overlappingKeyMods.TryGetValue(keyCodeB, out storedKeyCodes);
                     if (newKeyCodes == null) { newKeyCodes = new ExposableList<KeyCode>(); }
                     if (storedKeyCodes == null) { storedKeyCodes = new List<KeyCode>(); }
@@ -135,8 +99,23 @@ namespace Hotkeys
                     overlappingKeyMods[keyCodeB] = modifierKeyCodes;
                 }
             }
-        }
 
+            //Assign overlaps to keymods
+            foreach (var keyDef in allKeyDefs)
+            {
+                KeyCode keyCodeA = keyPrefData.GetBoundKeyCode(keyDef, KeyPrefs.BindingSlot.A);
+                KeyCode keyCodeB = keyPrefData.GetBoundKeyCode(keyDef, KeyPrefs.BindingSlot.B);
+
+                if (overlappingKeyMods.TryGetValue(keyCodeA, out List<KeyCode> overlapsA))
+                {
+                    keyDef.ModifierData().overlappingKeysA = overlapsA;
+                }
+                if (overlappingKeyMods.TryGetValue(keyCodeB, out List<KeyCode> overlapsB))
+                {
+                    keyDef.ModifierData().overlappingKeysB = overlapsB;
+                }
+            }
+        }
     } 
 }
 

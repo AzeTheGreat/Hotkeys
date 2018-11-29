@@ -83,15 +83,15 @@ namespace Hotkeys
 
         public static void ResetModifierList(KeyPrefs.BindingSlot slot, KeyBindingDef keyDef)
         {
-            var settings = HotkeysLate.settings;
+            var settings = Hotkeys_Save.saved;
             if (slot == KeyPrefs.BindingSlot.A)
             {
-                settings.keyBindModsA[keyDef.defName] = new ExposableList<KeyCode>();
+                keyDef.ModifierData().keyBindModsA = new ExposableList<KeyCode>();
                 settings.Write();
             }
             if (slot == KeyPrefs.BindingSlot.B)
             {
-                settings.keyBindModsB[keyDef.defName] = new ExposableList<KeyCode>();
+                keyDef.ModifierData().keyBindModsB = new ExposableList<KeyCode>();
                 settings.Write();
             }
         }
@@ -99,25 +99,21 @@ namespace Hotkeys
         private static string GetLabelForKeyDef(KeyPrefsData keyPrefsData, KeyBindingDef keyDef, KeyPrefs.BindingSlot slot)
         {
             string mainKey = keyPrefsData.GetBoundKeyCode(keyDef, slot).ToStringReadable();
-            bool keyPresent = false;
-            ExposableList<KeyCode> modifierKeyCodes = new ExposableList<KeyCode>();
-            var settings = HotkeysLate.settings;
+            List<KeyCode> modifierKeyCodes = new List<KeyCode>();
+            var settings = Hotkeys_Save.saved;
 
             if (slot == KeyPrefs.BindingSlot.A)
             {
-                keyPresent = settings.keyBindModsA.TryGetValue(keyDef.defName, out modifierKeyCodes);
+                modifierKeyCodes.AddRange(keyDef.ModifierData().keyBindModsA);
             }
             if (slot == KeyPrefs.BindingSlot.B)
             {
-                keyPresent = settings.keyBindModsB.TryGetValue(keyDef.defName, out modifierKeyCodes);
+                modifierKeyCodes.AddRange(keyDef.ModifierData().keyBindModsB);
             }
 
-            if (keyPresent)
+            foreach (var keyCode in modifierKeyCodes)
             {
-                foreach (var keyCode in modifierKeyCodes)
-                {
-                    mainKey = keyCode.ToStringReadable() + " + " + mainKey;
-                }
+                mainKey = keyCode.ToStringReadable() + " + " + mainKey;
             }
 
             return mainKey;
@@ -130,8 +126,8 @@ namespace Hotkeys
     {
         static void Postfix()
         {
-            HotkeysLate.settings.keyBindModsA.Clear();
-            HotkeysLate.settings.keyBindModsB.Clear();
+            Hotkeys_Save.saved.allKeyModifiers.Clear();
+            HotkeysGlobal.BuildKeyModData();
         }
     }
 
@@ -166,9 +162,7 @@ namespace Hotkeys
         {
             if (!Hotkeys.settings.useMultiKeys) { return; }
 
-            HotkeysLate.settings.keyBindModsA = new Dictionary<string, ExposableList<KeyCode>>(HotkeysGlobal.oldKeyBindModsA);
-            HotkeysLate.settings.keyBindModsB = new Dictionary<string, ExposableList<KeyCode>>(HotkeysGlobal.oldKeyBindModsB);
-            HotkeysLate.settings.Write();
+            Hotkeys_Save.saved.allKeyModifiers = new Dictionary<string, KeyModData>(HotkeysGlobal.oldKeyModifiers);
         }
     }
 
@@ -203,8 +197,7 @@ namespace Hotkeys
         {
             if (!Hotkeys.settings.useMultiKeys) { return; }
 
-            HotkeysGlobal.oldKeyBindModsA = new Dictionary<string, ExposableList<KeyCode>>(HotkeysLate.settings.keyBindModsA);
-            HotkeysGlobal.oldKeyBindModsB = new Dictionary<string, ExposableList<KeyCode>>(HotkeysLate.settings.keyBindModsB);
+            HotkeysGlobal.oldKeyModifiers = new Dictionary<string, KeyModData>(Hotkeys_Save.saved.allKeyModifiers);
         }
     }
 
