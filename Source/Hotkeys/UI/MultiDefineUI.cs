@@ -23,15 +23,15 @@ namespace Hotkeys
             return false;
         }
 
-        private static void BindOnKeyUp(ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance, ExposableList<KeyCode> keysPressed)
+        private static void BindOnKeyUp(ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance, List<KeyCode> keysPressed)
         {
             KeyCode lastPressed = keysPressed.Last();
             keysPressed.RemoveLast();
             ___keyPrefsData.SetBinding(___keyDef, ___slot, lastPressed);
 
             var settings = Hotkeys_Save.saved;
-            if (___slot == KeyPrefs.BindingSlot.A) { ___keyDef.ModifierData().keyBindModsA = new ExposableList<KeyCode>(keysPressed); }
-            if (___slot == KeyPrefs.BindingSlot.B) { ___keyDef.ModifierData().keyBindModsB = new ExposableList<KeyCode>(keysPressed); }
+            if (___slot == KeyPrefs.BindingSlot.A) { ___keyDef.ModifierData().keyBindModsA = new List<KeyCode>(keysPressed); }
+            if (___slot == KeyPrefs.BindingSlot.B) { ___keyDef.ModifierData().keyBindModsB = new List<KeyCode>(keysPressed); }
             settings.Write();
 
             ___keyPrefsData.EraseConflictingBindingsForKeyCode(___keyDef, lastPressed, delegate (KeyBindingDef oldDef)
@@ -54,7 +54,7 @@ namespace Hotkeys
 
             if ((Event.current.isKey && Event.current.keyCode != KeyCode.None) || (AnyShiftPressed()))
             {
-                ExposableList<KeyCode> keysPressed = HotkeysGlobal.keysPressed;
+                List<KeyCode> keysPressed = HotkeysGlobal.keysPressed;
 
                 if (Event.current.type == EventType.KeyUp)
                 {
@@ -94,6 +94,7 @@ namespace Hotkeys
         }
     }
 
+    // Custom Class
     public static class BindingConflicts
     {
         public static List<KeyBindingDef> ConflictingBindings(KeyBindingDef keyDef, KeyCode code, KeyPrefsData __instance)
@@ -122,8 +123,8 @@ namespace Hotkeys
 
             __instance.keyPrefs.TryGetValue(assignedKeyDef, out KeyBindingData prefDataAssigned);
 
-            ExposableList<KeyCode> assignedCodes = new ExposableList<KeyCode>();
-            ExposableList<KeyCode> existingCodes = new ExposableList<KeyCode>();
+            List<KeyCode> assignedCodes = new List<KeyCode>();
+            List<KeyCode> existingCodes = new List<KeyCode>();
 
             if (assignedCode == prefDataAssigned.keyBindingA)
             {
@@ -163,6 +164,7 @@ namespace Hotkeys
     {
         static bool Prefix(KeyPrefsData __instance, KeyBindingDef keyDef, KeyPrefs.BindingSlot slot)
         {
+            Log.Message("ErrorCheckOn");
             if (!Hotkeys.settings.useMultiKeys) { return true; }
 
             KeyCode boundKeyCode = __instance.GetBoundKeyCode(keyDef, slot);

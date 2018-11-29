@@ -46,10 +46,6 @@ namespace Hotkeys
 
             // INITIALIZE
             saved = GetSettings<Hotkeys_SettingsSave>();
-            //LongEventHandler.QueueLongEvent(() => HotkeysGlobal.InitializeMod(), null, false, null);
-
-            // THIS
-            //isInit = true;
         }
     }
 

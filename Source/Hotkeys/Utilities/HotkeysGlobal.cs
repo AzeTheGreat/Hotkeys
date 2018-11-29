@@ -10,6 +10,7 @@ using System.Linq;
 
 namespace Hotkeys
 {
+    // Static Constructor runs after all other startup processes to initialize mod
     [StaticConstructorOnStartup]
     public class InitializeMod
     {
@@ -20,11 +21,11 @@ namespace Hotkeys
         }
     }
 
+    // Global references for some variables/methods
     public static class HotkeysGlobal
     {
-        
         // Intermediate Fields
-        public static ExposableList<KeyCode> keysPressed;
+        public static List<KeyCode> keysPressed;
         public static bool lShiftWasUp;
         public static bool rShiftWasUp;
 
@@ -42,10 +43,12 @@ namespace Hotkeys
             List<KeyBindingDef> allKeyDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading;
             foreach (var keyDef in allKeyDefs)
             {
-                var newModData = new KeyModData();
-                allKeyModifiers[keyDef.defName] = newModData;
+                if (!allKeyModifiers.ContainsKey(keyDef.defName))
+                {
+                    var newModData = new KeyModData();
+                    allKeyModifiers[keyDef.defName] = newModData;
+                }
             }
-
         }
 
         public static void BuildOverlappingKeys()
@@ -77,7 +80,7 @@ namespace Hotkeys
                 {
                     newKeyCodes = keyDef.ModifierData().keyBindModsA;
                     overlappingKeyMods.TryGetValue(keyCodeA, out storedKeyCodes);
-                    if (newKeyCodes == null) { newKeyCodes = new ExposableList<KeyCode>(); }
+                    if (newKeyCodes == null) { newKeyCodes = new List<KeyCode>(); }
                     if (storedKeyCodes == null) { storedKeyCodes = new List<KeyCode>(); }
 
                     List<KeyCode> modifierKeyCodes = storedKeyCodes.Union(newKeyCodes).ToList();
@@ -90,7 +93,7 @@ namespace Hotkeys
                 {
                     newKeyCodes = keyDef.ModifierData().keyBindModsB;
                     overlappingKeyMods.TryGetValue(keyCodeB, out storedKeyCodes);
-                    if (newKeyCodes == null) { newKeyCodes = new ExposableList<KeyCode>(); }
+                    if (newKeyCodes == null) { newKeyCodes = new List<KeyCode>(); }
                     if (storedKeyCodes == null) { storedKeyCodes = new List<KeyCode>(); }
 
                     List<KeyCode> modifierKeyCodes = storedKeyCodes.Union(newKeyCodes).ToList();

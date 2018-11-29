@@ -13,13 +13,6 @@ namespace Hotkeys
         public static KeyModData ModifierData(this KeyBindingDef keyDef)
         {
             Hotkeys_Save.saved.allKeyModifiers.TryGetValue(keyDef.defName, out KeyModData keyModData);
-
-            //if (keyModData == null)
-            //{
-            //    keyModData = new KeyModData();
-            //    HotkeysGlobal.allKeyModifiers[keyDef.defName] = keyModData;
-            //    return keyModData;
-            //}
             return keyModData;
         }
     }

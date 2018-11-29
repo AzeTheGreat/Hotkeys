@@ -8,8 +8,7 @@ using System.Linq;
 
 namespace Hotkeys
 {
-    [HarmonyPatch(typeof(KeyBindingDef))]
-    [HarmonyPatch("KeyDownEvent")]
+    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.KeyDownEvent))]
     [HarmonyPatch(MethodType.Getter)]
     public class MultiKeyPatchKeyDownEvent
     {
@@ -27,8 +26,7 @@ namespace Hotkeys
         }
     }
 
-    [HarmonyPatch(typeof(KeyBindingDef))]
-    [HarmonyPatch("IsDownEvent")]
+    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDownEvent))]
     [HarmonyPatch(MethodType.Getter)]
     public class MultiKeyPatchIsDownEvent
     {
@@ -46,8 +44,7 @@ namespace Hotkeys
         }
     }
 
-    [HarmonyPatch(typeof(KeyBindingDef))]
-    [HarmonyPatch("JustPressed")]
+    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.JustPressed))]
     [HarmonyPatch(MethodType.Getter)]
     public class MultiKeyPatchJustPressed
     {
@@ -66,8 +63,7 @@ namespace Hotkeys
         }
     }
 
-    [HarmonyPatch(typeof(KeyBindingDef))]
-    [HarmonyPatch("IsDown")]
+    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDown))]
     [HarmonyPatch(MethodType.Getter)]
     public class MultiKeyPatchIsDown
     {

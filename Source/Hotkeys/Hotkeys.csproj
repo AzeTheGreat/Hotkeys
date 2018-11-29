@@ -61,7 +61,6 @@
     <Compile Include="Utilities\KeyModDataInjection.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\KeyModData.cs" />
-    <Compile Include="Utilities\ErdelfExposableList.cs" />
     <Compile Include="Utilities\HotkeysGlobal.cs" />
     <Compile Include="Hotkeys\MultiKeyPatch.cs" />
     <Compile Include="Utilities\Settings.cs" />
