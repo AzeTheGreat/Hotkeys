@@ -8,7 +8,7 @@ namespace Hotkeys
     {
         static InitializeMod()
         {
-            HotkeysGlobal.BuildOverlappingKeys();
+            Global.BuildOverlappingKeys();
             Hotkeys_Save.isInit = true;
         }
     }

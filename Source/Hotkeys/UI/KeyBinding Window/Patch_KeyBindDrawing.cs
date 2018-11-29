@@ -12,7 +12,7 @@ namespace Hotkeys
 {
     // Detour to take over keybinding screen
     [HarmonyPatch(typeof(Dialog_KeyBindings), "DrawKeyEntry")]
-    public class HotkeysPatch_KeyBindDrawing
+    public class Patch_KeyBindDrawing
     {
         static bool Prefix(KeyBindingDef keyDef, Rect parentRect, ref float curY, bool skipDrawing, ref KeyPrefsData ___keyPrefsData)
         {
@@ -52,10 +52,10 @@ namespace Hotkeys
         {
             if (Event.current.button == 0)
             {
-                if (HotkeysGlobal.keysPressed == null) { HotkeysGlobal.keysPressed = new List<KeyCode>(); }
-                HotkeysGlobal.keysPressed.Clear();
-                HotkeysGlobal.lShiftWasUp = false;
-                HotkeysGlobal.rShiftWasUp = false;
+                if (Global.keysPressed == null) { Global.keysPressed = new List<KeyCode>(); }
+                Global.keysPressed.Clear();
+                Global.lShiftWasUp = false;
+                Global.rShiftWasUp = false;
                 Find.WindowStack.Add(new Dialog_DefineBinding(keyPrefsData, keyDef, slot));
                 Event.current.Use();
             }

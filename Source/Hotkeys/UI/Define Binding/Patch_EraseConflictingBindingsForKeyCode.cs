@@ -19,12 +19,12 @@ namespace Hotkeys
                 if (keyBindingData.keyBindingA == keyCode)
                 {
                     keyBindingData.keyBindingA = KeyCode.None;
-                    HotkeysPatch_KeyBindDrawing.ResetModifierList(KeyPrefs.BindingSlot.A, keyBindingDef);
+                    Patch_KeyBindDrawing.ResetModifierList(KeyPrefs.BindingSlot.A, keyBindingDef);
                 }
                 if (keyBindingData.keyBindingB == keyCode)
                 {
                     keyBindingData.keyBindingB = KeyCode.None;
-                    HotkeysPatch_KeyBindDrawing.ResetModifierList(KeyPrefs.BindingSlot.B, keyBindingDef);
+                    Patch_KeyBindDrawing.ResetModifierList(KeyPrefs.BindingSlot.B, keyBindingDef);
                 }
                 if (callBackOnErase != null)
                 {

@@ -11,7 +11,7 @@ using System.Linq;
 namespace Hotkeys
 {
     // Global references for some variables/methods
-    public static class HotkeysGlobal
+    public static class Global
     {
         // Intermediate Fields
         public static List<KeyCode> keysPressed;

@@ -9,7 +9,7 @@ namespace Hotkeys
 {
     // Detour the define binding window
     [HarmonyPatch(typeof(Dialog_DefineBinding), nameof(Dialog_DefineBinding.DoWindowContents))]
-    public class KeyBindingWindowPatch
+    public class Patch_DefineBinding
     {
         private static bool AnyShiftPressed()
         {
@@ -52,20 +52,20 @@ namespace Hotkeys
 
             if ((Event.current.isKey && Event.current.keyCode != KeyCode.None) || (AnyShiftPressed()))
             {
-                List<KeyCode> keysPressed = HotkeysGlobal.keysPressed;
+                List<KeyCode> keysPressed = Global.keysPressed;
 
                 if (Event.current.type == EventType.KeyUp)
                 {
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
-                if (Input.GetKeyUp(KeyCode.LeftShift) && !HotkeysGlobal.lShiftWasUp && keysPressed.Contains(KeyCode.LeftShift))
+                if (Input.GetKeyUp(KeyCode.LeftShift) && !Global.lShiftWasUp && keysPressed.Contains(KeyCode.LeftShift))
                 {
-                    HotkeysGlobal.lShiftWasUp = true;
+                    Global.lShiftWasUp = true;
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
-                if (Input.GetKeyUp(KeyCode.RightShift) && !HotkeysGlobal.rShiftWasUp && keysPressed.Contains(KeyCode.RightShift))
+                if (Input.GetKeyUp(KeyCode.RightShift) && !Global.rShiftWasUp && keysPressed.Contains(KeyCode.RightShift))
                 {
-                    HotkeysGlobal.rShiftWasUp = true;
+                    Global.rShiftWasUp = true;
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
 

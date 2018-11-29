@@ -9,7 +9,7 @@ using System.Linq;
 namespace Hotkeys
 {
     [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.KeyDownEvent), MethodType.Getter)]
-    public class MultiKeyPatchKeyDownEvent
+    public class Patch_KeyDownEvent
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
@@ -26,7 +26,7 @@ namespace Hotkeys
     }
 
     [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDownEvent), MethodType.Getter)]
-    public class MultiKeyPatchIsDownEvent
+    public class Patch_IsDownEvent
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
@@ -43,7 +43,7 @@ namespace Hotkeys
     }
 
     [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.JustPressed), MethodType.Getter)]
-    public class MultiKeyPatchJustPressed
+    public class Patch_JustPressed
     {
         // Kinda dirty maybe make separate harmony to patch later?
         static void Postfix(ref bool __result, KeyBindingDef __instance)
@@ -61,7 +61,7 @@ namespace Hotkeys
     }
 
     [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDown), MethodType.Getter)]
-    public class MultiKeyPatchIsDown
+    public class Patch_IsDown
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {

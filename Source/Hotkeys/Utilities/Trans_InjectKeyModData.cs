@@ -14,7 +14,7 @@ namespace Hotkeys
 {
     // Transpiler to generate KeyModData at proper time
     [HarmonyPatch(typeof(KeyPrefs), nameof(KeyPrefs.Init))]
-    public class HotkeysPatch_InjectKeyModData
+    public class Trans_InjectKeyModData
     {
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -26,7 +26,7 @@ namespace Hotkeys
                 {
                     yield return i;
                     yield return new CodeInstruction(OpCodes.Call,
-                        AccessTools.Method(typeof(HotkeysPatch_InjectKeyModData), nameof(HotkeysPatch_InjectKeyModData.InjectKeyBindMods)));
+                        AccessTools.Method(typeof(Trans_InjectKeyModData), nameof(Trans_InjectKeyModData.InjectKeyBindMods)));
                     continue;
                 }
                 yield return i;
@@ -35,7 +35,7 @@ namespace Hotkeys
 
         private static void InjectKeyBindMods()
         {
-            HotkeysGlobal.BuildKeyModData();
+            Global.BuildKeyModData();
         }
     }
 }

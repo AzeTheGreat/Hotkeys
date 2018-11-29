@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Hotkeys
 {
     [HarmonyPatch(typeof(MainTabWindow_Architect), nameof(MainTabWindow_Architect.ExtraOnGUI))]
-    public class ArchitectHotkeyPatch
+    public class Patch_ArchitectHotkeys
     {
         static bool keyWasDown = false;
 

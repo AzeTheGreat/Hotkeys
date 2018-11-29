@@ -7,9 +7,9 @@ using Harmony;
 
 namespace Hotkeys
 {
-    // Transpiler to reset modifiers if closed
+    // Transpiler to rebuild overlap dictionary when accepted
     [HarmonyPatch(typeof(Dialog_KeyBindings), nameof(Dialog_KeyBindings.DoWindowContents))]
-    public class HotkeysPatch_KeybindingSettingsClosed
+    public class Trans_KeybindingSettingsAccepted
     {
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -18,7 +18,7 @@ namespace Hotkeys
 
             foreach (CodeInstruction i in instructions)
             {
-                if (i.opcode == OpCodes.Ldstr && (string)i.operand == "CancelButton")
+                if (i.opcode == OpCodes.Ldstr && (string)i.operand == "OK")
                 {
                     afterTarget = true;
                 }
@@ -26,7 +26,7 @@ namespace Hotkeys
                 {
                     yield return i;
                     yield return new CodeInstruction(OpCodes.Call,
-                        AccessTools.Method(typeof(HotkeysPatch_KeybindingSettingsClosed), nameof(HotkeysPatch_KeybindingSettingsClosed.RestoreKeyBindings)));
+                        AccessTools.Method(typeof(Trans_KeybindingSettingsAccepted), nameof(Trans_KeybindingSettingsAccepted.RebuildOverlapDict)));
                     afterTarget = false;
                     continue;
                 }
@@ -34,11 +34,11 @@ namespace Hotkeys
             }
         }
 
-        private static void RestoreKeyBindings()
+        private static void RebuildOverlapDict()
         {
             if (!Hotkeys.settings.useMultiKeys) { return; }
 
-            Hotkeys_Save.saved.allKeyModifiers = new Dictionary<string, KeyModData>(HotkeysGlobal.oldKeyModifiers);
+            Global.BuildOverlappingKeys();
         }
     }
 

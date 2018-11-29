@@ -9,7 +9,7 @@ namespace Hotkeys
 {
     // Transpiler to clear old modifier lists when keybinding settings window is opened.
     [HarmonyPatch(typeof(Dialog_Options), nameof(Dialog_Options.DoWindowContents))]
-    public class HotkeysPatch_KeybindingSettingsOpened
+    public class Trans_KeybindingSettingsOpened
     {
          static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -26,7 +26,7 @@ namespace Hotkeys
                 {
                     yield return i;
                     yield return new CodeInstruction(OpCodes.Call,
-                        AccessTools.Method(typeof(HotkeysPatch_KeybindingSettingsOpened), nameof(HotkeysPatch_KeybindingSettingsOpened.BackupKeyBindings)));
+                        AccessTools.Method(typeof(Trans_KeybindingSettingsOpened), nameof(Trans_KeybindingSettingsOpened.BackupKeyBindings)));
                     afterTarget = false;
                     continue;
                 }
@@ -38,7 +38,7 @@ namespace Hotkeys
         {
             if (!Hotkeys.settings.useMultiKeys) { return; }
 
-            HotkeysGlobal.oldKeyModifiers = new Dictionary<string, KeyModData>(Hotkeys_Save.saved.allKeyModifiers);
+            Global.oldKeyModifiers = new Dictionary<string, KeyModData>(Hotkeys_Save.saved.allKeyModifiers);
         }
     }
 
