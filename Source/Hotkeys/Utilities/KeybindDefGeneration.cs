@@ -6,8 +6,7 @@ using System.Linq;
 
 namespace Hotkeys
 {
-    [HarmonyPatch(typeof(DefGenerator))]
-    [HarmonyPatch("GenerateImpliedDefs_PostResolve")]
+    [HarmonyPatch(typeof(DefGenerator), nameof(DefGenerator.GenerateImpliedDefs_PostResolve))]
     public class KeybindDefGenerationPatch
     {
         static void Postfix()

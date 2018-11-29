@@ -8,8 +8,7 @@ using System.Linq;
 
 namespace Hotkeys
 {
-    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.KeyDownEvent))]
-    [HarmonyPatch(MethodType.Getter)]
+    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.KeyDownEvent), MethodType.Getter)]
     public class MultiKeyPatchKeyDownEvent
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
@@ -26,8 +25,7 @@ namespace Hotkeys
         }
     }
 
-    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDownEvent))]
-    [HarmonyPatch(MethodType.Getter)]
+    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDownEvent), MethodType.Getter)]
     public class MultiKeyPatchIsDownEvent
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
@@ -44,8 +42,7 @@ namespace Hotkeys
         }
     }
 
-    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.JustPressed))]
-    [HarmonyPatch(MethodType.Getter)]
+    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.JustPressed), MethodType.Getter)]
     public class MultiKeyPatchJustPressed
     {
         // Kinda dirty maybe make separate harmony to patch later?
@@ -63,8 +60,7 @@ namespace Hotkeys
         }
     }
 
-    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDown))]
-    [HarmonyPatch(MethodType.Getter)]
+    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDown), MethodType.Getter)]
     public class MultiKeyPatchIsDown
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)

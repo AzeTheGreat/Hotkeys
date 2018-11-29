@@ -6,8 +6,7 @@ using System.Collections.Generic;
 
 namespace Hotkeys
 {
-    [HarmonyPatch(typeof(MainTabWindow_Architect))]
-    [HarmonyPatch("ExtraOnGUI")]
+    [HarmonyPatch(typeof(MainTabWindow_Architect), nameof(MainTabWindow_Architect.ExtraOnGUI))]
     public class ArchitectHotkeyPatch
     {
         static bool keyWasDown = false;
@@ -34,8 +33,7 @@ namespace Hotkeys
                     {
                         keyWasDown = true;
                         ___selectedDesPanel = panel;
-                    }
-                    
+                    }   
                 }
             }
         }    

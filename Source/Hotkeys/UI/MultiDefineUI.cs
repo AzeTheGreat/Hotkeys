@@ -9,8 +9,7 @@ using System.Linq;
 namespace Hotkeys
 {
     // Detour the define binding window
-    [HarmonyPatch(typeof(Dialog_DefineBinding))]
-    [HarmonyPatch("DoWindowContents")]
+    [HarmonyPatch(typeof(Dialog_DefineBinding), nameof(Dialog_DefineBinding.DoWindowContents))]
     public class KeyBindingWindowPatch
     {
         private static bool AnyShiftPressed()
@@ -158,8 +157,7 @@ namespace Hotkeys
     }
 
     // Detour to use my ConflictingBindingsMethod
-    [HarmonyPatch(typeof(KeyPrefsData))]
-    [HarmonyPatch("ErrorCheckOn")]
+    [HarmonyPatch(typeof(KeyPrefsData), "ErrorCheckOn")]
     public class Patch_ErrorCheckOn
     {
         static bool Prefix(KeyPrefsData __instance, KeyBindingDef keyDef, KeyPrefs.BindingSlot slot)
@@ -204,8 +202,7 @@ namespace Hotkeys
     }
 
     // Detour to change how conflicting keybindings are handled.
-    [HarmonyPatch(typeof(KeyPrefsData))]
-    [HarmonyPatch("EraseConflictingBindingsForKeyCode")]
+    [HarmonyPatch(typeof(KeyPrefsData), nameof(KeyPrefsData.EraseConflictingBindingsForKeyCode))]
     public class Patch_EraseConflictingBindingsForKeyCode
     {
         static bool Prefix(KeyPrefsData __instance, KeyBindingDef keyDef, KeyCode keyCode, Action<KeyBindingDef> callBackOnErase = null)

@@ -9,8 +9,7 @@ using System.Linq;
 
 namespace Hotkeys
 {
-    [HarmonyPatch(typeof(Game))]
-    [HarmonyPatch("UpdatePlay")]
+    [HarmonyPatch(typeof(Game), nameof(Game.UpdatePlay))]
     public class DirectHotkeysPatch
     {
         static void Postfix()
