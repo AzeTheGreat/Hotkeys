@@ -56,18 +56,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hotkeys\ArchitectHotkeys.cs" />
-    <Compile Include="UI\MultiDefineUI.cs" />
-    <Compile Include="UI\MultiKeyUI.cs" />
+    <Compile Include="UI\Define Binding\BindingConflicts.cs" />
+    <Compile Include="UI\Define Binding\MultiDefineUI.cs" />
+    <Compile Include="UI\Define Binding\Patch_EraseConflictingBindingsForKeyCode.cs" />
+    <Compile Include="UI\Define Binding\Patch_ErrorCheckOn.cs" />
+    <Compile Include="UI\KeyBinding Window\HotkeysPatch_KeybindingSettingsAccepted.cs" />
+    <Compile Include="UI\KeyBinding Window\HotkeysPatch_KeybindingSettingsClosed.cs" />
+    <Compile Include="UI\KeyBinding Window\HotkeysPatch_KeybindingSettingsOpened.cs" />
+    <Compile Include="UI\KeyBinding Window\HotkeysPatch_ResetModifiers.cs" />
+    <Compile Include="UI\KeyBinding Window\MultiKeyUI.cs" />
+    <Compile Include="Saving\Hotkeys_Save.cs" />
+    <Compile Include="Saving\Hotkeys_SettingsSave.cs" />
     <Compile Include="Utilities\KeyModDataInjection.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\KeyModData.cs" />
     <Compile Include="Utilities\HotkeysGlobal.cs" />
     <Compile Include="Hotkeys\MultiKeyPatch.cs" />
-    <Compile Include="Utilities\Settings.cs" />
+    <Compile Include="Saving\Settings.cs" />
     <Compile Include="Hotkeys\DirectHotkeys.cs" />
-    <Compile Include="UI\ModUI.cs" />
+    <Compile Include="UI\ModSettings.cs" />
     <Compile Include="Utilities\KeybindDefGeneration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

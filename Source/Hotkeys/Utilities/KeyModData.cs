@@ -27,7 +27,6 @@ namespace Hotkeys
 
         public bool AllModifierKeysDown(KeyBindingDef keyDef, bool resultA, bool resultB)
         {
-            Log.Message("Test");
             KeyPrefsData keyPrefData = KeyPrefs.KeyPrefsData.Clone();
             bool allDownA = true;
             bool allDownB = true;

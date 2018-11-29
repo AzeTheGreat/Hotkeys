@@ -1,54 +1,9 @@
-﻿using Harmony;
-using Verse;
-using System.Reflection;
-using RimWorld;
-using UnityEngine;
+﻿using Verse;
 using System.Collections.Generic;
-using Verse.Sound;
-using RimWorld.Planet;
 using System.Linq;
 
 namespace Hotkeys
 {
-    public class Hotkeys_Settings : ModSettings
-    {
-        public bool useArchitectHotkeys;
-        public bool useDirectHotkeys;
-        public bool useMultiKeys;
-
-        public Hotkeys_Settings()
-        {
-            useArchitectHotkeys = false;
-            useDirectHotkeys = false;
-            useMultiKeys = false;
-        }
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look(ref useArchitectHotkeys, "Enable_Architect_Hotkeys");
-            Scribe_Values.Look(ref useDirectHotkeys, "Enable_Direct_Hotkeys");
-            Scribe_Values.Look(ref useMultiKeys, "Enable_Multi_Keybindings");
-        }
-    }
-
-    public class Hotkeys_Save : Mod
-    {
-        public static Hotkeys_SettingsSave saved;
-        public static bool isInit = false;
-
-        public Hotkeys_Save(ModContentPack content) : base(content)
-        {
-            // HARMONY
-            var harmonyHotkeys = HarmonyInstance.Create("Hotkeys");
-            HarmonyInstance.DEBUG = false;
-            harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
-
-            // INITIALIZE
-            saved = GetSettings<Hotkeys_SettingsSave>();
-        }
-    }
-
     public class Hotkeys_SettingsSave : ModSettings
     {
         public Dictionary<string, KeyModData> allKeyModifiers;

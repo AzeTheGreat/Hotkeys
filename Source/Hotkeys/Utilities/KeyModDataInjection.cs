@@ -35,7 +35,6 @@ namespace Hotkeys
 
         private static void InjectKeyBindMods()
         {
-            Log.Message("KeyBindMods Injected");
             HotkeysGlobal.BuildKeyModData();
         }
     }
