@@ -29,8 +29,8 @@ namespace Hotkeys
 
         private static bool CheckAllKeys(KeyBindingDef assignedKeyDef, KeyBindingDef existingKeyDef, KeyBindingData prefDataExisting, KeyCode assignedCode, KeyPrefsData __instance)
         {
-            var settings = Hotkeys_Save.saved;
-            if (settings == null) { settings = LoadedModManager.GetMod<Hotkeys_Save>().GetSettings<Hotkeys_SettingsSave>(); }
+            var settings = Hotkeys.settings;
+            if (settings == null) { settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<Hotkeys_Settings>(); }
 
             __instance.keyPrefs.TryGetValue(assignedKeyDef, out KeyBindingData prefDataAssigned);
 

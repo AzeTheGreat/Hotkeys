@@ -9,7 +9,7 @@ namespace Hotkeys
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !Hotkeys_Save.isInit || !Hotkeys.settings.useMultiKeys) { return; }
+            if (!__result || !Hotkeys.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
@@ -26,7 +26,7 @@ namespace Hotkeys
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !Hotkeys_Save.isInit || !Hotkeys.settings.useMultiKeys) { return; }
+            if (!__result || !Hotkeys.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
@@ -44,7 +44,7 @@ namespace Hotkeys
         // Kinda dirty maybe make separate harmony to patch later?
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !Hotkeys_Save.isInit || !Hotkeys.settings.useMultiKeys) { return; }
+            if (!__result || !Hotkeys.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
@@ -61,7 +61,7 @@ namespace Hotkeys
     {
         static void Postfix(ref bool __result, KeyBindingDef __instance)
         {
-            if (!__result || !Hotkeys_Save.isInit || !Hotkeys.settings.useMultiKeys) { return; }
+            if (!__result || !Hotkeys.isInit || !Hotkeys.settings.useMultiKeys) { return; }
 
             KeyBindingData keyBindingData;
             if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))

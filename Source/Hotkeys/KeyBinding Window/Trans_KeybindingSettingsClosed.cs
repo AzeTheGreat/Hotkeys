@@ -38,7 +38,7 @@ namespace Hotkeys
         {
             if (!Hotkeys.settings.useMultiKeys) { return; }
 
-            Hotkeys_Save.saved.allKeyModifiers = new Dictionary<string, KeyModData>(Global.oldKeyModifiers);
+            KeyMods.allKeyModifiers = new Dictionary<string, KeyModData>(KeyMods.oldKeyModifiers);
         }
     }
 

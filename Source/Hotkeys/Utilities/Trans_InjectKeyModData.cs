@@ -29,7 +29,7 @@ namespace Hotkeys
 
         private static void InjectKeyBindMods()
         {
-            Global.BuildKeyModData();
+            KeyMods.BuildKeyModData();
         }
     }
 }

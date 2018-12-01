@@ -1,35 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using RimWorld;
 using Verse;
 
 namespace Hotkeys
 {
-    public class Hotkeys_SettingsSave : ModSettings
+    [StaticConstructorOnStartup]
+    static class DirectKeys
     {
-        public Dictionary<string, KeyModData> allKeyModifiers;
+        public static List<string> desCategoryLabelCaps;
+        public static List<string> desLabelCaps;
 
-        public List<string> desCategoryLabelCaps;
-        public List<string> desLabelCaps;
-
-        public Hotkeys_SettingsSave()
+        static DirectKeys()
         {
-            allKeyModifiers = new Dictionary<string, KeyModData>();
-
-            desCategoryLabelCaps = new List<string>();
-            desLabelCaps = new List<string>();
+            desCategoryLabelCaps = Hotkeys.settings.desCategoryLabelCaps;
+            desLabelCaps = Hotkeys.settings.desLabelCaps;
         }
 
-        public override void ExposeData()
-        {
-            Scribe_Collections.Look(ref allKeyModifiers, "Hotkeys_Key_Modifiers");
-
-            Scribe_Collections.Look(ref desCategoryLabelCaps, "Designation_Categories");
-            Scribe_Collections.Look(ref desLabelCaps, "Designators");
-        }
-
-
-
-        public DesignationCategoryDef GetDesCategory(int index)
+        public static DesignationCategoryDef GetDesCategory(int index)
         {
             if (!CheckDesCategory(index)) { return null; }
 
@@ -37,7 +27,7 @@ namespace Hotkeys
             return desCat;
         }
 
-        public Designator GetDesignator(int index)
+        public static Designator GetDesignator(int index)
         {
             if (!CheckDesCategory(index)) { return null; }
             if (!CheckDesignator(index)) { return null; }
@@ -47,7 +37,7 @@ namespace Hotkeys
             return des;
         }
 
-        public bool CheckDesCategory(int index)
+        public static bool CheckDesCategory(int index)
         {
             var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Select(x => x.LabelCap);
             if (allDesCatDefs.Contains(desCategoryLabelCaps[index]))
@@ -60,7 +50,7 @@ namespace Hotkeys
             }
         }
 
-        public bool CheckDesignator(int index)
+        public static bool CheckDesignator(int index)
         {
             if (!CheckDesCategory(index)) { return false; }
 

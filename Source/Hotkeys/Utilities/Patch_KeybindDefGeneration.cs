@@ -10,7 +10,6 @@ namespace Hotkeys
         static void Postfix()
         {
             var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<Hotkeys_Settings>();
-            var saved = LoadedModManager.GetMod<Hotkeys_Save>().GetSettings<Hotkeys_SettingsSave>();
 
             if (settings.useArchitectHotkeys)
             {
@@ -30,12 +29,12 @@ namespace Hotkeys
             if (settings.useDirectHotkeys)
             {
                 // Generate keybindings for all direct hotkeys
-                for (int i = 0; i < saved.desCategoryLabelCaps.Count; i++)
+                for (int i = 0; i < settings.desCategoryLabelCaps.Count; i++)
                 {
                     var keyDef = new KeyBindingDef();
                     keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
                     keyDef.defName = "Hotkeys_DirectHotkey_" + i.ToString();
-                    keyDef.label = "Direct Hotkey " + i.ToString();
+                    keyDef.label = settings.desCategoryLabelCaps[i] + "/" + settings.desLabelCaps[i];
                     keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
                     keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys").modContentPack;
                     DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);

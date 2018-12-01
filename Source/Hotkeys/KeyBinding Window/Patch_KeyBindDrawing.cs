@@ -48,10 +48,10 @@ namespace Hotkeys
         {
             if (Event.current.button == 0)
             {
-                if (Global.keysPressed == null) { Global.keysPressed = new List<KeyCode>(); }
-                Global.keysPressed.Clear();
-                Global.lShiftWasUp = false;
-                Global.rShiftWasUp = false;
+                if (IntermediateKeys.keysPressed == null) { IntermediateKeys.keysPressed = new List<KeyCode>(); }
+                IntermediateKeys.keysPressed.Clear();
+                IntermediateKeys.lShiftWasUp = false;
+                IntermediateKeys.rShiftWasUp = false;
                 Find.WindowStack.Add(new Dialog_DefineBinding(keyPrefsData, keyDef, slot));
                 Event.current.Use();
             }
@@ -77,7 +77,7 @@ namespace Hotkeys
 
         public static void ResetModifierList(KeyPrefs.BindingSlot slot, KeyBindingDef keyDef)
         {
-            var settings = Hotkeys_Save.saved;
+            var settings = Hotkeys.settings;
             if (slot == KeyPrefs.BindingSlot.A)
             {
                 keyDef.ModifierData().keyBindModsA = new List<KeyCode>();
@@ -94,7 +94,7 @@ namespace Hotkeys
         {
             string mainKey = keyPrefsData.GetBoundKeyCode(keyDef, slot).ToStringReadable();
             List<KeyCode> modifierKeyCodes = new List<KeyCode>();
-            var settings = Hotkeys_Save.saved;
+            var settings = Hotkeys.settings;
 
             if (slot == KeyPrefs.BindingSlot.A)
             {

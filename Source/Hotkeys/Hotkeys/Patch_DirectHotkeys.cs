@@ -11,11 +11,8 @@ namespace Hotkeys
     {
         static void Postfix()
         {
-            var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<Hotkeys_Settings>();
-            var saved = LoadedModManager.GetMod<Hotkeys_Save>().GetSettings<Hotkeys_SettingsSave>();
-
             if (Event.current.type != EventType.KeyDown) { return; }
-            if (!settings.useDirectHotkeys) { return; }
+            if (!Hotkeys.settings.useDirectHotkeys) { return; }
 
             List<KeyBindingDef> designatorKeys = DefDatabase<KeyBindingDef>.AllDefsListForReading.FindAll(x => x.category == DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys"));
 
@@ -23,7 +20,7 @@ namespace Hotkeys
             {
                 if (designatorKeys[i].JustPressed)
                 {
-                    var designator = saved.GetDesignator(i);
+                    var designator = DirectKeys.GetDesignator(i);
                     if (designator != null)
                     {
                         Find.DesignatorManager.Select(designator);

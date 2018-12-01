@@ -1,24 +1,26 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
+using Harmony;
+using System.Reflection;
+using RimWorld;
+using System.Linq;
 
 namespace Hotkeys
 {
-    // Global references for some variables/methods
-    public static class Global
+    [StaticConstructorOnStartup]
+    static class KeyMods
     {
-        // Intermediate Fields
-        public static List<KeyCode> keysPressed;
-        public static bool lShiftWasUp;
-        public static bool rShiftWasUp;
-
+        public static Dictionary<string, KeyModData> allKeyModifiers;
         public static Dictionary<string, KeyModData> oldKeyModifiers;
+
+        static KeyMods()
+        {
+            allKeyModifiers = Hotkeys.settings.allKeyModifiers;
+        }
 
         public static void BuildKeyModData()
         {
-            var allKeyModifiers = Hotkeys_Save.saved.allKeyModifiers;
-
             if (allKeyModifiers == null)
             {
                 allKeyModifiers = new Dictionary<string, KeyModData>();
@@ -56,7 +58,7 @@ namespace Hotkeys
             {
                 KeyCode keyCodeA = keyPrefData.GetBoundKeyCode(keyDef, KeyPrefs.BindingSlot.A);
                 KeyCode keyCodeB = keyPrefData.GetBoundKeyCode(keyDef, KeyPrefs.BindingSlot.B);
- 
+
                 List<KeyCode> newKeyCodes = new List<KeyCode>();
                 List<KeyCode> storedKeyCodes = new List<KeyCode>();
 
@@ -103,8 +105,5 @@ namespace Hotkeys
                 }
             }
         }
-    } 
+    }
 }
-
-
-

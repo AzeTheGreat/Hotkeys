@@ -38,7 +38,7 @@ namespace Hotkeys
         {
             if (!Hotkeys.settings.useMultiKeys) { return; }
 
-            Global.BuildOverlappingKeys();
+            KeyMods.BuildOverlappingKeys();
         }
     }
 
