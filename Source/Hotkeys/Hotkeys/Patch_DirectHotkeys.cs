@@ -13,7 +13,7 @@ namespace Hotkeys
         {
             if (Event.current.type != EventType.KeyDown) { return; }
             if (!Hotkeys.settings.useDirectHotkeys) { return; }
-            if (Find.Selector.SelectedObjects != null) { return; }
+            if (Find.Selector.SelectedObjects.Count > 0) { return; }
 
             List<KeyBindingDef> designatorKeys = DefDatabase<KeyBindingDef>.AllDefsListForReading.FindAll(x => x.category == DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys"));
 
