@@ -45,7 +45,7 @@ namespace Hotkeys
             lMain.CheckboxLabeled("Multi Keybindings", ref settings.useMultiKeys, "Check to enable binding multiple keystrokes to each keybinding");
             lMain.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
             lMain.GapLine();
-            lMain.Label("The game MUST be restarted to add or remove keybinding options.  Set keybinds in the standard menu.");
+            //lMain.Label("The game MUST be restarted to add or remove keybinding options.  Set keybinds in the standard menu.");
 
 
             lMain.Gap();
@@ -110,7 +110,6 @@ namespace Hotkeys
                 DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
             }
             KeyPrefs.Init();
-
         }
 
         private void RemoveButtons(GridLayout grid)
