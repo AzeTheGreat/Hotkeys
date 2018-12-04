@@ -16,6 +16,8 @@ namespace Hotkeys
         private Vector2 scrollPosition;
         public static bool isInit = false;
 
+        private float indent = 10f;
+
         public Hotkeys(ModContentPack content) : base(content)
         {
             // HARMONY
@@ -32,7 +34,7 @@ namespace Hotkeys
 
         public override void DoSettingsWindowContents(Rect canvas)
         {
-            float contentHeight = 30f * settings.desCategoryLabelCaps.Count + 1000f;
+            float contentHeight = 30f * DirectKeys.directKeys.Count + 1000f;
 
             Rect source = new Rect(0f, 0f, canvas.width - 24f, contentHeight);
             Widgets.BeginScrollView(canvas, ref scrollPosition, source, true);
@@ -58,7 +60,7 @@ namespace Hotkeys
                 lMain.Gap();
                 lMain.End();
 
-                var grid = new GridLayout(new Rect(source.xMin, source.yMin + lMain.CurHeight, source.width, source.height - lMain.CurHeight), 5, 1, 0, 0);
+                var grid = new GridLayout(new Rect(source.xMin + indent, source.yMin + lMain.CurHeight, source.width - 2*indent, source.height - lMain.CurHeight), 5, 1, 0, 0);
 
                 CategoryFloatMenus(grid);
                 DesignatorFloatMenus(grid);
@@ -99,17 +101,8 @@ namespace Hotkeys
                 DefDatabase<KeyBindingDef>.Add(keyDef);
             }
 
-            for (int i = 0; i < settings.desCategoryLabelCaps.Count; i++)
-            {
-                var keyDef = new KeyBindingDef();
-                keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
-                keyDef.defName = "Hotkeys_DirectHotkey_" + i.ToString();
-                keyDef.label = settings.desCategoryLabelCaps[i] + "/" + settings.desLabelCaps[i];
-                keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
-                keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys").modContentPack;
-                DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
-            }
-            KeyPrefs.Init();
+            DirectKeys.BuildDirectKeyDefs();
+            
         }
 
         private void RemoveButtons(GridLayout grid)
@@ -119,12 +112,11 @@ namespace Hotkeys
             var rect2 = new Rect(rect.xMax - 30f, rect.yMin, 30f, rect.height);
             listing.Begin(rect2);
 
-            for (int i = 0; i < settings.desLabelCaps.Count; i++)
+            for (int i = 0; i < DirectKeys.directKeys.Count; i++)
             {
                 if (listing.ButtonText("-"))
                 {
-                    settings.desCategoryLabelCaps.RemoveAt(i);
-                    settings.desLabelCaps.RemoveAt(i);
+                    DirectKeys.directKeys.RemoveAt(i);
                 }
             }
 
@@ -137,9 +129,9 @@ namespace Hotkeys
             var listing = new Listing_Standard();
             listing.Begin(rect);
 
-            for (int index = 0; index < settings.desLabelCaps.Count; index++)
+            for (int index = 0; index < DirectKeys.directKeys.Count; index++)
             {
-                if (listing.ButtonText(settings.desLabelCaps[index]))
+                if (listing.ButtonText(DirectKeys.directKeys[index].desLabelCap))
                 {
                     var options = GetDesFloatMenuOptions(index);
 
@@ -152,8 +144,7 @@ namespace Hotkeys
 
             if (listing.ButtonText("Add Hotkey", "Add additional direct hotkeys"))
             {
-                settings.desCategoryLabelCaps.Add("None");
-                settings.desLabelCaps.Add("None");
+                DirectKeys.directKeys.Add(new DirectKeyData());
             }
 
             listing.End();
@@ -165,9 +156,9 @@ namespace Hotkeys
             var listing = new Listing_Standard();
             listing.Begin(rect);
 
-            for (int index = 0; index < settings.desCategoryLabelCaps.Count; index++)
+            for (int index = 0; index < DirectKeys.directKeys.Count; index++)
             {
-                if (listing.ButtonTextLabeled("Direct Hotkey " + index.ToString(), settings.desCategoryLabelCaps[index]))
+                if (listing.ButtonTextLabeled("Direct Hotkey " + index.ToString(), DirectKeys.directKeys[index].desCategoryLabelCap))
                 {
                     var options = GetCatFloatMenuOptions(index);
 
@@ -184,14 +175,14 @@ namespace Hotkeys
             int buttonNum = index;
             var options = new List<FloatMenuOption>();
 
-            if (DirectKeys.CheckDesCategory(index))
+            if (DirectKeys.directKeys[index].CheckDesCategory())
             {
-                var designators = DirectKeys.GetDesCategory(index).AllResolvedDesignators;
+                var designators = DirectKeys.directKeys[index].GetDesCategory().AllResolvedDesignators;
                 foreach (var designator in designators)
                 {
                     options.Add(new FloatMenuOption(designator.LabelCap, delegate ()
                     {
-                        settings.desLabelCaps[buttonNum] = designator.LabelCap;
+                        DirectKeys.directKeys[buttonNum].desLabelCap = designator.LabelCap;
                     }));
                 }
             }
@@ -199,7 +190,7 @@ namespace Hotkeys
             {
                 options.Add(new FloatMenuOption("None", delegate ()
                 {
-                    settings.desLabelCaps[buttonNum] = "None";
+                    DirectKeys.directKeys[buttonNum].desLabelCap = "None";
                 }));
             }
 
@@ -216,7 +207,7 @@ namespace Hotkeys
             {
                 options.Add(new FloatMenuOption(desCat.LabelCap, delegate ()
                 {
-                    settings.desCategoryLabelCaps[buttonNum] = desCat.LabelCap;
+                    DirectKeys.directKeys[buttonNum].desCategoryLabelCap = desCat.LabelCap;
                 }));
             }
 

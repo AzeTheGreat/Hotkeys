@@ -8,8 +8,7 @@ namespace Hotkeys
     {
         // Saved
         public Dictionary<string, KeyModData> allKeyModifiers;
-        public List<string> desCategoryLabelCaps;
-        public List<string> desLabelCaps;
+        public List<DirectKeyData> directKeys;
 
         // Settings
         public bool useArchitectHotkeys;
@@ -19,8 +18,7 @@ namespace Hotkeys
         public Hotkeys_Settings()
         {
             allKeyModifiers = new Dictionary<string, KeyModData>();
-            desCategoryLabelCaps = new List<string>();
-            desLabelCaps = new List<string>();
+            directKeys = new List<DirectKeyData>();
 
             useArchitectHotkeys = false;
             useDirectHotkeys = false;
@@ -29,9 +27,8 @@ namespace Hotkeys
 
         public override void ExposeData()
         {
-            Scribe_Collections.Look(ref allKeyModifiers, "Hotkeys_Key_Modifiers");
-            Scribe_Collections.Look(ref desCategoryLabelCaps, "Designation_Categories");
-            Scribe_Collections.Look(ref desLabelCaps, "Designators");
+            Scribe_Collections.Look(ref allKeyModifiers, "Key_Modifiers");
+            Scribe_Collections.Look(ref directKeys, "Direct_Keys");
 
             //base.ExposeData();
             Scribe_Values.Look(ref useArchitectHotkeys, "Enable_Architect_Hotkeys");

@@ -21,7 +21,7 @@ namespace Hotkeys
             {
                 if (designatorKeys[i].JustPressed)
                 {
-                    var designator = DirectKeys.GetDesignator(i);
+                    var designator = DirectKeys.directKeys[i].GetDesignator();
                     if (designator != null)
                     {
                         Find.DesignatorManager.Select(designator);

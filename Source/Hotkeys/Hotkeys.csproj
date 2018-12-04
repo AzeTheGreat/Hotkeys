@@ -61,6 +61,7 @@
     <Compile Include="Define Binding\Patch_DefineBinding.cs" />
     <Compile Include="Define Binding\Patch_EraseConflictingBindingsForKeyCode.cs" />
     <Compile Include="Define Binding\Patch_ErrorCheckOn.cs" />
+    <Compile Include="Key Data\DirectKeyData.cs" />
     <Compile Include="Key Data\DirectKeys.cs" />
     <Compile Include="Key Data\KeyMods.cs" />
     <Compile Include="KeyBinding Window\Trans_KeybindingSettingsAccepted.cs" />

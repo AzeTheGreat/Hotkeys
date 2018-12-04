@@ -19,6 +19,12 @@ namespace Hotkeys
             overlappingKeysB = new List<KeyCode>();
         }
 
+        public void ExposeData()
+        {
+            Scribe_Collections.Look(ref keyBindModsA, "KeyBindModsA", LookMode.Value);
+            Scribe_Collections.Look(ref keyBindModsB, "KeyBindModsB", LookMode.Value);
+        }
+
         public bool AllModifierKeysDown(KeyBindingDef keyDef, bool resultA, bool resultB)
         {
             KeyPrefsData keyPrefData = KeyPrefs.KeyPrefsData.Clone();
@@ -74,10 +80,6 @@ namespace Hotkeys
             return (allDownA && resultA) || (allDownB && resultB);
         }
 
-        public void ExposeData()
-        {
-            Scribe_Collections.Look(ref keyBindModsA, "Hotkeys_KeyBindModsA", LookMode.Value);
-            Scribe_Collections.Look(ref keyBindModsB, "Hotkeys_KeyBindModsB", LookMode.Value);
-        }
+        
     }
 }

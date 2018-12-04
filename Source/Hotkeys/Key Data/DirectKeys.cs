@@ -10,60 +10,32 @@ namespace Hotkeys
     [StaticConstructorOnStartup]
     static class DirectKeys
     {
-        public static List<string> desCategoryLabelCaps;
-        public static List<string> desLabelCaps;
+        public static List<DirectKeyData> directKeys;
 
         static DirectKeys()
         {
-            desCategoryLabelCaps = Hotkeys.settings.desCategoryLabelCaps;
-            desLabelCaps = Hotkeys.settings.desLabelCaps;
+            directKeys = Hotkeys.settings.directKeys;
+            BuildDirectKeyDefs();
         }
 
-        public static DesignationCategoryDef GetDesCategory(int index)
+        public static void BuildDirectKeyDefs()
         {
-            if (!CheckDesCategory(index)) { return null; }
-
-            var desCat = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Find(x => x.LabelCap == desCategoryLabelCaps[index]);
-            return desCat;
-        }
-
-        public static Designator GetDesignator(int index)
-        {
-            if (!CheckDesCategory(index)) { return null; }
-            if (!CheckDesignator(index)) { return null; }
-
-            var desCat = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Find(x => x.LabelCap == desCategoryLabelCaps[index]);
-            var des = desCat.AllResolvedDesignators.Find(x => x.LabelCap == desLabelCaps[index]);
-            return des;
-        }
-
-        public static bool CheckDesCategory(int index)
-        {
-            var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Select(x => x.LabelCap);
-            if (allDesCatDefs.Contains(desCategoryLabelCaps[index]))
+            if (directKeys == null)
             {
-                return true;
+                directKeys = new List<DirectKeyData>();
             }
-            else
-            {
-                return false;
-            }
-        }
 
-        public static bool CheckDesignator(int index)
-        {
-            if (!CheckDesCategory(index)) { return false; }
-
-            var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Find(x => x.LabelCap == desCategoryLabelCaps[index]);
-            var allDesignators = allDesCatDefs.AllResolvedDesignators.Select(x => x.LabelCap);
-            if (allDesignators.Contains(desLabelCaps[index]))
+            for (int i = 0; i < directKeys.Count; i++)
             {
-                return true;
+                var keyDef = new KeyBindingDef();
+                keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
+                keyDef.defName = "Hotkeys_DirectHotkey_" + i.ToString();
+                keyDef.label = directKeys[i].desCategoryLabelCap + "/" + directKeys[i].desLabelCap;
+                keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
+                keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys").modContentPack;
+                DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
             }
-            else
-            {
-                return false;
-            }
+            KeyPrefs.Init();
         }
     }
 }
