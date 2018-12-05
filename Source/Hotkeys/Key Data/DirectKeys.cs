@@ -20,10 +20,8 @@ namespace Hotkeys
 
         public static void BuildDirectKeyDefs()
         {
-            Log.Message("Build");
             if (directKeys == null)
             {
-                Log.Message("Why");
                 directKeys = new List<DirectKeyData>();
             }
 

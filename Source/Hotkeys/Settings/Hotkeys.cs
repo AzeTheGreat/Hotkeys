@@ -26,7 +26,6 @@ namespace Hotkeys
             harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
 
             // SETTINGS
-            Log.Message("Settings Get Got");
             settings = GetSettings<Hotkeys_Settings>();
 
             // THIS
@@ -96,7 +95,6 @@ namespace Hotkeys
             List<KeyBindingDef> allOldDefs = allKeyDefs.ListFullCopy();
 
             DefDatabase<KeyBindingDef>.Clear();
-            Log.Message(allOldDefs.Count.ToString());
 
             foreach (var keyDef in allOldDefs)
             {
