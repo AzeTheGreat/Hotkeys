@@ -37,3 +37,5 @@ namespace Hotkeys
         }
     }
 }
+
+//Test
