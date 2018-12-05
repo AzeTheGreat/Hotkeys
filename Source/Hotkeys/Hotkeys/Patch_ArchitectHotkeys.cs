@@ -6,8 +6,14 @@ using System.Collections.Generic;
 
 namespace Hotkeys
 {
+<<<<<<< HEAD:Source/Hotkeys/Hotkeys/Patch_ArchitectHotkeys.cs
     [HarmonyPatch(typeof(MainTabWindow_Architect), nameof(MainTabWindow_Architect.ExtraOnGUI))]
     public class Patch_ArchitectHotkeys
+=======
+    [HarmonyPatch(typeof(MainTabWindow_Architect))]
+    [HarmonyPatch("ExtraOnGUI")]
+    public class ArchitectHotkeyPatch
+>>>>>>> parent of 852b8cd... Reduced strings in harmony patches:Source/Hotkeys/Hotkeys/ArchitectHotkeys.cs
     {
         static bool keyWasDown = false;
 
@@ -32,7 +38,8 @@ namespace Hotkeys
                     {
                         keyWasDown = true;
                         ___selectedDesPanel = panel;
-                    }   
+                    }
+                    
                 }
             }
         }    

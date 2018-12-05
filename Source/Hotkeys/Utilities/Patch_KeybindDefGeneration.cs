@@ -6,8 +6,14 @@ using System.Linq;
 
 namespace Hotkeys
 {
+<<<<<<< HEAD:Source/Hotkeys/Utilities/Patch_KeybindDefGeneration.cs
     [HarmonyPatch(typeof(DefGenerator), nameof(DefGenerator.GenerateImpliedDefs_PostResolve))]
     public class Patch_KeybindDefGeneration
+=======
+    [HarmonyPatch(typeof(DefGenerator))]
+    [HarmonyPatch("GenerateImpliedDefs_PostResolve")]
+    public class KeybindDefGenerationPatch
+>>>>>>> parent of 852b8cd... Reduced strings in harmony patches:Source/Hotkeys/Utilities/KeybindDefGeneration.cs
     {
         static void Postfix()
         {
