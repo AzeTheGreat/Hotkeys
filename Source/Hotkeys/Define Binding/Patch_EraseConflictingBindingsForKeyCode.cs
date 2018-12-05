@@ -1,7 +1,7 @@
 ﻿using Harmony;
-using System;
-using UnityEngine;
 using Verse;
+using UnityEngine;
+using System;
 
 namespace Hotkeys
 {

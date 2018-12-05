@@ -1,6 +1,12 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using Harmony;
 using Verse;
+using System.Reflection;
+using RimWorld;
+using UnityEngine;
+using System.Collections.Generic;
+using Verse.Sound;
+using RimWorld.Planet;
+using System.Linq;
 
 namespace Hotkeys
 {
@@ -17,6 +23,12 @@ namespace Hotkeys
             keyBindModsB = new List<KeyCode>();
             overlappingKeysA = new List<KeyCode>();
             overlappingKeysB = new List<KeyCode>();
+        }
+
+        public void ExposeData()
+        {
+            Scribe_Collections.Look(ref keyBindModsA, "KeyBindModsA", LookMode.Value);
+            Scribe_Collections.Look(ref keyBindModsB, "KeyBindModsB", LookMode.Value);
         }
 
         public bool AllModifierKeysDown(KeyBindingDef keyDef, bool resultA, bool resultB)
@@ -70,14 +82,7 @@ namespace Hotkeys
                 }
             }
             
-
             return (allDownA && resultA) || (allDownB && resultB);
-        }
-
-        public void ExposeData()
-        {
-            Scribe_Collections.Look(ref keyBindModsA, "Hotkeys_KeyBindModsA", LookMode.Value);
-            Scribe_Collections.Look(ref keyBindModsB, "Hotkeys_KeyBindModsB", LookMode.Value);
         }
     }
 }

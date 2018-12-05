@@ -1,8 +1,8 @@
 ﻿using Harmony;
-using RimWorld;
-using System.Collections.Generic;
-using UnityEngine;
 using Verse;
+using RimWorld;
+using UnityEngine;
+using System.Collections.Generic;
 
 namespace Hotkeys
 {
@@ -13,11 +13,10 @@ namespace Hotkeys
 
         static void Prefix(ref ArchitectCategoryTab ___selectedDesPanel, ref List<ArchitectCategoryTab> ___desPanelsCached)
         {
-            var settings = LoadedModManager.GetMod<Hotkeys>().GetSettings<Hotkeys_Settings>();
             keyWasDown = false;
 
             if (Event.current.type != EventType.KeyDown) { return; }
-            if (!settings.useArchitectHotkeys) { return; }
+            if (!Hotkeys.settings.useArchitectHotkeys) { return; }
 
             List<KeyBindingDef> categories = DefDatabase<KeyBindingDef>.AllDefsListForReading.FindAll(x => x.category == DefDatabase<KeyBindingCategoryDef>.GetNamed("ArchitectHotkeys"));
             
@@ -40,7 +39,7 @@ namespace Hotkeys
 
         static void Postfix()
         {
-            // Due to keydown persisting for 6 frames (?) this immediately deslects the 'carry through'
+            // Due to keydown persisting for 6 frames (why?) this immediately deslects the 'carry through'
             if (keyWasDown)
             {
                 Find.DesignatorManager.Deselect();

@@ -55,27 +55,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Define Binding\IntermediateKeys.cs" />
     <Compile Include="Hotkeys\Patch_ArchitectHotkeys.cs" />
-    <Compile Include="UI\Define Binding\BindingConflicts.cs" />
-    <Compile Include="UI\Define Binding\Patch_DefineBinding.cs" />
-    <Compile Include="UI\Define Binding\Patch_EraseConflictingBindingsForKeyCode.cs" />
-    <Compile Include="UI\Define Binding\Patch_ErrorCheckOn.cs" />
-    <Compile Include="UI\KeyBinding Window\Trans_KeybindingSettingsAccepted.cs" />
-    <Compile Include="UI\KeyBinding Window\Trans_KeybindingSettingsClosed.cs" />
-    <Compile Include="UI\KeyBinding Window\Trans_KeybindingSettingsOpened.cs" />
-    <Compile Include="UI\KeyBinding Window\Patch_ResetModifiers.cs" />
-    <Compile Include="UI\KeyBinding Window\Patch_KeyBindDrawing.cs" />
-    <Compile Include="Saving\Hotkeys_Save.cs" />
-    <Compile Include="Saving\Hotkeys_SettingsSave.cs" />
+    <Compile Include="Define Binding\BindingConflicts.cs" />
+    <Compile Include="Define Binding\Patch_DefineBinding.cs" />
+    <Compile Include="Define Binding\Patch_EraseConflictingBindingsForKeyCode.cs" />
+    <Compile Include="Define Binding\Patch_ErrorCheckOn.cs" />
+    <Compile Include="Key Data\DirectKeyData.cs" />
+    <Compile Include="Key Data\DirectKeys.cs" />
+    <Compile Include="Key Data\KeyMods.cs" />
+    <Compile Include="KeyBinding Window\Trans_KeybindingSettingsAccepted.cs" />
+    <Compile Include="KeyBinding Window\Trans_KeybindingSettingsClosed.cs" />
+    <Compile Include="KeyBinding Window\Trans_KeybindingSettingsOpened.cs" />
+    <Compile Include="KeyBinding Window\Patch_ResetModifiers.cs" />
+    <Compile Include="KeyBinding Window\Patch_KeyBindDrawing.cs" />
     <Compile Include="Utilities\InitializeMod.cs" />
     <Compile Include="Utilities\Trans_InjectKeyModData.cs" />
     <Compile Include="Utilities\Extensions.cs" />
-    <Compile Include="Utilities\KeyModData.cs" />
-    <Compile Include="Utilities\Global.cs" />
+    <Compile Include="Key Data\KeyModData.cs" />
     <Compile Include="Hotkeys\Patches_MultiKeys.cs" />
-    <Compile Include="Saving\Settings.cs" />
+    <Compile Include="Settings\Hotkeys_Settings.cs" />
     <Compile Include="Hotkeys\Patch_DirectHotkeys.cs" />
-    <Compile Include="UI\ModSettings.cs" />
+    <Compile Include="Settings\Hotkeys.cs" />
     <Compile Include="Utilities\Patch_KeybindDefGeneration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

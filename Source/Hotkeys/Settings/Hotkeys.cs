@@ -1,21 +1,41 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using Harmony;
 using Verse;
+<<<<<<< HEAD:Source/Hotkeys/Settings/Hotkeys.cs
+using Harmony;
+using System.Reflection;
+using RimWorld;
+=======
+using System.Reflection;
+using RimWorld;
+using UnityEngine;
+using System.Collections.Generic;
+using Verse.Sound;
+using RimWorld.Planet;
+>>>>>>> parent of 22a6550... Cleaned up usings:Source/Hotkeys/UI/ModSettings.cs
 
 namespace Hotkeys
 {
     public class Hotkeys : Mod
     {
         public override string SettingsCategory() => "Hotkeys";
+
         public static Hotkeys_Settings settings;
-        private static Hotkeys_SettingsSave saved;
+
         private Vector2 scrollPosition;
+        public static bool isInit = false;
+
+        private float indent = 10f;
 
         public Hotkeys(ModContentPack content) : base(content)
         {
+            // HARMONY
+            var harmonyHotkeys = HarmonyInstance.Create("Hotkeys");
+            HarmonyInstance.DEBUG = false;
+            harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
+
             // SETTINGS
+            Log.Message("Settings Get Got");
             settings = GetSettings<Hotkeys_Settings>();
-            saved = LoadedModManager.GetMod<Hotkeys_Save>().GetSettings<Hotkeys_SettingsSave>();
 
             // THIS
             scrollPosition = new Vector2(0f, 0f);
@@ -23,7 +43,7 @@ namespace Hotkeys
 
         public override void DoSettingsWindowContents(Rect canvas)
         {
-            float contentHeight = 30f * saved.desCategoryLabelCaps.Count + 1000f;
+            float contentHeight = 30f * DirectKeys.directKeys.Count + 1000f;
 
             Rect source = new Rect(0f, 0f, canvas.width - 24f, contentHeight);
             Widgets.BeginScrollView(canvas, ref scrollPosition, source, true);
@@ -36,7 +56,7 @@ namespace Hotkeys
             lMain.CheckboxLabeled("Multi Keybindings", ref settings.useMultiKeys, "Check to enable binding multiple keystrokes to each keybinding");
             lMain.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
             lMain.GapLine();
-            lMain.Label("The game MUST be restarted to add or remove keybinding options.  Set keybinds in the standard menu.");
+            //lMain.Label("The game MUST be restarted to add or remove keybinding options.  Set keybinds in the standard menu.");
 
 
             lMain.Gap();
@@ -49,7 +69,7 @@ namespace Hotkeys
                 lMain.Gap();
                 lMain.End();
 
-                var grid = new GridLayout(new Rect(source.xMin, source.yMin + lMain.CurHeight, source.width, source.height - lMain.CurHeight), 5, 1, 0, 0);
+                var grid = new GridLayout(new Rect(source.xMin + indent, source.yMin + lMain.CurHeight, source.width - 2*indent, source.height - lMain.CurHeight), 5, 1, 0, 0);
 
                 CategoryFloatMenus(grid);
                 DesignatorFloatMenus(grid);
@@ -64,6 +84,35 @@ namespace Hotkeys
             settings.Write();
         }
 
+        public override void WriteSettings()
+        {
+            UpdateDirectHotkeys();
+            settings.Write();
+            base.WriteSettings();
+        }
+
+        private void UpdateDirectHotkeys()
+        {
+            List<KeyBindingDef> allDirectDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading.FindAll(x => x.category == DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys"));
+            List<KeyBindingDef> allKeyDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading;
+
+            foreach (var keyDef in allDirectDefs)
+            {
+                allKeyDefs.RemoveAll(x => x == keyDef);
+            }
+
+            List<KeyBindingDef> allOldDefs = allKeyDefs.ListFullCopy();
+
+            DefDatabase<KeyBindingDef>.Clear();
+            Log.Message(allOldDefs.Count.ToString());
+
+            foreach (var keyDef in allOldDefs)
+            {
+                DefDatabase<KeyBindingDef>.Add(keyDef);
+            }
+
+            DirectKeys.BuildDirectKeyDefs(); 
+        }
 
         private void RemoveButtons(GridLayout grid)
         {
@@ -72,12 +121,11 @@ namespace Hotkeys
             var rect2 = new Rect(rect.xMax - 30f, rect.yMin, 30f, rect.height);
             listing.Begin(rect2);
 
-            for (int i = 0; i < saved.desLabelCaps.Count; i++)
+            for (int i = 0; i < DirectKeys.directKeys.Count; i++)
             {
                 if (listing.ButtonText("-"))
                 {
-                    saved.desCategoryLabelCaps.RemoveAt(i);
-                    saved.desLabelCaps.RemoveAt(i);
+                    DirectKeys.directKeys.RemoveAt(i);
                 }
             }
 
@@ -90,9 +138,9 @@ namespace Hotkeys
             var listing = new Listing_Standard();
             listing.Begin(rect);
 
-            for (int index = 0; index < saved.desLabelCaps.Count; index++)
+            for (int index = 0; index < DirectKeys.directKeys.Count; index++)
             {
-                if (listing.ButtonText(saved.desLabelCaps[index]))
+                if (listing.ButtonText(DirectKeys.directKeys[index].desLabelCap))
                 {
                     var options = GetDesFloatMenuOptions(index);
 
@@ -105,8 +153,7 @@ namespace Hotkeys
 
             if (listing.ButtonText("Add Hotkey", "Add additional direct hotkeys"))
             {
-                saved.desCategoryLabelCaps.Add("None");
-                saved.desLabelCaps.Add("None");
+                DirectKeys.directKeys.Add(new DirectKeyData());
             }
 
             listing.End();
@@ -118,9 +165,9 @@ namespace Hotkeys
             var listing = new Listing_Standard();
             listing.Begin(rect);
 
-            for (int index = 0; index < saved.desCategoryLabelCaps.Count; index++)
+            for (int index = 0; index < DirectKeys.directKeys.Count; index++)
             {
-                if (listing.ButtonTextLabeled("Direct Hotkey " + index.ToString(), saved.desCategoryLabelCaps[index]))
+                if (listing.ButtonTextLabeled("Direct Hotkey " + index.ToString(), DirectKeys.directKeys[index].desCategoryLabelCap))
                 {
                     var options = GetCatFloatMenuOptions(index);
 
@@ -137,14 +184,14 @@ namespace Hotkeys
             int buttonNum = index;
             var options = new List<FloatMenuOption>();
 
-            if (saved.CheckDesCategory(index))
+            if (DirectKeys.directKeys[index].desCategoryLabelCap != "None")
             {
-                var designators = saved.GetDesCategory(index).AllResolvedDesignators;
+                var designators = DirectKeys.directKeys[index].GetDesCategory().AllResolvedDesignators;
                 foreach (var designator in designators)
                 {
                     options.Add(new FloatMenuOption(designator.LabelCap, delegate ()
                     {
-                        saved.desLabelCaps[buttonNum] = designator.LabelCap;
+                        DirectKeys.directKeys[buttonNum].desLabelCap = designator.LabelCap;
                     }));
                 }
             }
@@ -152,7 +199,7 @@ namespace Hotkeys
             {
                 options.Add(new FloatMenuOption("None", delegate ()
                 {
-                    saved.desLabelCaps[buttonNum] = "None";
+                    DirectKeys.directKeys[buttonNum].desLabelCap = "None";
                 }));
             }
 
@@ -169,7 +216,7 @@ namespace Hotkeys
             {
                 options.Add(new FloatMenuOption(desCat.LabelCap, delegate ()
                 {
-                    saved.desCategoryLabelCaps[buttonNum] = desCat.LabelCap;
+                    DirectKeys.directKeys[buttonNum].desCategoryLabelCap = desCat.LabelCap;
                 }));
             }
 

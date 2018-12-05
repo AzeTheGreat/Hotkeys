@@ -1,9 +1,9 @@
-﻿using Harmony;
-using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
+using RimWorld;
+using Harmony;
 
 namespace Hotkeys
 {
@@ -38,7 +38,7 @@ namespace Hotkeys
         {
             if (!Hotkeys.settings.useMultiKeys) { return; }
 
-            Global.oldKeyModifiers = new Dictionary<string, KeyModData>(Hotkeys_Save.saved.allKeyModifiers);
+            KeyMods.oldKeyModifiers = new Dictionary<string, KeyModData>(KeyMods.allKeyModifiers);
         }
     }
 

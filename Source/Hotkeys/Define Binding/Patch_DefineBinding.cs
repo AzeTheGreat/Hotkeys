@@ -1,9 +1,9 @@
 ﻿using Harmony;
+using Verse;
 using RimWorld;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using Verse;
 
 namespace Hotkeys
 {
@@ -27,7 +27,7 @@ namespace Hotkeys
             keysPressed.RemoveLast();
             ___keyPrefsData.SetBinding(___keyDef, ___slot, lastPressed);
 
-            var settings = Hotkeys_Save.saved;
+            var settings = Hotkeys.settings;
             if (___slot == KeyPrefs.BindingSlot.A) { ___keyDef.ModifierData().keyBindModsA = new List<KeyCode>(keysPressed); }
             if (___slot == KeyPrefs.BindingSlot.B) { ___keyDef.ModifierData().keyBindModsB = new List<KeyCode>(keysPressed); }
             settings.Write();
@@ -52,20 +52,20 @@ namespace Hotkeys
 
             if ((Event.current.isKey && Event.current.keyCode != KeyCode.None) || (AnyShiftPressed()))
             {
-                List<KeyCode> keysPressed = Global.keysPressed;
+                List<KeyCode> keysPressed = IntermediateKeys.keysPressed;
 
                 if (Event.current.type == EventType.KeyUp)
                 {
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
-                if (Input.GetKeyUp(KeyCode.LeftShift) && !Global.lShiftWasUp && keysPressed.Contains(KeyCode.LeftShift))
+                if (Input.GetKeyUp(KeyCode.LeftShift) && !IntermediateKeys.lShiftWasUp && keysPressed.Contains(KeyCode.LeftShift))
                 {
-                    Global.lShiftWasUp = true;
+                    IntermediateKeys.lShiftWasUp = true;
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
-                if (Input.GetKeyUp(KeyCode.RightShift) && !Global.rShiftWasUp && keysPressed.Contains(KeyCode.RightShift))
+                if (Input.GetKeyUp(KeyCode.RightShift) && !IntermediateKeys.rShiftWasUp && keysPressed.Contains(KeyCode.RightShift))
                 {
-                    Global.rShiftWasUp = true;
+                    IntermediateKeys.rShiftWasUp = true;
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
                 }
 

@@ -1,6 +1,6 @@
 ﻿using Harmony;
-using System.Reflection;
 using Verse;
+using System.Reflection;
 
 namespace Hotkeys
 {

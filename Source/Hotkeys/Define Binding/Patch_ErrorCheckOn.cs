@@ -1,6 +1,6 @@
 ﻿using Harmony;
-using UnityEngine;
 using Verse;
+using UnityEngine;
 
 namespace Hotkeys
 {

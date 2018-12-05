@@ -1,5 +1,5 @@
-﻿using Harmony;
-using Verse;
+﻿using Verse;
+using Harmony;
 
 namespace Hotkeys
 {
@@ -9,8 +9,8 @@ namespace Hotkeys
     {
         static void Postfix()
         {
-            Hotkeys_Save.saved.allKeyModifiers.Clear();
-            Global.BuildKeyModData();
+            KeyMods.allKeyModifiers.Clear();
+            KeyMods.BuildKeyModData();
         }
     }
 
