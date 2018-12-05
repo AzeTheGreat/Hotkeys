@@ -13,6 +13,22 @@ namespace Hotkeys
         public string desCategoryLabelCap;
         public string desLabelCap;
 
+        private Designator _designator;
+        public Designator Designator
+        {
+            get
+            {
+                if (_designator == null) { GetDesignator(); }
+                return _designator;
+            }
+            private set
+            {
+                _designator = value;
+            }
+        }
+
+        public KeyBindingDef keyDef;
+
         public DirectKeyData()
         {
             desCategoryLabelCap = "None";
@@ -33,17 +49,28 @@ namespace Hotkeys
             return desCat;
         }
 
-        public Designator GetDesignator()
+        public void CreateKeyDef(int i)
         {
-            if (!CheckDesCategory()) { return null; }
-            if (!CheckDesignator()) { return null; }
+            var keyDef = new KeyBindingDef();
+            keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
+            keyDef.defName = "Hotkeys_DirectHotkey_" + i.ToString();
+            keyDef.label = desCategoryLabelCap + "/" + desLabelCap;
+            keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
+            keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys").modContentPack;
+            DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
+        }
+
+        private void GetDesignator()
+        {
+            if (!CheckDesCategory()) { return; }
+            if (!CheckDesignator()) { return; }
 
             var desCat = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Find(x => x.LabelCap == desCategoryLabelCap);
             var des = desCat.AllResolvedDesignators.Find(x => x.LabelCap == desLabelCap);
-            return des;
+            Designator = des;
         }
 
-        public bool CheckDesCategory()
+        private bool CheckDesCategory()
         {
             var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Select(x => x.LabelCap);
             if (allDesCatDefs.Contains(desCategoryLabelCap))
@@ -56,7 +83,7 @@ namespace Hotkeys
             }
         }
 
-        public bool CheckDesignator()
+        private bool CheckDesignator()
         {
             if (!CheckDesCategory()) { return false; }
 
@@ -71,6 +98,5 @@ namespace Hotkeys
                 return false;
             }
         }
-
     }
 }

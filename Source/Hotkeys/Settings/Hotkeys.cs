@@ -26,6 +26,7 @@ namespace Hotkeys
             harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
 
             // SETTINGS
+            Log.Message("Settings Get Got");
             settings = GetSettings<Hotkeys_Settings>();
 
             // THIS
@@ -78,6 +79,7 @@ namespace Hotkeys
         public override void WriteSettings()
         {
             UpdateDirectHotkeys();
+            settings.Write();
             base.WriteSettings();
         }
 
@@ -101,8 +103,7 @@ namespace Hotkeys
                 DefDatabase<KeyBindingDef>.Add(keyDef);
             }
 
-            DirectKeys.BuildDirectKeyDefs();
-            
+            DirectKeys.BuildDirectKeyDefs(); 
         }
 
         private void RemoveButtons(GridLayout grid)
@@ -175,7 +176,7 @@ namespace Hotkeys
             int buttonNum = index;
             var options = new List<FloatMenuOption>();
 
-            if (DirectKeys.directKeys[index].CheckDesCategory())
+            if (DirectKeys.directKeys[index].desCategoryLabelCap != "None")
             {
                 var designators = DirectKeys.directKeys[index].GetDesCategory().AllResolvedDesignators;
                 foreach (var designator in designators)

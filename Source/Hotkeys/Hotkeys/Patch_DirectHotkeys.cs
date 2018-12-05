@@ -15,13 +15,12 @@ namespace Hotkeys
             if (!Hotkeys.settings.useDirectHotkeys) { return; }
             if (Find.Selector.SelectedObjects.Count > 0) { return; }
 
-            List<KeyBindingDef> designatorKeys = DefDatabase<KeyBindingDef>.AllDefsListForReading.FindAll(x => x.category == DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys"));
-
-            for (int i = 0; i < designatorKeys.Count; i++)
+            var directKeys = DirectKeys.directKeys;
+            for (int i = 0; i < directKeys.Count; i++)
             {
-                if (designatorKeys[i].JustPressed)
+                if (directKeys[i].keyDef.JustPressed)
                 {
-                    var designator = DirectKeys.directKeys[i].GetDesignator();
+                    var designator = directKeys[i].Designator;
                     if (designator != null)
                     {
                         Find.DesignatorManager.Select(designator);

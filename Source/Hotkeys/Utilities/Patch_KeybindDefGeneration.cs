@@ -25,12 +25,6 @@ namespace Hotkeys
                     DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
                 }
             }
-
-            if (settings.useDirectHotkeys)
-            {
-                // Generate keybindings for all direct hotkeys
-                DirectKeys.BuildDirectKeyDefs();
-            }
         }
     }
 }

@@ -20,20 +20,16 @@ namespace Hotkeys
 
         public static void BuildDirectKeyDefs()
         {
+            Log.Message("Build");
             if (directKeys == null)
             {
+                Log.Message("Why");
                 directKeys = new List<DirectKeyData>();
             }
 
             for (int i = 0; i < directKeys.Count; i++)
             {
-                var keyDef = new KeyBindingDef();
-                keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
-                keyDef.defName = "Hotkeys_DirectHotkey_" + i.ToString();
-                keyDef.label = directKeys[i].desCategoryLabelCap + "/" + directKeys[i].desLabelCap;
-                keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
-                keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys").modContentPack;
-                DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
+                directKeys[i].CreateKeyDef(i);
             }
             KeyPrefs.Init();
         }

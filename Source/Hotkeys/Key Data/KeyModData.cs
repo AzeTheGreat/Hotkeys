@@ -76,10 +76,7 @@ namespace Hotkeys
                 }
             }
             
-
             return (allDownA && resultA) || (allDownB && resultB);
         }
-
-        
     }
 }
