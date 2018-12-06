@@ -42,7 +42,6 @@ namespace Hotkeys
         {
             if (__instance.hotKey.JustPressed)
             {
-                Log.Message("TRUE");
                 DirectKeys.gizmoTriggered = true;
             }
         }
