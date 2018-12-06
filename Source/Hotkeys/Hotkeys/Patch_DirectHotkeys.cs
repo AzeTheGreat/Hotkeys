@@ -24,7 +24,7 @@ namespace Hotkeys
                     var designator = directKeys[i].Designator;
                     if (designator != null)
                     {
-                        SoundDefOf.CancelMode.PlayOneShotOnCamera((Map)null);
+                        SoundDefOf.SelectDesignator.PlayOneShotOnCamera((Map)null);
                         Find.DesignatorManager.Select(designator);
                     }
                 }
