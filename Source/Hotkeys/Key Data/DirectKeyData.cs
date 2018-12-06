@@ -12,6 +12,7 @@ namespace Hotkeys
     {
         public string desCategoryLabelCap;
         public string desLabelCap;
+        public KeyBindingDef keyDef;
 
         private Designator _designator;
         public Designator Designator
@@ -26,8 +27,6 @@ namespace Hotkeys
                 _designator = value;
             }
         }
-
-        public KeyBindingDef keyDef;
 
         public DirectKeyData()
         {
@@ -51,7 +50,7 @@ namespace Hotkeys
 
         public void CreateKeyDef(int i)
         {
-            var keyDef = new KeyBindingDef();
+            keyDef = new KeyBindingDef();
             keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
             keyDef.defName = "Hotkeys_DirectHotkey_" + i.ToString();
             keyDef.label = desCategoryLabelCap + "/" + desLabelCap;
