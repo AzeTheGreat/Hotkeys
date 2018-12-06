@@ -11,6 +11,7 @@ namespace Hotkeys
     static class DirectKeys
     {
         public static List<DirectKeyData> directKeys;
+        public static bool gizmoTriggered = false;
 
         static DirectKeys()
         {
