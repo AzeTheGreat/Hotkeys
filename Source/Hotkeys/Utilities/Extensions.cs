@@ -1,4 +1,6 @@
 ﻿using Verse;
+using System.Reflection;
+
 
 namespace Hotkeys
 {
