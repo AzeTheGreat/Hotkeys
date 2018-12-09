@@ -16,7 +16,7 @@ namespace Hotkeys
         private Vector2 scrollPosition;
         public static bool isInit = false;
 
-        private float indent = 10f;
+        private float indent = 15f;
 
         public Hotkeys(ModContentPack content) : base(content)
         {
@@ -43,20 +43,13 @@ namespace Hotkeys
             lMain.ColumnWidth = source.width;
             lMain.Begin(source);
 
-            lMain.GapLine();
             lMain.CheckboxLabeled("Multi Keybindings", ref settings.useMultiKeys, "Check to enable binding multiple keystrokes to each keybinding");
             lMain.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
-            lMain.GapLine();
-            //lMain.Label("The game MUST be restarted to add or remove keybinding options.  Set keybinds in the standard menu.");
-
-
-            lMain.Gap();
-            lMain.Gap();
             lMain.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
-            lMain.GapLine();
 
             if (settings.useDirectHotkeys)
             {
+                lMain.GapLine();
                 lMain.Gap();
                 lMain.End();
 
@@ -119,6 +112,13 @@ namespace Hotkeys
                 }
             }
 
+            listing.Gap();
+
+            if (listing.ButtonText("+", "Add additional direct hotkeys"))
+            {
+                DirectKeys.directKeys.Add(new DirectKeyData());
+            }
+
             listing.End();
         }
 
@@ -137,13 +137,6 @@ namespace Hotkeys
                     FloatMenu window = new FloatMenu(options, "Select Category", false);
                     Find.WindowStack.Add(window);
                 }
-            }
-
-            listing.Gap();
-
-            if (listing.ButtonText("Add Hotkey", "Add additional direct hotkeys"))
-            {
-                DirectKeys.directKeys.Add(new DirectKeyData());
             }
 
             listing.End();

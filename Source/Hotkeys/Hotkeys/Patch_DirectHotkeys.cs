@@ -40,6 +40,8 @@ namespace Hotkeys
     {
         static void Postfix(Command __instance)
         {
+            if(__instance.hotKey == null) { return; }
+
             if (__instance.hotKey.JustPressed)
             {
                 DirectKeys.gizmoTriggered = true;
