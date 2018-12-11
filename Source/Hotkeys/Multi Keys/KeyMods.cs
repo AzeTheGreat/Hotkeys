@@ -14,6 +14,8 @@ namespace Hotkeys
         public static Dictionary<string, KeyModData> allKeyModifiers;
         public static Dictionary<string, KeyModData> oldKeyModifiers;
 
+        public static List<KeyBindingDef> drawnGimoKeyDefs = new List<KeyBindingDef>();
+
         static KeyMods()
         {
             allKeyModifiers = Hotkeys.settings.allKeyModifiers;
