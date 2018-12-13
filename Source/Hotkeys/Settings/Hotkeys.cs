@@ -16,7 +16,7 @@ namespace Hotkeys
         private Vector2 scrollPosition;
         public static bool isInit = false;
 
-        private float indent = 15f;
+        private readonly float indent = 15f;
 
         public Hotkeys(ModContentPack content) : base(content)
         {
@@ -47,22 +47,22 @@ namespace Hotkeys
             lMain.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
             lMain.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
 
-            if (settings.useDirectHotkeys)
-            {
-                lMain.GapLine();
-                lMain.Gap();
-                lMain.End();
+            //if (settings.useDirectHotkeys)
+            //{
+            //    lMain.GapLine();
+            //    lMain.Gap();
+            //    lMain.End();
 
-                var grid = new GridLayout(new Rect(source.xMin + indent, source.yMin + lMain.CurHeight, source.width - 2*indent, source.height - lMain.CurHeight), 5, 1, 0, 0);
+            //    var grid = new GridLayout(new Rect(source.xMin + indent, source.yMin + lMain.CurHeight, source.width - 2*indent, source.height - lMain.CurHeight), 5, 1, 0, 0);
 
-                CategoryFloatMenus(grid);
-                DesignatorFloatMenus(grid);
-                RemoveButtons(grid);
-            }
-            else
-            {
-                lMain.End();
-            }
+            //    CategoryFloatMenus(grid);
+            //    DesignatorFloatMenus(grid);
+            //    RemoveButtons(grid);
+            //}
+            //else
+            //{
+            //    lMain.End();
+            //}
 
             Widgets.EndScrollView();
             settings.Write();
@@ -78,133 +78,120 @@ namespace Hotkeys
         private void UpdateDirectHotkeys()
         {
             List<KeyBindingDef> allDirectDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading.FindAll(x => x.category == DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys"));
-            List<KeyBindingDef> allKeyDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading;
 
-            foreach (var keyDef in allDirectDefs)
-            {
-                allKeyDefs.RemoveAll(x => x == keyDef);
-            }
-
-            List<KeyBindingDef> allOldDefs = allKeyDefs.ListFullCopy();
-
-            DefDatabase<KeyBindingDef>.Clear();
-
-            foreach (var keyDef in allOldDefs)
-            {
-                DefDatabase<KeyBindingDef>.Add(keyDef);
-            }
+            InitializeMod.RemoveKeyDefs(allDirectDefs);
 
             DirectKeys.BuildDirectKeyDefs(); 
         }
 
-        private void RemoveButtons(GridLayout grid)
-        {
-            var rect = grid.GetCellRect(4, 0, 1);
-            var listing = new Listing_Standard();
-            var rect2 = new Rect(rect.xMax - 30f, rect.yMin, 30f, rect.height);
-            listing.Begin(rect2);
+        //private void RemoveButtons(GridLayout grid)
+        //{
+        //    var rect = grid.GetCellRect(4, 0, 1);
+        //    var listing = new Listing_Standard();
+        //    var rect2 = new Rect(rect.xMax - 30f, rect.yMin, 30f, rect.height);
+        //    listing.Begin(rect2);
 
-            for (int i = 0; i < DirectKeys.directKeys.Count; i++)
-            {
-                if (listing.ButtonText("-"))
-                {
-                    DirectKeys.directKeys.RemoveAt(i);
-                }
-            }
+        //    for (int i = 0; i < DirectKeys.directKeys.Count; i++)
+        //    {
+        //        if (listing.ButtonText("-"))
+        //        {
+        //            DirectKeys.directKeys.RemoveAt(i);
+        //        }
+        //    }
 
-            listing.Gap();
+        //    listing.Gap();
 
-            if (listing.ButtonText("+", "Add additional direct hotkeys"))
-            {
-                DirectKeys.directKeys.Add(new DirectKeyData());
-            }
+        //    if (listing.ButtonText("+", "Add additional direct hotkeys"))
+        //    {
+        //        DirectKeys.directKeys.Add(new DirectKeyData());
+        //    }
 
-            listing.End();
-        }
+        //    listing.End();
+        //}
 
-        private void DesignatorFloatMenus(GridLayout grid)
-        {
-            var rect = grid.GetCellRect(2, 0, 1);
-            var listing = new Listing_Standard();
-            listing.Begin(rect);
+        //private void DesignatorFloatMenus(GridLayout grid)
+        //{
+        //    var rect = grid.GetCellRect(2, 0, 1);
+        //    var listing = new Listing_Standard();
+        //    listing.Begin(rect);
 
-            for (int index = 0; index < DirectKeys.directKeys.Count; index++)
-            {
-                if (listing.ButtonText(DirectKeys.directKeys[index].desLabelCap))
-                {
-                    var options = GetDesFloatMenuOptions(index);
+        //    for (int index = 0; index < DirectKeys.directKeys.Count; index++)
+        //    {
+        //        if (listing.ButtonText(DirectKeys.directKeys[index].desLabelCap))
+        //        {
+        //            var options = GetDesFloatMenuOptions(index);
 
-                    FloatMenu window = new FloatMenu(options, "Select Category", false);
-                    Find.WindowStack.Add(window);
-                }
-            }
+        //            FloatMenu window = new FloatMenu(options, "Select Category", false);
+        //            Find.WindowStack.Add(window);
+        //        }
+        //    }
 
-            listing.End();
-        }
+        //    listing.End();
+        //}
 
-        private void CategoryFloatMenus(GridLayout grid)
-        {
-            var rect = grid.GetCellRect(0, 0, 2);
-            var listing = new Listing_Standard();
-            listing.Begin(rect);
+        //private void CategoryFloatMenus(GridLayout grid)
+        //{
+        //    var rect = grid.GetCellRect(0, 0, 2);
+        //    var listing = new Listing_Standard();
+        //    listing.Begin(rect);
 
-            for (int index = 0; index < DirectKeys.directKeys.Count; index++)
-            {
-                if (listing.ButtonTextLabeled("Direct Hotkey " + index.ToString(), DirectKeys.directKeys[index].desCategoryLabelCap))
-                {
-                    var options = GetCatFloatMenuOptions(index);
+        //    for (int index = 0; index < DirectKeys.directKeys.Count; index++)
+        //    {
+        //        if (listing.ButtonTextLabeled("Direct Hotkey " + index.ToString(), DirectKeys.directKeys[index].desCategoryLabelCap))
+        //        {
+        //            var options = GetCatFloatMenuOptions(index);
 
-                    FloatMenu window = new FloatMenu(options, "Select Category", false);
-                    Find.WindowStack.Add(window);
-                }
-            }
+        //            FloatMenu window = new FloatMenu(options, "Select Category", false);
+        //            Find.WindowStack.Add(window);
+        //        }
+        //    }
 
-            listing.End();
-        }
+        //    listing.End();
+        //}
 
-        private List<FloatMenuOption> GetDesFloatMenuOptions(int index)
-        {
-            int buttonNum = index;
-            var options = new List<FloatMenuOption>();
+        //private List<FloatMenuOption> GetDesFloatMenuOptions(int index)
+        //{
+        //    int buttonNum = index;
+        //    var options = new List<FloatMenuOption>();
 
-            if (DirectKeys.directKeys[index].desCategoryLabelCap != "None")
-            {
-                var designators = DirectKeys.directKeys[index].GetDesCategory().AllResolvedDesignators;
-                foreach (var designator in designators)
-                {
-                    options.Add(new FloatMenuOption(designator.LabelCap, delegate ()
-                    {
-                        DirectKeys.directKeys[buttonNum].desLabelCap = designator.LabelCap;
-                    }));
-                }
-            }
-            else
-            {
-                options.Add(new FloatMenuOption("None", delegate ()
-                {
-                    DirectKeys.directKeys[buttonNum].desLabelCap = "None";
-                }));
-            }
+        //    if (DirectKeys.directKeys[index].desCategoryLabelCap != "None")
+        //    {
+        //        var designators = DirectKeys.directKeys[index].GetDesCategory().AllResolvedDesignators;
+        //        foreach (var designator in designators)
+        //        {
+        //            options.Add(new FloatMenuOption(designator.LabelCap, delegate ()
+        //            {
+        //                DirectKeys.directKeys[buttonNum].desLabelCap = designator.LabelCap;
+        //            }));
+        //        }
+        //    }
+        //    else
+        //    {
+        //        options.Add(new FloatMenuOption("None", delegate ()
+        //        {
+        //            DirectKeys.directKeys[buttonNum].desLabelCap = "None";
+        //        }));
+        //    }
 
-            return options;
-        }
+        //    return options;
+        //}
 
-        private List<FloatMenuOption> GetCatFloatMenuOptions(int index)
-        {
-            int buttonNum = index;
-            var options = new List<FloatMenuOption>();
+        //private List<FloatMenuOption> GetCatFloatMenuOptions(int index)
+        //{
+        //    int buttonNum = index;
+        //    var options = new List<FloatMenuOption>();
 
-            var desCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading;
-            foreach (var desCat in desCatDefs)
-            {
-                options.Add(new FloatMenuOption(desCat.LabelCap, delegate ()
-                {
-                    DirectKeys.directKeys[buttonNum].desCategoryLabelCap = desCat.LabelCap;
-                }));
-            }
+        //    var desCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading;
+        //    foreach (var desCat in desCatDefs)
+        //    {
+        //        options.Add(new FloatMenuOption(desCat.LabelCap, delegate ()
+        //        {
+        //            DirectKeys.directKeys[buttonNum].desCategoryLabelCap = desCat.LabelCap;
+        //        }));
+        //    }
 
-            return options;
-        }
+        //    return options;
+        //}
     }
 }
 

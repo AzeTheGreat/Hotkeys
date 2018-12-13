@@ -32,5 +32,31 @@ namespace Hotkeys
             }
             KeyPrefs.Init();
         }
+
+        public static void AddKey(string name)
+        {
+            var data = new DirectKeyData
+            {
+                desLabelCap = name
+            };
+            directKeys.Add(data);
+            BuildDirectKeyDefs();
+
+            KeyPrefs.Init();
+            KeyMods.BuildKeyModData();
+        }
+
+        public static void RemoveKey(string name)
+        {
+            var direct = directKeys.Find(x => x.desLabelCap == name);
+            directKeys.Remove(direct);
+
+            List<KeyBindingDef> keyDefs = new List<KeyBindingDef>
+                {
+                    direct.keyDef
+                };
+            InitializeMod.RemoveKeyDefs(keyDefs);
+            KeyPrefs.Init();
+        }
     }
 }

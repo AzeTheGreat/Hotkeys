@@ -14,4 +14,12 @@
 		<description>Controls for direct designations. Configurable in Hotkeys mod menu.</description>
 		<isGameUniversal>false</isGameUniversal>
 	</KeyBindingCategoryDef>
+	
+	<KeyBindingCategoryDef>
+		<defName>GizmoKeys</defName>
+		<label>Gizmo Hotkeys</label>
+		<description>Overrides for gizmo keys. Configurable in Hotkeys mod menu.</description>
+		<isGameUniversal>false</isGameUniversal>
+		<selfConflicting>false</selfConflicting>
+	</KeyBindingCategoryDef>
 </Defs>

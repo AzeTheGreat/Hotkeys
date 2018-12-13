@@ -55,6 +55,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gizmo Hotkeys\GizmoKeyData.cs" />
+    <Compile Include="Gizmo Hotkeys\GizmoKeys.cs" />
+    <Compile Include="Gizmo Hotkeys\Patch_ApplyGizmoHotkeys.cs" />
+    <Compile Include="Gizmo Hotkeys\Patch_AssignGizmoKey.cs" />
     <Compile Include="Multi Keys\Trans_GizmoRenderKeyMods.cs" />
     <Compile Include="Multi Keys\Define Binding\IntermediateKeys.cs" />
     <Compile Include="Architect Hotkeys\Patch_ArchitectHotkeys.cs" />
@@ -79,11 +83,9 @@
     <Compile Include="Settings\Hotkeys_Settings.cs" />
     <Compile Include="Direct Hotkeys\Patch_DirectHotkeys.cs" />
     <Compile Include="Settings\Hotkeys.cs" />
-    <Compile Include="Utilities\Patch_KeybindDefGeneration.cs" />
+    <Compile Include="Architect Hotkeys\Patch_KeybindDefGeneration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Gizmo Hotkeys\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

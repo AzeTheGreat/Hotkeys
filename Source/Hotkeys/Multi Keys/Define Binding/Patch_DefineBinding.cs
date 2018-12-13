@@ -88,6 +88,7 @@ namespace Hotkeys
                     Event.current.Use();
                 }
             }
+
             return false;
         }
     }
