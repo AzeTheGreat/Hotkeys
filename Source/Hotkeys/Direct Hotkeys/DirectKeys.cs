@@ -26,9 +26,9 @@ namespace Hotkeys
                 directKeys = new List<DirectKeyData>();
             }
 
-            for (int i = 0; i < directKeys.Count; i++)
+            foreach (var key in directKeys)
             {
-                directKeys[i].CreateKeyDef(i);
+                key.CreateKeyDef();
             }
             KeyPrefs.Init();
         }
@@ -40,7 +40,7 @@ namespace Hotkeys
                 desLabelCap = name
             };
             directKeys.Add(data);
-            BuildDirectKeyDefs();
+            data.CreateKeyDef();
 
             KeyPrefs.Init();
             KeyMods.BuildKeyModData();

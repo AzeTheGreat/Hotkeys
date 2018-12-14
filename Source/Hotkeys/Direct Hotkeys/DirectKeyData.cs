@@ -45,11 +45,11 @@ namespace Hotkeys
         //    return desCat;
         //}
 
-        public void CreateKeyDef(int i)
+        public void CreateKeyDef()
         {
             keyDef = new KeyBindingDef();
             keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
-            keyDef.defName = "Hotkeys_DirectHotkey_" + i.ToString();
+            keyDef.defName = "Hotkeys_DirectHotkey_" + desLabelCap;
             keyDef.label = desLabelCap;
             keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
             keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys").modContentPack;

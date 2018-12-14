@@ -22,7 +22,7 @@ namespace Hotkeys
         {
             // HARMONY
             var harmonyHotkeys = HarmonyInstance.Create("Hotkeys");
-            HarmonyInstance.DEBUG = true;
+            HarmonyInstance.DEBUG = false;
             harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
 
             // SETTINGS
