@@ -34,18 +34,21 @@ namespace Hotkeys
 
         public override void DoSettingsWindowContents(Rect canvas)
         {
-            float contentHeight = 30f * DirectKeys.directKeys.Count + 1000f;
+            //float contentHeight = 30f * DirectKeys.directKeys.Count + 1000f;
 
-            Rect source = new Rect(0f, 0f, canvas.width - 24f, contentHeight);
-            Widgets.BeginScrollView(canvas, ref scrollPosition, source, true);
+            //Rect source = new Rect(0f, 0f, canvas.width - 24f, contentHeight);
+            //Widgets.BeginScrollView(canvas, ref scrollPosition, source, true);
 
             var lMain = new Listing_Standard();
+            Rect source = canvas;
             lMain.ColumnWidth = source.width;
             lMain.Begin(source);
 
             lMain.CheckboxLabeled("Multi Keybindings", ref settings.useMultiKeys, "Check to enable binding multiple keystrokes to each keybinding");
             lMain.CheckboxLabeled("Architect Hotkeys", ref settings.useArchitectHotkeys, "Check to enable the use of hotkeys to select subtabs in the Architect Tab.");
             lMain.CheckboxLabeled("Direct Hotkeys", ref settings.useDirectHotkeys, "Check to enable direct hotkeys to any designator");
+
+            lMain.End();
 
             //if (settings.useDirectHotkeys)
             //{
@@ -64,7 +67,7 @@ namespace Hotkeys
             //    lMain.End();
             //}
 
-            Widgets.EndScrollView();
+            //Widgets.EndScrollView();
             settings.Write();
         }
 

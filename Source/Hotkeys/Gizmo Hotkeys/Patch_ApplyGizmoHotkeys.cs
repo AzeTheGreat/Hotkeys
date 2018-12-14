@@ -18,7 +18,7 @@ namespace Hotkeys
                 __instance.hotKey = gizmoKeyData.keyDef;
             }
 
-            var direct = DirectKeys.directKeys.Find(x => x.desLabelCap == __instance.LabelCap);
+            var direct = DirectKeys.directKeys.FirstOrDefault(x => x.desLabelCap == __instance.LabelCap);
             if (direct != null)
             {
                 __instance.hotKey = direct.keyDef;
