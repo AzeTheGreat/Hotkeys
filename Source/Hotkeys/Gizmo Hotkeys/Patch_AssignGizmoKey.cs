@@ -18,8 +18,8 @@ namespace Hotkeys
             if (Event.current.button == 1 && keyDef.IsDown)
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
-                bool alreadyDirect = DirectKeys.directKeys.FindAll(x => x.desLabelCap == __instance.LabelCap).Count > 0;
-                bool alreadyGizmo = GizmoKeys.gizmoKeys.ContainsKey(__instance.LabelCap);
+                bool alreadyDirect = DirectKeys.KeyPresent(__instance);
+                bool alreadyGizmo = GizmoKeys.KeyPresent(__instance);
 
                 if (!alreadyGizmo)
                 {
@@ -29,7 +29,7 @@ namespace Hotkeys
                         if (!alreadyDirect) { MakeGizmoHotkey(__instance); }
                     }));
                 }
-                if (!alreadyDirect)
+                if (!alreadyDirect && __instance is Designator)
                 {
                     options.Add(new FloatMenuOption("Make Direct Hotkey", delegate ()
                     {
@@ -43,6 +43,12 @@ namespace Hotkeys
                     {
                         ClearHotkey(__instance, alreadyDirect, alreadyGizmo);
                     }));
+                    options.Add(new FloatMenuOption("Edit Key", delegate ()
+                    {
+                        var edit = new Dialog_EditKeySpecificity();
+                        edit.Command = __instance;
+                        Find.WindowStack.Add(edit);
+                    }));
                 }
                 
                 FloatMenu window = new FloatMenu(options, "Select Category", false);
@@ -54,21 +60,21 @@ namespace Hotkeys
 
         private static void GizmoToDirect(Command __instance)
         {
-            GizmoKeys.RemoveKey(__instance.LabelCap);
+            GizmoKeys.RemoveKey(__instance);
             DirectKeys.AddKey(__instance.LabelCap);
             Messages.Message("Gizmo Hotkey '" + __instance.LabelCap + "' changed to Direct Hotkey.", MessageTypeDefOf.TaskCompletion, false);
         }
 
         private static void DirectToGizmo(Command __instance)
         {
-            DirectKeys.RemoveKey(__instance.LabelCap);
-            GizmoKeys.AddKey(__instance.LabelCap);
+            DirectKeys.RemoveKey(__instance);
+            GizmoKeys.AddKey(__instance);
             Messages.Message("Direct Hotkey '" + __instance.LabelCap + "' changed to Gizmo Hotkey.", MessageTypeDefOf.TaskCompletion, false);
         }
 
         private static void MakeGizmoHotkey(Command __instance)
         {
-            GizmoKeys.AddKey(__instance.LabelCap);
+            GizmoKeys.AddKey(__instance);
             Messages.Message("Gizmo Hotkey '" + __instance.LabelCap + "' added.", MessageTypeDefOf.TaskCompletion, false);
         }
 
@@ -82,12 +88,12 @@ namespace Hotkeys
         {
             if (alreadyDirect)
             {
-                DirectKeys.RemoveKey(__instance.LabelCap);
+                DirectKeys.RemoveKey(__instance);
                 Messages.Message("Direct Hotkey '" + __instance.LabelCap + "' cleared.", MessageTypeDefOf.TaskCompletion, false);
             }
             if (alreadyGizmo)
             {
-                GizmoKeys.RemoveKey(__instance.LabelCap);
+                GizmoKeys.RemoveKey(__instance);
                 Messages.Message("Gizmo Hotkey '" + __instance.LabelCap + "' cleared.", MessageTypeDefOf.TaskCompletion, false);
             }
         }

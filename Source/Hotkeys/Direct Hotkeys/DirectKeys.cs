@@ -44,19 +44,49 @@ namespace Hotkeys
 
             KeyPrefs.Init();
             KeyMods.BuildKeyModData();
+            Hotkeys.settings.Write();
         }
 
-        public static void RemoveKey(string name)
+        public static void RemoveKey(Command command)
         {
-            var direct = directKeys.Find(x => x.desLabelCap == name);
-            directKeys.Remove(direct);
+            DirectKeyData data = TryKey(command);
+            directKeys.Remove(data);
 
             List<KeyBindingDef> keyDefs = new List<KeyBindingDef>
                 {
-                    direct.keyDef
+                    data.keyDef
                 };
+
             InitializeMod.RemoveKeyDefs(keyDefs);
             KeyPrefs.Init();
+            Hotkeys.settings.Write();
+        }
+
+        public static bool KeyPresent(Command command)
+        {
+            if (TryKey(command) != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static DirectKeyData GetKey(Command command)
+        {
+            return TryKey(command);
+        }
+
+        private static DirectKeyData TryKey(Command command)
+        {
+            DirectKeyData data;
+
+            for (int i = 0; i < Extensions.names.Length; i++)
+            {
+                data = directKeys.FirstOrDefault(x => x.desLabelCap == command.Key(Extensions.names[i], Extensions.types[i], Extensions.descs[i]));
+                if (data != null) { return data; }
+            }
+
+            return null;
         }
     }
 }

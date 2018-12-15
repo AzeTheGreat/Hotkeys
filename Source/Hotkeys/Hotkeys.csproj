@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gizmo Hotkeys\Dialog_EditKeySpecificity.cs" />
     <Compile Include="Gizmo Hotkeys\GizmoKeyData.cs" />
     <Compile Include="Gizmo Hotkeys\GizmoKeys.cs" />
     <Compile Include="Gizmo Hotkeys\Patch_ApplyGizmoHotkeys.cs" />

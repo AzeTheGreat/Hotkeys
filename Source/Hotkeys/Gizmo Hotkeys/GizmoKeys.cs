@@ -45,8 +45,9 @@ namespace Hotkeys
             KeyPrefs.Init();
         }
 
-        public static void AddKey(string name)
+        public static void AddKey(Command command)
         {
+            string name = command.Key(true, false, false);
             var data = new GizmoKeyData
             {
                 defName = name
@@ -57,19 +58,48 @@ namespace Hotkeys
             KeyMods.BuildKeyModData();
 
             gizmoKeys[name] = data;
+            Hotkeys.settings.Write();
         }
 
-        public static void RemoveKey(string name)
+        public static void RemoveKey(Command command)
         {
-            GizmoKeys.gizmoKeys.TryGetValue(name, out var gizmo);
-            GizmoKeys.gizmoKeys.Remove(name);
+            GizmoKeyData data = TryKey(command);
+            gizmoKeys.Remove(data.defName);
 
             List<KeyBindingDef> keyDefs = new List<KeyBindingDef>
                 {
-                    gizmo.keyDef
+                    data.keyDef
                 };
+
             InitializeMod.RemoveKeyDefs(keyDefs);
             KeyPrefs.Init();
+            Hotkeys.settings.Write();
+        }
+
+        public static bool KeyPresent(Command command)
+        {
+            if (TryKey(command) != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static GizmoKeyData GetKey(Command command)
+        {
+            return TryKey(command);
+        }
+
+        private static GizmoKeyData TryKey(Command command)
+        {
+            GizmoKeyData data;
+
+            for (int i = 0; i < Extensions.names.Length; i++)
+            {
+                if (gizmoKeys.TryGetValue(command.Key(Extensions.names[i], Extensions.types[i], Extensions.descs[i]), out data)) { return data; }
+            }
+
+            return null;
         }
     }
 }

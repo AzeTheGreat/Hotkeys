@@ -30,7 +30,6 @@ namespace Hotkeys
                     }
                 }
             }
-
             DirectKeys.gizmoTriggered = false;
         }
     }
