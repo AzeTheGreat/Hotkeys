@@ -16,7 +16,7 @@ namespace Hotkeys
         private bool type;
         private bool desc;
 
-        private readonly int descDisplayLength = 100;
+        private readonly int descDisplayLength = 20;
 
         public override void DoWindowContents(Rect canvas)
         {
@@ -39,11 +39,7 @@ namespace Hotkeys
             listing.CheckboxLabeled("Name: " + Command.LabelCap, ref name);
             listing.CheckboxLabeled("Type: " + Command.GetType().ToString(), ref type);
 
-            string description = Command.Desc;
-            if (description.Length > descDisplayLength)
-            {
-                description = description.Substring(0, descDisplayLength);
-            }
+            string description = Command.Desc.Truncate(descDisplayLength);
 
             listing.CheckboxLabeled("Desc: " + description, ref desc);
             listing.Gap();

@@ -27,6 +27,15 @@ namespace Hotkeys
             return label;
         }
 
+        public static string Truncate(this string str, int toLength)
+        {
+            if (str.Length > toLength)
+            {
+                str = str.Substring(0, toLength);
+            }
+            return str;
+        }
+
         public static readonly bool[] names = { true, true, true, false, true, false, false };
         public static readonly bool[] types = { true, true, false, true, false, true, false };
         public static readonly bool[] descs = { true, false, true, true, false, false, true };
