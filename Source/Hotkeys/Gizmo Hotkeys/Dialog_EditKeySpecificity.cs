@@ -16,8 +16,6 @@ namespace Hotkeys
         private bool type;
         private bool desc;
 
-        private readonly int descDisplayLength = 20;
-
         public override void DoWindowContents(Rect canvas)
         {
             var listing = new Listing_Standard();
@@ -36,12 +34,10 @@ namespace Hotkeys
             GenUI.ResetLabelAlign();
             listing.GapLine();
 
-            listing.CheckboxLabeled("Name: " + Command.LabelCap, ref name);
-            listing.CheckboxLabeled("Type: " + Command.GetType().ToString(), ref type);
+            listing.CheckboxLabeled("Name: " + Command.Key(true, false, false), ref name);
+            listing.CheckboxLabeled("Type: " + Command.Key(false, true, false), ref type);
+            listing.CheckboxLabeled("Desc: " + Command.Key(false, false, true), ref desc);
 
-            string description = Command.Desc.Truncate(descDisplayLength);
-
-            listing.CheckboxLabeled("Desc: " + description, ref desc);
             listing.Gap();
             listing.Gap();
             listing.Gap();
@@ -77,23 +73,15 @@ namespace Hotkeys
         {
             base.PreOpen();
 
-            if (Command.hotKey.defName.Contains(Command.LabelCap))
+            if (Command.hotKey.defName?.Contains(Command.Key(true, false, false)) ?? false)
             {
                 name = true;
             }
-            if (Command.hotKey.defName.Contains(Command.GetType().ToString()))
+            if (Command.hotKey.defName?.Contains(Command.Key(false, true, false)) ?? false)
             {
                 type = true;
             }
-
-            string description = Command.Desc;
-
-            if (description.Length > Extensions.descKeyLength)
-            {
-                description = description.Substring(0, Extensions.descKeyLength);
-            }
-
-            if (Command.hotKey.defName.Contains(description))
+            if (Command.hotKey.defName?.Contains(Command.Key(false, false, true)) ?? false)
             {
                 desc = true;
             }
