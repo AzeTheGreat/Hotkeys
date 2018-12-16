@@ -61,7 +61,7 @@ namespace Hotkeys
         private static void GizmoToDirect(Command __instance)
         {
             GizmoKeys.RemoveKey(__instance);
-            DirectKeys.AddKey(__instance.LabelCap);
+            DirectKeys.AddKey(__instance);
             Messages.Message("Gizmo Hotkey '" + __instance.LabelCap + "' changed to Direct Hotkey.", MessageTypeDefOf.TaskCompletion, false);
         }
 
@@ -80,7 +80,7 @@ namespace Hotkeys
 
         private static void MakeDirectHotkey(Command __instance)
         {
-            DirectKeys.AddKey(__instance.LabelCap);
+            DirectKeys.AddKey(__instance);
             Messages.Message("Direct Hotkey '" + __instance.LabelCap + "' added.", MessageTypeDefOf.TaskCompletion, false);
         }
 

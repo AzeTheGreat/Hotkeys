@@ -32,7 +32,7 @@ namespace Hotkeys
             listing.Label("Select what information should be used to assign Hotkeys to commands.  For most purposes just the Name is enough.  Where there is overlap or custom behavior is desired, the most specified key is selected first.");
             listing.GapLine();
             Text.Anchor = TextAnchor.MiddleCenter;
-            listing.Label("Key: ");
+            listing.Label("Key: " + Command.Key(name, type, desc));
             GenUI.ResetLabelAlign();
             listing.GapLine();
 
@@ -60,7 +60,47 @@ namespace Hotkeys
 
         public override void PreClose()
         {
-            
+            if (GizmoKeys.KeyPresent(Command))
+            {
+                GizmoKeys.RemoveKey(Command);
+                GizmoKeys.AddKey(Command, name, type, desc);
+                Messages.Message("Edited Gizmo Hotkey '" + Command.LabelCap + "'.", MessageTypeDefOf.TaskCompletion, false);
+            }
+            if (DirectKeys.KeyPresent(Command))
+            {
+                DirectKeys.RemoveKey(Command);
+                DirectKeys.AddKey(Command, name, type, desc);
+                Messages.Message("Edited Direct Hotkey '" + Command.LabelCap + "'.", MessageTypeDefOf.TaskCompletion, false);
+
+            }
+
+            Hotkeys.settings.Write();
+        }
+
+        public override void PreOpen()
+        {
+            base.PreOpen();
+
+            if (Command.hotKey.defName.Contains(Command.LabelCap))
+            {
+                name = true;
+            }
+            if (Command.hotKey.defName.Contains(Command.GetType().ToString()))
+            {
+                type = true;
+            }
+
+            string description = Command.Desc;
+
+            if (description.Length > Extensions.descKeyLength)
+            {
+                description = description.Substring(0, Extensions.descKeyLength);
+            }
+
+            if (Command.hotKey.defName.Contains(description))
+            {
+                desc = true;
+            }
         }
     }
 }

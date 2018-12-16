@@ -31,7 +31,7 @@ namespace Hotkeys
         public static readonly bool[] types = { true, true, false, true, false, true, false };
         public static readonly bool[] descs = { true, false, true, true, false, false, true };
  
-        private static readonly int descKeyLength = 10;
+        public static readonly int descKeyLength = 20;
 
         public static string Key(this Command command, bool name, bool type, bool desc)
         {
@@ -39,7 +39,7 @@ namespace Hotkeys
 
             if (name)
             {
-                label = command.LabelCap;
+                if (command.LabelCap != null) { label = command.LabelCap; } 
             }
             if (type)
             {
@@ -47,13 +47,13 @@ namespace Hotkeys
             }
             if (desc)
             {
-                string description = command.Desc;
-                if (description.Length > descKeyLength)
+                string description = command?.Desc;
+                if (description?.Length > descKeyLength)
                 {
-                    description.Substring(0, descKeyLength);
+                    description = description?.Substring(0, descKeyLength);
                 }
 
-                label += description;
+                if (description != null) { label += description; }
             }
 
             return label;

@@ -33,11 +33,11 @@ namespace Hotkeys
             KeyPrefs.Init();
         }
 
-        public static void AddKey(string name)
+        public static void AddKey(Command command, bool name = true, bool type = false, bool desc = false)
         {
             var data = new DirectKeyData
             {
-                desLabelCap = name
+                desLabelCap = command.Key(name, type, desc)
             };
             directKeys.Add(data);
             data.CreateKeyDef();

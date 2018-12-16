@@ -45,19 +45,19 @@ namespace Hotkeys
             KeyPrefs.Init();
         }
 
-        public static void AddKey(Command command)
+        public static void AddKey(Command command, bool name = true, bool type = false, bool desc = false)
         {
-            string name = command.Key(true, false, false);
+            string keyName = command.Key(name, type, desc);
             var data = new GizmoKeyData
             {
-                defName = name
+                defName = keyName
             };
             data.BuildKeyDef();
 
             KeyPrefs.Init();
             KeyMods.BuildKeyModData();
 
-            gizmoKeys[name] = data;
+            gizmoKeys[keyName] = data;
             Hotkeys.settings.Write();
         }
 

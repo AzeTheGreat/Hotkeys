@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RimWorld;
-using Harmony;
+﻿using Harmony;
 using Verse;
-using System.Reflection;
+
 
 namespace Hotkeys
 {
@@ -18,17 +13,18 @@ namespace Hotkeys
             //string typeName = type.ToString();
             //Log.Message(typeName);
 
-            if (__instance.LabelCap == null) { return; }
+            //if (__instance.LabelCap == null) { return; }
 
-            if (GizmoKeys.gizmoKeys.TryGetValue(__instance.LabelCap, out GizmoKeyData gizmoKeyData))
-            {
-                __instance.hotKey = gizmoKeyData.keyDef;
-            }
-
-            var direct = DirectKeys.directKeys.FirstOrDefault(x => x.desLabelCap == __instance.LabelCap);
+            DirectKeyData direct = DirectKeys.GetKey(__instance);
             if (direct != null)
             {
                 __instance.hotKey = direct.keyDef;
+            }
+
+            GizmoKeyData gizmo = GizmoKeys.GetKey(__instance);
+            if (gizmo != null)
+            {
+                __instance.hotKey = gizmo.keyDef;
             }
         }
     }
