@@ -48,21 +48,18 @@ namespace Hotkeys
 
             if (name)
             {
-                if (command.LabelCap != null) { label = command.LabelCap; } 
+                if (!command.LabelCap.NullOrEmpty()) { label = command.LabelCap; } 
             }
             if (type)
             {
-                label = label + command.GetType().ToString();
+                string s = command.GetType().ToString();
+                label += " (" + s.Substring(s.LastIndexOf(".") + 1) + ")";
             }
             if (desc)
             {
-                string description = command?.Desc;
-                if (description?.Length > descKeyLength)
-                {
-                    description = description?.Substring(0, descKeyLength);
-                }
+                string description = command?.Desc.Truncate(descKeyLength);
 
-                if (description != null) { label += description; }
+                if (!description.NullOrEmpty()) { label += " '" + description + "'"; }
             }
 
             return label;
