@@ -37,7 +37,7 @@ namespace Hotkeys
         {
             var data = new DirectKeyData
             {
-                desLabelCap = command.Key(name, type, desc)
+                defName = command.Key(name, type, desc)
             };
             directKeys.Add(data);
             data.CreateKeyDef();
@@ -82,7 +82,7 @@ namespace Hotkeys
 
             for (int i = 0; i < Extensions.names.Length; i++)
             {
-                data = directKeys.FirstOrDefault(x => x.desLabelCap == command.Key(Extensions.names[i], Extensions.types[i], Extensions.descs[i]));
+                data = directKeys.FirstOrDefault(x => x.defName == command.Key(Extensions.names[i], Extensions.types[i], Extensions.descs[i]));
                 if (data != null) { return data; }
             }
 

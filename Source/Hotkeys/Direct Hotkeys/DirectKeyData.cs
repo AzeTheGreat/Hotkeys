@@ -10,7 +10,7 @@ namespace Hotkeys
 {
     public class DirectKeyData : IExposable
     {
-        public string desLabelCap;
+        public string defName;
         public KeyBindingDef keyDef;
 
         private Designator _designator;
@@ -29,12 +29,12 @@ namespace Hotkeys
 
         public DirectKeyData()
         {
-            desLabelCap = "None";
+            defName = "None";
         }
 
         public void ExposeData()
         {
-            Scribe_Values.Look(ref desLabelCap, "DesignatorLabel");
+            Scribe_Values.Look(ref defName, "DesignatorLabel");
         }
 
         //public DesignationCategoryDef GetDesCategory()
@@ -49,8 +49,8 @@ namespace Hotkeys
         {
             keyDef = new KeyBindingDef();
             keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
-            keyDef.defName = "Hotkeys_DirectHotkey_" + desLabelCap;
-            keyDef.label = desLabelCap;
+            keyDef.defName = "Hotkeys_DirectHotkey_" + defName;
+            keyDef.label = defName;
             keyDef.defaultKeyCodeA = UnityEngine.KeyCode.None;
             keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys").modContentPack;
             DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
@@ -64,7 +64,7 @@ namespace Hotkeys
             var desCats = DefDatabase<DesignationCategoryDef>.AllDefsListForReading;
             foreach (var desCat in desCats)
             {
-                var des = desCat.AllResolvedDesignators.FirstOrDefault(x => x.LabelCap == desLabelCap);
+                var des = desCat.AllResolvedDesignators.FirstOrDefault(x => x.LabelCap == defName);
                 if (des != null)
                 {
                     Designator = des;
