@@ -62,7 +62,7 @@ namespace Hotkeys
                 if (!description.NullOrEmpty()) { label += " '" + description + "'"; }
             }
 
-            return label;
+            return label.Trim();
         }
     }
 }
