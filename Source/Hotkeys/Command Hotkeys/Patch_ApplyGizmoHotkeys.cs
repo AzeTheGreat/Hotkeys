@@ -57,6 +57,14 @@ namespace Hotkeys
             keyCache.isUpdated = true;
             return keyCache;
         }
+
+        public static void UpdateCache()
+        {
+            foreach (KeyBindFlagged key in keyCache.Values)
+            {
+                key.isUpdated = false;
+            }
+        }
     }
 
     [HarmonyPatch(typeof(Command), MethodType.Constructor)]
