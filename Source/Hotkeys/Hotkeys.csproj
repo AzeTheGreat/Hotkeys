@@ -58,6 +58,7 @@
     <Compile Include="Command Hotkeys\Gizmo Hotkeys\Dialog_EditKeySpecificity.cs" />
     <Compile Include="Command Hotkeys\Gizmo Hotkeys\GizmoKeyData.cs" />
     <Compile Include="Command Hotkeys\Gizmo Hotkeys\GizmoKeys.cs" />
+    <Compile Include="Command Hotkeys\KeyBindFlagged.cs" />
     <Compile Include="Command Hotkeys\Patch_ApplyGizmoHotkeys.cs" />
     <Compile Include="Command Hotkeys\Patch_AssignGizmoKey.cs" />
     <Compile Include="Multi Keys\Trans_GizmoRenderKeyMods.cs" />
