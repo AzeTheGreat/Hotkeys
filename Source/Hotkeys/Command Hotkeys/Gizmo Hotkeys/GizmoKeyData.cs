@@ -17,7 +17,7 @@ namespace Hotkeys
             Scribe_Values.Look(ref defName, "KeybindingDefName");
         }
 
-        public void BuildKeyDef()
+        public void CreateKeyDef()
         {
             keyDef = new KeyBindingDef();
             keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("GizmoKeys");

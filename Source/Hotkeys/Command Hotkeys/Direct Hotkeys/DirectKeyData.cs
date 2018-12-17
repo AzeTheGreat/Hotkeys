@@ -8,11 +8,8 @@ using Verse;
 
 namespace Hotkeys
 {
-    public class DirectKeyData : IExposable
+    public class DirectKeyData : GizmoKeyData, IExposable
     {
-        public string defName;
-        public KeyBindingDef keyDef;
-
         private Designator _designator;
         public Designator Designator
         {
@@ -32,20 +29,7 @@ namespace Hotkeys
             defName = "None";
         }
 
-        public void ExposeData()
-        {
-            Scribe_Values.Look(ref defName, "DesignatorLabel");
-        }
-
-        //public DesignationCategoryDef GetDesCategory()
-        //{
-        //    if (!CheckDesCategory()) { return null; }
-
-        //    var desCat = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Find(x => x.LabelCap == desCategoryLabelCap);
-        //    return desCat;
-        //}
-
-        public void CreateKeyDef()
+        public new void CreateKeyDef()
         {
             keyDef = new KeyBindingDef();
             keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("DirectHotkeys");
@@ -58,9 +42,6 @@ namespace Hotkeys
 
         private void GetDesignator()
         {
-            //if (!CheckDesCategory()) { return; }
-            //if (!CheckDesignator()) { return; }
-
             var desCats = DefDatabase<DesignationCategoryDef>.AllDefsListForReading;
             foreach (var desCat in desCats)
             {
@@ -71,34 +52,5 @@ namespace Hotkeys
                 }
             }
         }
-
-        //private bool CheckDesCategory()
-        //{
-        //    var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Select(x => x.LabelCap);
-        //    if (allDesCatDefs.Contains(desCategoryLabelCap))
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
-
-        //private bool CheckDesignator()
-        //{
-        //    if (!CheckDesCategory()) { return false; }
-
-        //    var allDesCatDefs = DefDatabase<DesignationCategoryDef>.AllDefsListForReading.Find(x => x.LabelCap == desCategoryLabelCap);
-        //    var allDesignators = allDesCatDefs.AllResolvedDesignators.Select(x => x.LabelCap);
-        //    if (allDesignators.Contains(desLabelCap))
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
     }
 }
