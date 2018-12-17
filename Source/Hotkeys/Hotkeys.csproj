@@ -55,11 +55,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gizmo Hotkeys\Dialog_EditKeySpecificity.cs" />
-    <Compile Include="Gizmo Hotkeys\GizmoKeyData.cs" />
-    <Compile Include="Gizmo Hotkeys\GizmoKeys.cs" />
-    <Compile Include="Gizmo Hotkeys\Patch_ApplyGizmoHotkeys.cs" />
-    <Compile Include="Gizmo Hotkeys\Patch_AssignGizmoKey.cs" />
+    <Compile Include="Command Hotkeys\Gizmo Hotkeys\Dialog_EditKeySpecificity.cs" />
+    <Compile Include="Command Hotkeys\Gizmo Hotkeys\GizmoKeyData.cs" />
+    <Compile Include="Command Hotkeys\Gizmo Hotkeys\GizmoKeys.cs" />
+    <Compile Include="Command Hotkeys\Patch_ApplyGizmoHotkeys.cs" />
+    <Compile Include="Command Hotkeys\Patch_AssignGizmoKey.cs" />
     <Compile Include="Multi Keys\Trans_GizmoRenderKeyMods.cs" />
     <Compile Include="Multi Keys\Define Binding\IntermediateKeys.cs" />
     <Compile Include="Architect Hotkeys\Patch_ArchitectHotkeys.cs" />
@@ -67,22 +67,22 @@
     <Compile Include="Multi Keys\Define Binding\Patch_DefineBinding.cs" />
     <Compile Include="Multi Keys\Define Binding\Patch_EraseConflictingBindingsForKeyCode.cs" />
     <Compile Include="Multi Keys\Define Binding\Patch_ErrorCheckOn.cs" />
-    <Compile Include="Direct Hotkeys\DirectKeyData.cs" />
-    <Compile Include="Direct Hotkeys\DirectKeys.cs" />
+    <Compile Include="Command Hotkeys\Direct Hotkeys\DirectKeyData.cs" />
+    <Compile Include="Command Hotkeys\Direct Hotkeys\DirectKeys.cs" />
     <Compile Include="Multi Keys\KeyMods.cs" />
     <Compile Include="Multi Keys\KeyBinding Window\Trans_KeybindingSettingsAccepted.cs" />
     <Compile Include="Multi Keys\KeyBinding Window\Trans_KeybindingSettingsClosed.cs" />
     <Compile Include="Multi Keys\KeyBinding Window\Trans_KeybindingSettingsOpened.cs" />
     <Compile Include="Multi Keys\KeyBinding Window\Patch_ResetModifiers.cs" />
     <Compile Include="Multi Keys\KeyBinding Window\Patch_KeyBindDrawing.cs" />
-    <Compile Include="Direct Hotkeys\Patch_CheckGizmoKeybindings.cs" />
+    <Compile Include="Command Hotkeys\Direct Hotkeys\Patch_CheckGizmoKeybindings.cs" />
     <Compile Include="Utilities\InitializeMod.cs" />
     <Compile Include="Multi Keys\Trans_InjectKeyModData.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Multi Keys\KeyModData.cs" />
     <Compile Include="Multi Keys\Patches_MultiKeys.cs" />
     <Compile Include="Settings\Hotkeys_Settings.cs" />
-    <Compile Include="Direct Hotkeys\Patch_DirectHotkeys.cs" />
+    <Compile Include="Command Hotkeys\Direct Hotkeys\Patch_DirectHotkeys.cs" />
     <Compile Include="Settings\Hotkeys.cs" />
     <Compile Include="Architect Hotkeys\Patch_KeybindDefGeneration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

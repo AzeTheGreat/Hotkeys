@@ -39,7 +39,7 @@ namespace Hotkeys
 
             foreach (var keyData in gizmoKeys.Values)
             {
-                keyData.BuildKeyDef();
+                keyData.CreateKeyDef();
             }
             
             KeyPrefs.Init();
@@ -52,7 +52,7 @@ namespace Hotkeys
             {
                 defName = keyName
             };
-            data.BuildKeyDef();
+            data.CreateKeyDef();
 
             KeyPrefs.Init();
             KeyMods.BuildKeyModData();
