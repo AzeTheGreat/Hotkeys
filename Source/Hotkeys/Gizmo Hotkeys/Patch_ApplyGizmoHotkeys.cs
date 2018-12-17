@@ -1,5 +1,7 @@
 ﻿using Harmony;
 using Verse;
+using System.Collections;
+using System.Collections.Generic;
 
 
 namespace Hotkeys
@@ -9,23 +11,30 @@ namespace Hotkeys
     {
         static void Prefix(Command __instance)
         {
-            //Type type = __instance.GetType();
-            //string typeName = type.ToString();
-            //Log.Message(typeName);
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+            //for (int i = 0; i < 10000; i++)
+            //{
+                List<string> keys = __instance.KeyList();
 
-            //if (__instance.LabelCap == null) { return; }
+                foreach (string key in keys)
+                {
+                    DirectKeyData direct = DirectKeys.GetKey(key);
+                    if (direct != null)
+                    {
+                        __instance.hotKey = direct.keyDef;
+                        //return;
+                    }
 
-            DirectKeyData direct = DirectKeys.GetKey(__instance);
-            if (direct != null)
-            {
-                __instance.hotKey = direct.keyDef;
-            }
-
-            GizmoKeyData gizmo = GizmoKeys.GetKey(__instance);
-            if (gizmo != null)
-            {
-                __instance.hotKey = gizmo.keyDef;
-            }
+                    GizmoKeyData gizmo = GizmoKeys.GetKey(key);
+                    if (gizmo != null)
+                    {
+                        __instance.hotKey = gizmo.keyDef;
+                        //return;
+                    }
+                }
+            //}
+            //watch.Stop();
+            //Log.Message(watch.ElapsedMilliseconds.ToString());
         }
     }
 

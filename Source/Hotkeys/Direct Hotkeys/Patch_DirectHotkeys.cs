@@ -18,11 +18,12 @@ namespace Hotkeys
             if (!Hotkeys.settings.useDirectHotkeys) { return; }
 
             var directKeys = DirectKeys.directKeys;
-            for (int i = 0; i < directKeys.Count; i++)
+
+            foreach (DirectKeyData directKey in directKeys.Values)
             {
-                if (directKeys[i].keyDef.JustPressed)
+                if (directKey.keyDef.JustPressed)
                 {
-                    var designator = directKeys[i].Designator;
+                    var designator = directKey.Designator;
                     if (designator != null)
                     {
                         SoundDefOf.SelectDesignator.PlayOneShotOnCamera((Map)null);
@@ -30,6 +31,7 @@ namespace Hotkeys
                     }
                 }
             }
+
             DirectKeys.gizmoTriggered = false;
         }
     }

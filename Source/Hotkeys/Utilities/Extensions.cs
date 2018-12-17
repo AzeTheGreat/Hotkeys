@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Text;
 
 
 namespace Hotkeys
@@ -44,25 +46,59 @@ namespace Hotkeys
 
         public static string Key(this Command command, bool name, bool type, bool desc)
         {
-            string label = "";
+            StringBuilder label = new StringBuilder();
 
             if (name)
             {
-                if (!command.LabelCap.NullOrEmpty()) { label = command.LabelCap; } 
+                if (!command.LabelCap.NullOrEmpty()) { label.Append(command.LabelCap); }
             }
             if (type)
             {
                 string s = command.GetType().ToString();
-                label += " (" + s.Substring(s.LastIndexOf(".") + 1) + ")";
+                if (name) { label.Append(" "); }
+                label.Append("(");
+                label.Append(s.Substring(s.LastIndexOf(".") + 1));
+                label.Append(")");
             }
+
             if (desc)
             {
                 string description = command?.Desc.Truncate(descKeyLength);
 
-                if (!description.NullOrEmpty()) { label += " '" + description + "'"; }
+                if (!description.NullOrEmpty())
+                {
+                    if (type) { label.Append(" "); }
+                    label.Append("'");
+                    label.Append(description);
+                    label.Append("'");
+                }
             }
 
-            return label.Trim();
+            return label.ToString();
+        }
+
+        public static List<string> KeyList(this Command command)
+        {
+            string name = command.Key(true, false, false);
+            string type = command.Key(false, true, false);
+            string desc = command.Key(false, false, true);
+
+            List<string> keys = new List<string>();
+
+            for (int i = 0; i < names.Length; i++)
+            {
+                StringBuilder key = new StringBuilder();
+
+                if (names[i]) { key.Append(name); }
+                if (names[i] && types[i]) { key.Append(" "); }
+                if (types[i]) { key.Append(type); }
+                if(types[i] && descs[i]) { key.Append(" "); }
+                if (descs[i]) { key.Append(desc); }
+
+                keys.Add(key.ToString());
+            }
+
+            return keys;
         }
     }
 }

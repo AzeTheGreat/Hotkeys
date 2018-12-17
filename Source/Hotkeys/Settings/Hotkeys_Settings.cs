@@ -8,7 +8,7 @@ namespace Hotkeys
     {
         // Saved
         public Dictionary<string, KeyModData> allKeyModifiers;
-        public List<DirectKeyData> directKeys;
+        public Dictionary<string, DirectKeyData> directKeys;
         public Dictionary<string, GizmoKeyData> gizmoKeys;
 
         // Settings
@@ -19,7 +19,7 @@ namespace Hotkeys
         public Hotkeys_Settings()
         {
             allKeyModifiers = new Dictionary<string, KeyModData>();
-            directKeys = new List<DirectKeyData>();
+            directKeys = new Dictionary<string, DirectKeyData>();
             gizmoKeys = new Dictionary<string, GizmoKeyData>();
 
             useArchitectHotkeys = false;

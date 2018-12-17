@@ -37,9 +37,9 @@ namespace Hotkeys
                 gizmoKeys = new Dictionary<string, GizmoKeyData>();
             }
 
-            foreach (var keyData in gizmoKeys)
+            foreach (var keyData in gizmoKeys.Values)
             {
-                keyData.Value.BuildKeyDef();
+                keyData.BuildKeyDef();
             }
             
             KeyPrefs.Init();
@@ -90,13 +90,20 @@ namespace Hotkeys
             return TryKey(command);
         }
 
+        public static GizmoKeyData GetKey(string key)
+        {
+            gizmoKeys.TryGetValue(key, out GizmoKeyData data);
+            return data;
+        }
+
         private static GizmoKeyData TryKey(Command command)
         {
             GizmoKeyData data;
+            List<string> keys = command.KeyList();
 
-            for (int i = 0; i < Extensions.names.Length; i++)
+            foreach (string key in keys)
             {
-                if (gizmoKeys.TryGetValue(command.Key(Extensions.names[i], Extensions.types[i], Extensions.descs[i]), out data)) { return data; }
+                if (gizmoKeys.TryGetValue(key, out data)) { return data; }
             }
 
             return null;

@@ -10,7 +10,7 @@ namespace Hotkeys
     [StaticConstructorOnStartup]
     static class DirectKeys
     {
-        public static List<DirectKeyData> directKeys;
+        public static Dictionary<string, DirectKeyData> directKeys;
         public static bool gizmoTriggered = false;
 
         static DirectKeys()
@@ -23,10 +23,10 @@ namespace Hotkeys
         {
             if (directKeys == null)
             {
-                directKeys = new List<DirectKeyData>();
+                directKeys = new Dictionary<string, DirectKeyData>();
             }
 
-            foreach (var key in directKeys)
+            foreach (var key in directKeys.Values)
             {
                 key.CreateKeyDef();
             }
@@ -35,11 +35,12 @@ namespace Hotkeys
 
         public static void AddKey(Command command, bool name = true, bool type = false, bool desc = false)
         {
+            string keyName = command.Key(name, type, desc);
             var data = new DirectKeyData
             {
-                defName = command.Key(name, type, desc)
+                defName = keyName
             };
-            directKeys.Add(data);
+            directKeys[keyName] = data;
             data.CreateKeyDef();
 
             KeyPrefs.Init();
@@ -50,7 +51,7 @@ namespace Hotkeys
         public static void RemoveKey(Command command)
         {
             DirectKeyData data = TryKey(command);
-            directKeys.Remove(data);
+            directKeys.Remove(data.defName);
 
             List<KeyBindingDef> keyDefs = new List<KeyBindingDef>
                 {
@@ -76,14 +77,20 @@ namespace Hotkeys
             return TryKey(command);
         }
 
+        public static DirectKeyData GetKey(string key)
+        {
+            directKeys.TryGetValue(key, out DirectKeyData data);
+            return data;
+        }
+
         private static DirectKeyData TryKey(Command command)
         {
             DirectKeyData data;
+            List<string> keys = command.KeyList();
 
-            for (int i = 0; i < Extensions.names.Length; i++)
+            foreach (string key in keys)
             {
-                data = directKeys.FirstOrDefault(x => x.defName == command.Key(Extensions.names[i], Extensions.types[i], Extensions.descs[i]));
-                if (data != null) { return data; }
+                if (directKeys.TryGetValue(key, out data)) { return data; }
             }
 
             return null;

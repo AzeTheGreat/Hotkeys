@@ -23,20 +23,40 @@ namespace Hotkeys
 
                 if (!alreadyGizmo)
                 {
-                    options.Add(new FloatMenuOption("Make Hotkey", delegate ()
+                    //if (alreadyDirect)
+                    //{
+                    //    options.Add(new FloatMenuOption("Change to Hotkey", delegate ()
+                    //    {
+                    //        DirectToGizmo(__instance);
+                    //    }));
+                    //}
+                    if (!alreadyDirect)
                     {
-                        if (alreadyDirect) { DirectToGizmo(__instance); }
-                        if (!alreadyDirect) { MakeGizmoHotkey(__instance); }
-                    }));
+                        options.Add(new FloatMenuOption("Make Hotkey", delegate ()
+                        {
+                            MakeGizmoHotkey(__instance);
+                        }));
+                    }
                 }
+
                 if (!alreadyDirect && __instance is Designator)
                 {
-                    options.Add(new FloatMenuOption("Make Direct Hotkey", delegate ()
+                    //if (alreadyGizmo)
+                    //{
+                    //    options.Add(new FloatMenuOption("Change to Direct Hotkey", delegate ()
+                    //    {
+                    //        GizmoToDirect(__instance);
+                    //    }));
+                    //}
+                    if (!alreadyGizmo)
                     {
-                        if (alreadyGizmo) { GizmoToDirect(__instance); }
-                        if (!alreadyGizmo) { MakeDirectHotkey(__instance); }
-                    }));
+                        options.Add(new FloatMenuOption("Make Direct Hotkey", delegate ()
+                        {
+                            MakeDirectHotkey(__instance);
+                        }));
+                    } 
                 }
+
                 if (alreadyGizmo || alreadyDirect)
                 {
                     options.Add(new FloatMenuOption("Clear Hotkey", delegate ()
@@ -58,19 +78,19 @@ namespace Hotkeys
             }
         }
 
-        private static void GizmoToDirect(Command __instance)
-        {
-            GizmoKeys.RemoveKey(__instance);
-            DirectKeys.AddKey(__instance);
-            Messages.Message("Gizmo Hotkey '" + __instance.LabelCap + "' changed to Direct Hotkey.", MessageTypeDefOf.TaskCompletion, false);
-        }
+        //private static void GizmoToDirect(Command __instance)
+        //{
+        //    GizmoKeys.RemoveKey(__instance);
+        //    DirectKeys.AddKey(__instance);
+        //    Messages.Message("Gizmo Hotkey '" + __instance.LabelCap + "' changed to Direct Hotkey.", MessageTypeDefOf.TaskCompletion, false);
+        //}
 
-        private static void DirectToGizmo(Command __instance)
-        {
-            DirectKeys.RemoveKey(__instance);
-            GizmoKeys.AddKey(__instance);
-            Messages.Message("Direct Hotkey '" + __instance.LabelCap + "' changed to Gizmo Hotkey.", MessageTypeDefOf.TaskCompletion, false);
-        }
+        //private static void DirectToGizmo(Command __instance)
+        //{
+        //    DirectKeys.RemoveKey(__instance);
+        //    GizmoKeys.AddKey(__instance);
+        //    Messages.Message("Direct Hotkey '" + __instance.LabelCap + "' changed to Gizmo Hotkey.", MessageTypeDefOf.TaskCompletion, false);
+        //}
 
         private static void MakeGizmoHotkey(Command __instance)
         {
