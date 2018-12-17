@@ -11,39 +11,33 @@ namespace Hotkeys
     {
         static void Prefix(Command __instance)
         {
-            //var watch = System.Diagnostics.Stopwatch.StartNew();
-            //for (int i = 0; i < 10000; i++)
-            //{
-                List<string> keys = __instance.KeyList();
+            List<string> keys = __instance.KeyList();
 
-                foreach (string key in keys)
+            foreach (string key in keys)
+            {
+                DirectKeyData direct = DirectKeys.GetKey(key);
+                if (direct != null)
                 {
-                    DirectKeyData direct = DirectKeys.GetKey(key);
-                    if (direct != null)
-                    {
-                        __instance.hotKey = direct.keyDef;
-                        //return;
-                    }
-
-                    GizmoKeyData gizmo = GizmoKeys.GetKey(key);
-                    if (gizmo != null)
-                    {
-                        __instance.hotKey = gizmo.keyDef;
-                        //return;
-                    }
+                    __instance.hotKey = direct.keyDef;
+                    //return;
                 }
-            //}
-            //watch.Stop();
-            //Log.Message(watch.ElapsedMilliseconds.ToString());
+
+                GizmoKeyData gizmo = GizmoKeys.GetKey(key);
+                if (gizmo != null)
+                {
+                    __instance.hotKey = gizmo.keyDef;
+                    //return;
+                }
+            }
         }
     }
 
     [HarmonyPatch(typeof(Command), MethodType.Constructor)]
     class Patch_CommandConstructor
     {
-        static void Postfix()
+        static void Postfix(Command __instance)
         {
-            //Log.Message("Constructed");
+            
         }
     }
 }
