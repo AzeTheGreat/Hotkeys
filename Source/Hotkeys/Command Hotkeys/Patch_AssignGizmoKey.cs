@@ -43,17 +43,21 @@ namespace Hotkeys
                     } 
                 }
 
-                if (alreadyGizmo || alreadyDirect)
+                if (alreadyGizmo)
                 {
-                    options.Add(new FloatMenuOption("Clear Hotkey", delegate ()
-                    {
-                        ClearHotkey(__instance, alreadyDirect, alreadyGizmo);
-                    }));
                     options.Add(new FloatMenuOption("Edit Key", delegate ()
                     {
                         var edit = new Dialog_EditKeySpecificity();
                         edit.Command = __instance;
                         Find.WindowStack.Add(edit);
+                    }));
+                }
+
+                if (alreadyGizmo || alreadyDirect)
+                {
+                    options.Add(new FloatMenuOption("Clear Hotkey", delegate ()
+                    {
+                        ClearHotkey(__instance, alreadyDirect, alreadyGizmo);
                     }));
                 }
                 
