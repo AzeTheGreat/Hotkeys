@@ -57,6 +57,7 @@ namespace Hotkeys
             KeyPrefs.Init();
             KeyMods.BuildKeyModData();
             Patch_ApplyGizmoHotkeys.UpdateCache();
+            Patch_CommandConstructor.CheckStaticCommands();
 
             gizmoKeys[keyName] = data;
             Hotkeys.settings.Write();
@@ -75,6 +76,7 @@ namespace Hotkeys
             InitializeMod.RemoveKeyDefs(keyDefs);
             KeyPrefs.Init();
             Patch_ApplyGizmoHotkeys.UpdateCache();
+            Patch_CommandConstructor.CheckStaticCommands();
             Hotkeys.settings.Write();
         }
 
