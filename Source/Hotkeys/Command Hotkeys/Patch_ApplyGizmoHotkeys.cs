@@ -14,6 +14,8 @@ namespace Hotkeys
 
         static void Prefix()
         {
+            if(!Hotkeys.settings.useCommandHotkeys) { return; }
+
             foreach (Command command in newCommands)
             {
                 UpdateCommandHotkey(command);

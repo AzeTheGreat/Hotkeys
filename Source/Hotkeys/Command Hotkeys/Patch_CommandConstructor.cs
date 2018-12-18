@@ -9,6 +9,8 @@ namespace Hotkeys
     {
         static void Postfix(Command __instance)
         {
+            if (!Hotkeys.settings.useCommandHotkeys) { return; }
+
             Patch_ApplyGizmoHotkeys.newCommands.Add(__instance);
         }
 

@@ -15,7 +15,7 @@ namespace Hotkeys
         {
             if (DirectKeys.gizmoTriggered) { DirectKeys.gizmoTriggered = false; return; }
             if (Event.current.type != EventType.KeyDown) { return; }
-            if (!Hotkeys.settings.useDirectHotkeys) { return; }
+            if (!Hotkeys.settings.useCommandHotkeys) { return; }
 
             var directKeys = DirectKeys.directKeys;
 

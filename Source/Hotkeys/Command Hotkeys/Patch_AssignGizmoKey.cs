@@ -13,6 +13,7 @@ namespace Hotkeys
         static void Postfix(ref GizmoResult __result, Command __instance)
         {
             if (__result.State != GizmoState.OpenedFloatMenu) { return; }
+            if (!Hotkeys.settings.useCommandHotkeys) { return; }
 
             KeyBindingDef keyDef = DefDatabase<KeyBindingDef>.AllDefsListForReading.Find(x => x.defName == "Hotkeys_GizmoAssigner");
             if (Event.current.button == 1 && keyDef.IsDown)

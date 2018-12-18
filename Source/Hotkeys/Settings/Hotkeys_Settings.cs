@@ -13,7 +13,7 @@ namespace Hotkeys
 
         // Settings
         public bool useArchitectHotkeys;
-        public bool useDirectHotkeys;
+        public bool useCommandHotkeys;
         public bool useMultiKeys;
 
         public Hotkeys_Settings()
@@ -23,7 +23,7 @@ namespace Hotkeys
             gizmoKeys = new Dictionary<string, GizmoKeyData>();
 
             useArchitectHotkeys = false;
-            useDirectHotkeys = false;
+            useCommandHotkeys = false;
             useMultiKeys = false;
         }
 
@@ -35,7 +35,7 @@ namespace Hotkeys
 
             //base.ExposeData();
             Scribe_Values.Look(ref useArchitectHotkeys, "Enable_Architect_Hotkeys");
-            Scribe_Values.Look(ref useDirectHotkeys, "Enable_Direct_Hotkeys");
+            Scribe_Values.Look(ref useCommandHotkeys, "Enable_Command_Hotkeys");
             Scribe_Values.Look(ref useMultiKeys, "Enable_Multi_Keybindings");
         }
     }
