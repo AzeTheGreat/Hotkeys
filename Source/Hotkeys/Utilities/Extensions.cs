@@ -100,5 +100,26 @@ namespace Hotkeys
 
             return keys;
         }
+
+        public static Dictionary<string, KeyModData> Clone(this Dictionary<string, KeyModData> original)
+        {
+            Dictionary<string, KeyModData> returned = new Dictionary<string, KeyModData>();
+
+            foreach (KeyValuePair<string, KeyModData> pair in original)
+            {
+                returned[pair.Key] = pair.Value.Clone();
+            }
+
+            return returned;
+        }
+
+        public static KeyModData Clone(this KeyModData old)
+        {
+            return new KeyModData
+            {
+                keyBindModsA = old.keyBindModsA.ListFullCopy(),
+                keyBindModsB = old.keyBindModsB.ListFullCopy()
+            };
+        }
     }
 }
