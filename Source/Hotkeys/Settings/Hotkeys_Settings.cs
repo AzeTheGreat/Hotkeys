@@ -22,9 +22,9 @@ namespace Hotkeys
             directKeys = new Dictionary<string, DirectKeyData>();
             gizmoKeys = new Dictionary<string, GizmoKeyData>();
 
-            useArchitectHotkeys = false;
-            useCommandHotkeys = false;
-            useMultiKeys = false;
+            useArchitectHotkeys = true;
+            useCommandHotkeys = true;
+            useMultiKeys = true;
         }
 
         public override void ExposeData()
