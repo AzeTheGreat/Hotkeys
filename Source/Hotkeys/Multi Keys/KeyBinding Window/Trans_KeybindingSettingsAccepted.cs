@@ -37,7 +37,6 @@ namespace Hotkeys
         private static void RebuildOverlapDict()
         {
             if (!Hotkeys.settings.useMultiKeys) { return; }
-            Log.Message("Accepted");
             KeyMods.BuildOverlappingKeys();
         }
     }

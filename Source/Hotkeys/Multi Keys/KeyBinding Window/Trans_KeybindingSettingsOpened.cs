@@ -37,7 +37,6 @@ namespace Hotkeys
         private static void BackupKeyBindings()
         {
             if (!Hotkeys.settings.useMultiKeys) { return; }
-            Log.Message("Opened");
             KeyMods.oldKeyModifiers = KeyMods.allKeyModifiers.Clone();
         }
     }
