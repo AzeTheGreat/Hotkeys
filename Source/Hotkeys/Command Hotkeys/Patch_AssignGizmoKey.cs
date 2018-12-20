@@ -10,6 +10,7 @@ namespace Hotkeys
     [HarmonyPatch(typeof(Command), nameof(Command.GizmoOnGUI))]
     class Patch_AssignGizmoKey
     {
+        [HarmonyPriority(Priority.First)]
         static void Postfix(ref GizmoResult __result, Command __instance)
         {
             if (__result.State != GizmoState.OpenedFloatMenu) { return; }

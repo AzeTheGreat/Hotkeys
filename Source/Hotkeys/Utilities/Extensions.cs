@@ -31,7 +31,7 @@ namespace Hotkeys
 
         public static string Truncate(this string str, int toLength)
         {
-            if (str.Length > toLength)
+            if ((str?.Length ?? 0) > toLength)
             {
                 str = str.Substring(0, toLength);
             }
