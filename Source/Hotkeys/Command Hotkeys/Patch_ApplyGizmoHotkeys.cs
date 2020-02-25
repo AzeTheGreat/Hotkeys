@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Verse;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace Hotkeys
         private static KeyBindFlagged FullKeySearch(Command command)
         {
             List<string> keys = command.KeyList();
-            KeyBindFlagged keyCache = new KeyBindFlagged();
+            var keyCache = new KeyBindFlagged();
 
             foreach (string key in keys)
             {

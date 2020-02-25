@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
@@ -22,7 +22,7 @@ namespace Hotkeys
                 {
                     afterTarget = true;
                 }
-                if (i.opcode == OpCodes.Callvirt && i.operand == Add && afterTarget)
+                if (i.opcode == OpCodes.Callvirt && i.OperandIs(Add) && afterTarget)
                 {
                     yield return i;
                     yield return new CodeInstruction(OpCodes.Call,

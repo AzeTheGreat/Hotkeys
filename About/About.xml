@@ -2,7 +2,11 @@
 <ModMetaData>
 	<name>HotkeysDev</name>
 	<author>Aze</author>
-	<targetVersion>1.0.2096</targetVersion>
+	<supportedVersions>
+      <li>1.0</li>
+      <li>1.1</li>
+   </supportedVersions>
+   <packageId>Aze.HotkeysDev</packageId>
 	<description>This mod adds keybindings to the Architect subtabs, direct hotkeys to access any designator, and the ability to create multi-keybindings.</description>
 	<url></url>
 </ModMetaData>

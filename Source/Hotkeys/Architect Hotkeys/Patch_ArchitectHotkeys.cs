@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,9 +41,7 @@ namespace Hotkeys
         {
             // Due to keydown persisting for 6 frames (why?) this immediately deslects the 'carry through'
             if (keyWasDown)
-            {
                 Find.DesignatorManager.Deselect();
-            }
         }
     } 
 }

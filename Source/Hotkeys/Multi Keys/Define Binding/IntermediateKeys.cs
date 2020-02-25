@@ -9,7 +9,5 @@ namespace Hotkeys
     static class IntermediateKeys
     {
         public static List<KeyCode> keysPressed;
-        public static bool lShiftWasUp;
-        public static bool rShiftWasUp;
     }
 }

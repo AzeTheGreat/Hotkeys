@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using Harmony;
+using HarmonyLib;
 using System.Reflection;
 using RimWorld;
 
@@ -18,10 +18,10 @@ namespace Hotkeys
 
         public Hotkeys(ModContentPack content) : base(content)
         {
-            // HARMONY
-            var harmonyHotkeys = HarmonyInstance.Create("Hotkeys");
-            HarmonyInstance.DEBUG = false;
-            harmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
+            // Harmony
+            var HarmonyHotkeys = new Harmony("Hotkeys");
+            Harmony.DEBUG = false;
+            HarmonyHotkeys.PatchAll(Assembly.GetExecutingAssembly());
 
             // SETTINGS
             settings = GetSettings<Hotkeys_Settings>();

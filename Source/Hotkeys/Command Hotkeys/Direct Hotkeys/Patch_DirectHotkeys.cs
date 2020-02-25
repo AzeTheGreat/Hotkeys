@@ -1,9 +1,7 @@
-﻿using Harmony;
-using RimWorld;
+﻿using HarmonyLib;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
-using System.Collections.Generic;
 
 
 namespace Hotkeys
@@ -26,7 +24,7 @@ namespace Hotkeys
                     var designator = directKey.Designator;
                     if (designator != null)
                     {
-                        SoundDefOf.SelectDesignator.PlayOneShotOnCamera((Map)null);
+                        designator.activateSound.PlayOneShotOnCamera(null);
                         Find.DesignatorManager.Select(designator);
                     }
                 }

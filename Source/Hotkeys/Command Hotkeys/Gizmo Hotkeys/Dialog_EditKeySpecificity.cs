@@ -74,17 +74,13 @@ namespace Hotkeys
             base.PreOpen();
 
             if (Command.hotKey.defName?.Contains(Command.Key(true, false, false)) ?? false)
-            {
                 name = true;
-            }
+
             if (Command.hotKey.defName?.Contains(Command.Key(false, true, false)) ?? false)
-            {
                 type = true;
-            }
+
             if (Command.hotKey.defName?.Contains(Command.Key(false, false, true)) ?? false)
-            {
                 desc = true;
-            }
         }
     }
 }

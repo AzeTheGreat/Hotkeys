@@ -22,9 +22,7 @@ namespace Hotkeys
         public static void BuildDirectKeyDefs()
         {
             if (directKeys == null)
-            {
                 directKeys = new Dictionary<string, DirectKeyData>();
-            }
 
             foreach (var key in directKeys.Values)
             {
@@ -55,10 +53,7 @@ namespace Hotkeys
             DirectKeyData data = TryKey(command);
             directKeys.Remove(data.defName);
 
-            List<KeyBindingDef> keyDefs = new List<KeyBindingDef>
-                {
-                    data.keyDef
-                };
+            var keyDefs = new List<KeyBindingDef> { data.keyDef };
 
             InitializeMod.RemoveKeyDefs(keyDefs);
             KeyPrefs.Init();
@@ -70,9 +65,7 @@ namespace Hotkeys
         public static bool KeyPresent(Command command)
         {
             if (TryKey(command) != null)
-            {
-                return true;
-            }
+                 return true;
             return false;
         }
 
@@ -94,7 +87,8 @@ namespace Hotkeys
 
             foreach (string key in keys)
             {
-                if (directKeys.TryGetValue(key, out data)) { return data; }
+                if (directKeys.TryGetValue(key, out data))
+                    return data;
             }
 
             return null;

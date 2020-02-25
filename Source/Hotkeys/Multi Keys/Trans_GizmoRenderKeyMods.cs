@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -19,7 +19,7 @@ namespace Hotkeys
 
             foreach (CodeInstruction i in instructions)
             {
-                if (i.opcode == OpCodes.Callvirt && i.operand == Contains)
+                if (i.opcode == OpCodes.Callvirt && i.OperandIs(Contains))
                 {
                     afterTarget = true;
                 }
@@ -38,7 +38,7 @@ namespace Hotkeys
                     continue;
                 }
 
-                if (i.opcode == OpCodes.Call && i.operand == ToStringReadable)
+                if (i.opcode == OpCodes.Call && i.OperandIs(ToStringReadable))
                 {
                     yield return i;
 

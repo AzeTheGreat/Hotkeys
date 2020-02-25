@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +40,6 @@ namespace Hotkeys
             __instance.Close(true);
             //Event.current.Use();  Dunno what the original purpose of this is for.
         }
-
         
         static bool Prefix(Rect inRect, ref KeyPrefsData ___keyPrefsData, ref KeyBindingDef ___keyDef, ref KeyPrefs.BindingSlot ___slot, Dialog_DefineBinding __instance)
         {
@@ -54,33 +53,24 @@ namespace Hotkeys
             {
                 List<KeyCode> keysPressed = IntermediateKeys.keysPressed;
 
-                if (Event.current.type == EventType.KeyUp)
-                {
+                if (
+                    Event.current.type == EventType.KeyUp ||
+                    (Input.GetKeyUp(KeyCode.LeftShift) && keysPressed.Contains(KeyCode.LeftShift)) ||
+                    (Input.GetKeyUp(KeyCode.RightShift) && keysPressed.Contains(KeyCode.RightShift))
+                   )
                     BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
-                }
-                if (Input.GetKeyUp(KeyCode.LeftShift) && !IntermediateKeys.lShiftWasUp && keysPressed.Contains(KeyCode.LeftShift))
-                {
-                    IntermediateKeys.lShiftWasUp = true;
-                    BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
-                }
-                if (Input.GetKeyUp(KeyCode.RightShift) && !IntermediateKeys.rShiftWasUp && keysPressed.Contains(KeyCode.RightShift))
-                {
-                    IntermediateKeys.rShiftWasUp = true;
-                    BindOnKeyUp(ref ___keyPrefsData, ref ___keyDef, ref ___slot, __instance, keysPressed);
-                }
 
                 if (Event.current.type == EventType.KeyDown)
-                {
-                    if (!keysPressed.Contains(Event.current.keyCode)) { keysPressed.Add(Event.current.keyCode); }
-                }
+                    if (!keysPressed.Contains(Event.current.keyCode))
+                        keysPressed.Add(Event.current.keyCode);
+
                 if (Input.GetKeyDown(KeyCode.LeftShift))
-                {
-                    if (!keysPressed.Contains(KeyCode.LeftShift)) { keysPressed.Add(KeyCode.LeftShift); }
-                }
+                    if (!keysPressed.Contains(KeyCode.LeftShift))
+                        keysPressed.Add(KeyCode.LeftShift);
+
                 if (Input.GetKeyDown(KeyCode.RightShift))
-                {
-                    if (!keysPressed.Contains(KeyCode.RightShift)) { keysPressed.Add(KeyCode.RightShift); }
-                }
+                    if (!keysPressed.Contains(KeyCode.RightShift))
+                        keysPressed.Add(KeyCode.RightShift);
 
                 if (Event.current.keyCode == KeyCode.Escape)
                 {

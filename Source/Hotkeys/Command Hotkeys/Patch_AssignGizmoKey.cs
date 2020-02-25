@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using System.Collections.Generic;
 using Verse;
 using UnityEngine;
@@ -19,7 +19,7 @@ namespace Hotkeys
             KeyBindingDef keyDef = DefDatabase<KeyBindingDef>.AllDefsListForReading.Find(x => x.defName == "Hotkeys_GizmoAssigner");
             if (Event.current.button == 1 && keyDef.IsDown)
             {
-                List<FloatMenuOption> options = new List<FloatMenuOption>();
+                var options = new List<FloatMenuOption>();
                 bool alreadyDirect = DirectKeys.KeyPresent(__instance);
                 bool alreadyGizmo = GizmoKeys.KeyPresent(__instance);
 
@@ -63,7 +63,7 @@ namespace Hotkeys
                     }));
                 }
                 
-                FloatMenu window = new FloatMenu(options, "Select Category", false);
+                var window = new FloatMenu(options, "Select Category", false);
                 Find.WindowStack.Add(window);
 
                 __result = new GizmoResult(GizmoState.Mouseover, null);

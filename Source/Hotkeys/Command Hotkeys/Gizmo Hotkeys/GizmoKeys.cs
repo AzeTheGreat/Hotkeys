@@ -21,21 +21,21 @@ namespace Hotkeys
 
         private static void AddSetterKey()
         {
-            var keyDef = new KeyBindingDef();
-            keyDef.category = DefDatabase<KeyBindingCategoryDef>.GetNamed("GizmoKeys");
-            keyDef.defName = "Hotkeys_GizmoAssigner";
-            keyDef.label = "Assign Gizmos";
-            keyDef.defaultKeyCodeA = UnityEngine.KeyCode.Ampersand;
-            keyDef.modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("GizmoKeys").modContentPack;
+            var keyDef = new KeyBindingDef
+            {
+                category = DefDatabase<KeyBindingCategoryDef>.GetNamed("GizmoKeys"),
+                defName = "Hotkeys_GizmoAssigner",
+                label = "Assign Gizmos",
+                defaultKeyCodeA = UnityEngine.KeyCode.Ampersand,
+                modContentPack = DefDatabase<KeyBindingCategoryDef>.GetNamed("GizmoKeys").modContentPack
+            };
             DefGenerator.AddImpliedDef<KeyBindingDef>(keyDef);
         }
 
         public static void BuildGizmoKeys()
         {
             if (gizmoKeys == null)
-            {
                 gizmoKeys = new Dictionary<string, GizmoKeyData>();
-            }
 
             foreach (var keyData in gizmoKeys.Values)
             {
@@ -48,10 +48,7 @@ namespace Hotkeys
         public static void AddKey(Command command, bool name = true, bool type = false, bool desc = false)
         {
             string keyName = command.Key(name, type, desc);
-            var data = new GizmoKeyData
-            {
-                defName = keyName
-            };
+            var data = new GizmoKeyData { defName = keyName };
             data.CreateKeyDef();
 
             KeyPrefs.Init();
@@ -68,10 +65,7 @@ namespace Hotkeys
             GizmoKeyData data = TryKey(command);
             gizmoKeys.Remove(data.defName);
 
-            List<KeyBindingDef> keyDefs = new List<KeyBindingDef>
-                {
-                    data.keyDef
-                };
+            var keyDefs = new List<KeyBindingDef> { data.keyDef };
 
             InitializeMod.RemoveKeyDefs(keyDefs);
             KeyPrefs.Init();
@@ -83,9 +77,7 @@ namespace Hotkeys
         public static bool KeyPresent(Command command)
         {
             if (TryKey(command) != null)
-            {
                 return true;
-            }
             return false;
         }
 
@@ -107,7 +99,8 @@ namespace Hotkeys
 
             foreach (string key in keys)
             {
-                if (gizmoKeys.TryGetValue(key, out data)) { return data; }
+                if (gizmoKeys.TryGetValue(key, out data))
+                    return data;
             }
 
             return null;

@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,14 +50,12 @@ namespace Hotkeys
             {
                 if (IntermediateKeys.keysPressed == null) { IntermediateKeys.keysPressed = new List<KeyCode>(); }
                 IntermediateKeys.keysPressed.Clear();
-                IntermediateKeys.lShiftWasUp = false;
-                IntermediateKeys.rShiftWasUp = false;
                 Find.WindowStack.Add(new Dialog_DefineBinding(keyPrefsData, keyDef, slot));
                 Event.current.Use();
             }
             else if (Event.current.button == 1)
             {
-                List<FloatMenuOption> list = new List<FloatMenuOption>();
+                var list = new List<FloatMenuOption>();
                 list.Add(new FloatMenuOption("ResetBinding".Translate(), delegate ()
                 {
                     KeyCode keyCode = (slot != KeyPrefs.BindingSlot.A) ? keyDef.defaultKeyCodeB : keyDef.defaultKeyCodeA;

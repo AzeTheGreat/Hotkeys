@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using Harmony;
+using HarmonyLib;
 using System.Reflection;
 using RimWorld;
 using System.Linq;
@@ -46,7 +46,7 @@ namespace Hotkeys
             List<KeyBindingDef> allKeyDefs = DefDatabase<KeyBindingDef>.AllDefsListForReading;
             KeyPrefsData keyPrefData = KeyPrefs.KeyPrefsData.Clone();
 
-            List<KeyCode> allTriggerKeys = new List<KeyCode>();
+            var allTriggerKeys = new List<KeyCode>();
             foreach (KeyBindingDef keyDef in allKeyDefs)
             {
                 allTriggerKeys.Add(keyPrefData.GetBoundKeyCode(keyDef, KeyPrefs.BindingSlot.A));
@@ -61,8 +61,8 @@ namespace Hotkeys
                 KeyCode keyCodeA = keyPrefData.GetBoundKeyCode(keyDef, KeyPrefs.BindingSlot.A);
                 KeyCode keyCodeB = keyPrefData.GetBoundKeyCode(keyDef, KeyPrefs.BindingSlot.B);
 
-                List<KeyCode> newKeyCodes = new List<KeyCode>();
-                List<KeyCode> storedKeyCodes = new List<KeyCode>();
+                var newKeyCodes = new List<KeyCode>();
+                var storedKeyCodes = new List<KeyCode>();
 
                 if (overlappingTriggerKeys.Contains(keyCodeA))
                 {
@@ -71,7 +71,7 @@ namespace Hotkeys
                     if (newKeyCodes == null) { newKeyCodes = new List<KeyCode>(); }
                     if (storedKeyCodes == null) { storedKeyCodes = new List<KeyCode>(); }
 
-                    List<KeyCode> modifierKeyCodes = storedKeyCodes.Union(newKeyCodes).ToList();
+                    var modifierKeyCodes = storedKeyCodes.Union(newKeyCodes).ToList();
                     if (modifierKeyCodes == null) { modifierKeyCodes = new List<KeyCode>(); }
 
                     overlappingKeyMods[keyCodeA] = modifierKeyCodes;

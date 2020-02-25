@@ -1,74 +1,49 @@
-﻿using Harmony;
+﻿using HarmonyLib;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using Verse;
 
 namespace Hotkeys
 {
-    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.KeyDownEvent), MethodType.Getter)]
-    public class Patch_KeyDownEvent
+    class Patches_MultiKeys
     {
-        static void Postfix(ref bool __result, KeyBindingDef __instance)
+        [HarmonyPatch]
+        class Patch_KeyDown
         {
-            if (!__result || !Hotkeys.isInit || !Hotkeys.settings.useMultiKeys) { return; }
-
-            KeyBindingData keyBindingData;
-            if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
+            static IEnumerable<MethodBase> TargetMethods()
             {
-                bool resultA = Input.GetKeyDown(keyBindingData.keyBindingA) || Event.current.keyCode == keyBindingData.keyBindingA;
-                bool resultB = Input.GetKeyDown(keyBindingData.keyBindingB) || Event.current.keyCode == keyBindingData.keyBindingB;
-                __result = __instance.ModifierData().AllModifierKeysDown(__instance, resultA, resultB);
+                yield return AccessTools.PropertyGetter(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDownEvent));
+                yield return AccessTools.PropertyGetter(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDown));
             }
+
+            static void Postfix(ref bool __result, KeyBindingDef __instance) => Patch(ref __result, __instance, Input.GetKey);
         }
-    }
 
-    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDownEvent), MethodType.Getter)]
-    public class Patch_IsDownEvent
-    {
-        static void Postfix(ref bool __result, KeyBindingDef __instance)
+        [HarmonyPatch]
+        class Patch_KeyPressed
         {
-            if (!__result || !Hotkeys.isInit || !Hotkeys.settings.useMultiKeys) { return; }
-
-            KeyBindingData keyBindingData;
-            if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
+            static IEnumerable<MethodBase> TargetMethods()
             {
-                bool resultA = Input.GetKey(keyBindingData.keyBindingA);
-                bool resultB = Input.GetKey(keyBindingData.keyBindingB);
-                __result = __instance.ModifierData().AllModifierKeysDown(__instance, resultA, resultB);
+                yield return AccessTools.PropertyGetter(typeof(KeyBindingDef), nameof(KeyBindingDef.JustPressed));
+                yield return AccessTools.PropertyGetter(typeof(KeyBindingDef), nameof(KeyBindingDef.KeyDownEvent));
             }
+
+            static void Postfix(ref bool __result, KeyBindingDef __instance) => Patch(ref __result, __instance, Input.GetKeyDown);
         }
-    }
 
-    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.JustPressed), MethodType.Getter)]
-    public class Patch_JustPressed
-    {
-        // Kinda dirty maybe make separate harmony to patch later?
-        static void Postfix(ref bool __result, KeyBindingDef __instance)
+        private static void Patch(ref bool result, KeyBindingDef instance, Func<KeyCode, bool> processKey)
         {
-            if (!__result || !Hotkeys.isInit || !Hotkeys.settings.useMultiKeys) { return; }
+            // Kinda dirty maybe make separate Harmony to patch later?
+            if (!result || !Hotkeys.isInit || !Hotkeys.settings.useMultiKeys)
+                return;
 
-            KeyBindingData keyBindingData;
-            if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
+            if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(instance, out KeyBindingData keyBindingData))
             {
-                bool resultA = Input.GetKeyDown(keyBindingData.keyBindingA);
-                bool resultB = Input.GetKeyDown(keyBindingData.keyBindingB);
-                __result = __instance.ModifierData().AllModifierKeysDown(__instance, resultA, resultB);
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(KeyBindingDef), nameof(KeyBindingDef.IsDown), MethodType.Getter)]
-    public class Patch_IsDown
-    {
-        static void Postfix(ref bool __result, KeyBindingDef __instance)
-        {
-            if (!__result || !Hotkeys.isInit || !Hotkeys.settings.useMultiKeys) { return; }
-
-            KeyBindingData keyBindingData;
-            if (KeyPrefs.KeyPrefsData.keyPrefs.TryGetValue(__instance, out keyBindingData))
-            {
-                bool resultA = Input.GetKey(keyBindingData.keyBindingA);
-                bool resultB = Input.GetKey(keyBindingData.keyBindingB);
-                __result = __instance.ModifierData().AllModifierKeysDown(__instance, resultA, resultB);
+                bool resultA = processKey(keyBindingData.keyBindingA);
+                bool resultB = processKey(keyBindingData.keyBindingB);
+                result = instance.ModifierData().AllModifierKeysDown(instance, resultA, resultB);
             }
         }
     }

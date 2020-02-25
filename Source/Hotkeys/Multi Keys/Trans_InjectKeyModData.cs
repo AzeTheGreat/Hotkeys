@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -16,7 +16,7 @@ namespace Hotkeys
 
             foreach (CodeInstruction i in instructions)
             {
-                if (i.opcode == OpCodes.Callvirt && i.operand == AddMissingDefaultBindings)
+                if (i.opcode == OpCodes.Callvirt && i.OperandIs(AddMissingDefaultBindings))
                 {
                     yield return i;
                     yield return new CodeInstruction(OpCodes.Call,
