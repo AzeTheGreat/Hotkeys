@@ -2,4 +2,4 @@
 
 This mod adds fully user configurable keybindings for a variety of purposes.
 
-If you can't download through the Steam Workshop, zipped [releases]() are available.  Simply download, unzip, and place in the mods folder.  The file structure should appear as: `...\steamapps\common\RimWorld\Mods\Hotkeys`.
+If you can't download through the Steam Workshop, zipped [releases](https://github.com/AzeTheGreat/Hotkeys/releases) are available.  Simply download, unzip, and place in the mods folder.  The file structure should appear as: `...\steamapps\common\RimWorld\Mods\Hotkeys`.
