@@ -89,10 +89,9 @@
     <Compile Include="Multi Keys\Trans_GizmoRenderKeyMods.cs" />
     <Compile Include="Multi Keys\Define Binding\IntermediateKeys.cs" />
     <Compile Include="Architect Hotkeys\Patch_ArchitectHotkeys.cs" />
-    <Compile Include="Multi Keys\Define Binding\BindingConflicts.cs" />
+    <Compile Include="Multi Keys\Define Binding\Patch_ConflictingBindings.cs" />
     <Compile Include="Multi Keys\Define Binding\Patch_DefineBinding.cs" />
-    <Compile Include="Multi Keys\Define Binding\Patch_EraseConflictingBindingsForKeyCode.cs" />
-    <Compile Include="Multi Keys\Define Binding\Patch_ErrorCheckOn.cs" />
+    <Compile Include="Multi Keys\Define Binding\Trans_EraseConflictingBindingsForKeyCode.cs" />
     <Compile Include="Command Hotkeys\Direct Hotkeys\DirectKeyData.cs" />
     <Compile Include="Command Hotkeys\Direct Hotkeys\DirectKeys.cs" />
     <Compile Include="Multi Keys\KeyMods.cs" />
