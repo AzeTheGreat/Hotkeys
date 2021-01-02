@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Hotkeys
 {
     // Transpiler to show multi key labels
-    [HarmonyPatch(typeof(Command), nameof(Command.GizmoOnGUI))]
+    [HarmonyPatch(typeof(Command), "GizmoOnGUIInt")]
     public class Trans_GizmoRenderKeyMods
     {
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

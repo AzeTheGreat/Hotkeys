@@ -5,7 +5,7 @@ using Verse;
 
 namespace Hotkeys
 {
-    [HarmonyPatch(typeof(Command), nameof(Command.GizmoOnGUI))]
+    [HarmonyPatch(typeof(Command), "GizmoOnGUIInt")]
     class Patch_ApplyGizmoHotkeys
     {
         public static List<Command> newCommands = new List<Command>();

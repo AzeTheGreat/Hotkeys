@@ -7,93 +7,83 @@ using RimWorld;
 
 namespace Hotkeys
 {
-    [HarmonyPatch(typeof(Command), nameof(Command.GizmoOnGUI))]
-    class Patch_AssignGizmoKey
+    [HarmonyPatch(typeof(Command), "GizmoOnGUIInt")]
+    static class Patch_AssignGizmoKey
     {
         [HarmonyPriority(Priority.First)]
         static void Postfix(ref GizmoResult __result, Command __instance)
         {
-            if (__result.State != GizmoState.OpenedFloatMenu) { return; }
-            if (!Hotkeys.settings.useCommandHotkeys) { return; }
+            if (!Hotkeys.settings.useCommandHotkeys || __result.State != GizmoState.OpenedFloatMenu)
+                return;
 
-            KeyBindingDef keyDef = DefDatabase<KeyBindingDef>.AllDefsListForReading.Find(x => x.defName == "Hotkeys_GizmoAssigner");
-            if (Event.current.button == 1 && keyDef.IsDown)
+            Log.Message("PATCH Proceeds: " + __result.State);
+
+            var keyDef = DefDatabase<KeyBindingDef>.AllDefsListForReading.Find(x => x.defName == "Hotkeys_GizmoAssigner");
+            if (!(Event.current.button == 1 && keyDef.IsDown))
+                return;
+
+            var options = GetFloatMenuOptions(__instance);
+            var window = new FloatMenu(options, "Select Category", false);
+            Find.WindowStack.Add(window);
+            __result = new GizmoResult(GizmoState.Clear, null);
+        }
+
+        private static List<FloatMenuOption> GetFloatMenuOptions(Command __instance)
+        {
+            var options = new List<FloatMenuOption>();
+            bool alreadyDirect = DirectKeys.KeyPresent(__instance);
+            bool alreadyGizmo = GizmoKeys.KeyPresent(__instance);
+
+            if (!alreadyGizmo && !alreadyDirect)
             {
-                var options = new List<FloatMenuOption>();
-                bool alreadyDirect = DirectKeys.KeyPresent(__instance);
-                bool alreadyGizmo = GizmoKeys.KeyPresent(__instance);
-
-                if (!alreadyGizmo)
-                {
-                    if (!alreadyDirect)
-                    {
-                        options.Add(new FloatMenuOption("Make Hotkey", delegate ()
-                        {
-                            MakeGizmoHotkey(__instance);
-                        }));
-                    }
-                }
-
-                if (!alreadyDirect && __instance is Designator)
-                {
-                    if (!alreadyGizmo)
-                    {
-                        options.Add(new FloatMenuOption("Make Direct Hotkey", delegate ()
-                        {
-                            MakeDirectHotkey(__instance);
-                        }));
-                    } 
-                }
-
-                if (alreadyGizmo)
-                {
-                    options.Add(new FloatMenuOption("Edit Key", delegate ()
-                    {
-                        var edit = new Dialog_EditKeySpecificity();
-                        edit.Command = __instance;
-                        Find.WindowStack.Add(edit);
-                    }));
-                }
-
-                if (alreadyGizmo || alreadyDirect)
-                {
-                    options.Add(new FloatMenuOption("Clear Hotkey", delegate ()
-                    {
-                        ClearHotkey(__instance, alreadyDirect, alreadyGizmo);
-                    }));
-                }
-                
-                var window = new FloatMenu(options, "Select Category", false);
-                Find.WindowStack.Add(window);
-
-                __result = new GizmoResult(GizmoState.Mouseover, null);
+                options.Add(new FloatMenuOption("Make Hotkey", () => __instance.MakeGizmoHotkey()));
+                if (__instance is Designator)
+                    options.Add(new FloatMenuOption("Make Direct Hotkey", () => __instance.MakeDirectHotkey()));
             }
-        }
 
-        private static void MakeGizmoHotkey(Command __instance)
-        {
-            GizmoKeys.AddKey(__instance);
-            Messages.Message("Gizmo Hotkey '" + __instance.LabelCap + "' added.", MessageTypeDefOf.TaskCompletion, false);
-        }
-
-        private static void MakeDirectHotkey(Command __instance)
-        {
-            DirectKeys.AddKey(__instance);
-            Messages.Message("Direct Hotkey '" + __instance.LabelCap + "' added.", MessageTypeDefOf.TaskCompletion, false);
-        }
-
-        private static void ClearHotkey(Command __instance, bool alreadyDirect, bool alreadyGizmo)
-        {
-            if (alreadyDirect)
-            {
-                DirectKeys.RemoveKey(__instance);
-                Messages.Message("Direct Hotkey '" + __instance.LabelCap + "' cleared.", MessageTypeDefOf.TaskCompletion, false);
-            }
             if (alreadyGizmo)
             {
+                options.Add(new FloatMenuOption("Edit Key", () =>
+                {
+                    var edit = new Dialog_EditKeySpecificity();
+                    edit.Command = __instance;
+                    Find.WindowStack.Add(edit);
+                }));
+            }
+
+            if (alreadyGizmo || alreadyDirect)
+                options.Add(new FloatMenuOption("Clear Hotkey", () => __instance.ClearHotkey()));
+
+            return options;
+        }
+
+        private static void MakeGizmoHotkey(this Command __instance)
+        {
+            GizmoKeys.AddKey(__instance);
+            Message(__instance, "Gizmo", "added");
+        }
+
+        private static void MakeDirectHotkey(this Command __instance)
+        {
+            DirectKeys.AddKey(__instance);
+            Message(__instance, "Direct", "added");
+        }
+
+        private static void ClearHotkey(this Command __instance)
+        {
+            if (DirectKeys.KeyPresent(__instance))
+            {
+                DirectKeys.RemoveKey(__instance);
+                Message(__instance, "Direct", "cleared");
+            }
+            if (GizmoKeys.KeyPresent(__instance))
+            {
                 GizmoKeys.RemoveKey(__instance);
-                Messages.Message("Gizmo Hotkey '" + __instance.LabelCap + "' cleared.", MessageTypeDefOf.TaskCompletion, false);
+                Message(__instance, "Gizmo", "cleared");
             }
         }
+
+        private static void Message(Command __instance, string keyType, string change) => 
+            Messages.Message(keyType + " Hotkey " + __instance.LabelCap + " " + change, MessageTypeDefOf.TaskCompletion, false);
     }
 }
